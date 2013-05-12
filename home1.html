@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Untitled</title>
+<link rel="stylesheet" href="css/home1.css" />
+<link rel="stylesheet" href="themes/android/android.css" />
+
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.ui.position.js"></script>
+
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<link rel="stylesheet"  href="themes/android/android.css" />
+<link rel="stylesheet" href="css/template1.css" />
+
+<script type="text/javascript" src="js/jquery-1.9.min.js"></script>
+
+<script type="text/javascript" src="dojox/mobile/deviceTheme.js"
+	data-dojo-config="mblThemeFiles: ['base','Button']"></script>
+
+
+
+
+
+
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.ui.position.js"></script>
+
+
+<script type="text/javascript" src="js/iscroll-lite.js"></script>
+
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+
+<script type="text/javascript" src="./lib/dojo/dojo/dojo.js"
+	data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], mblLoadCompatPattern: /\/project1\/themes\/.*\.css$/"></script>
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
+</style>
+
+<script type="text/javascript" src="js/meuJSIos.js"></script>
+
+<script type="text/javascript" >
+require([
+			"dojo/_base/window",
+			"dojo/_base/Deferred",
+			"dijit/registry",
+			"dojox/mobile/ViewController",
+			"dojox/mobile/parser",
+			"dojox/mobile",
+			"dojox/mobile/compat",
+			"dojox/mobile/Button"
+		], function(win, Deferred, registry, ViewController){
+			var vc = ViewController.getInstance();
+			onBtn1Clicked = function(e){
+				vc.openExternalView({url:"template1Ios.html", transition:"slide"} , win.body());
+
+			};
+			onBtn3Clicked = function(e){
+				vc.openExternalView({url:"home1.html", transition:"slide"}, win.body());
+			};
+			
+			
+		});
+function mostrarPagina(){
+	$("#home").show();
+}
+
+
+
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
+</head>
+
+<body onload="mostrarPagina()" class="claro" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+
+
+
+
+
+	<div style="display:none" class="geral" id="home" >
+		<div id="topo" class="topo">
+		
+		</div>
+
+		<div class="content">
+			<div id="mobileTransitionView101" class="menu_categoria"
+				dojoType="dojox.mobile.ScrollableView" selected="true">
+
+				<ul dojoType="dojox.mobile.EdgeToEdgeList">
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						  class="Icones"  href="template1Ios.html" >
+						
+						<img alt="" src="img/icone_cardapio.jpg" />
+						<p>Template 1</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones" >
+						
+						<a href="template2.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Template 2</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						  class="Icones">
+						
+						<a href="template3.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Template 3</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones" >
+						
+						<a href="template1Ios.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>TemplateIos</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones">
+						
+						<a href="template1.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Cardapio</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones" >
+						
+						<a href="template1.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Cardapio</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones">
+						
+						<a href="template1.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Cardapio</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones">
+						
+						<a href="template1.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Cardapio</p>
+						
+					</li>
+					
+					<li dojoType="dojox.mobile.ListItem" moveTo="filmListView"
+						 class="Icones">
+						
+						<a href="template1.html">
+						<img alt="" src="img/icone_cardapio.jpg" />
+						</a>
+						<p>Cardapio</p>
+						
+					</li>
+				</ul>
+
+			</div>
+		</div>
+
+		<div id="footer" class="footer">
+		<img alt="" src="img/footer.jpg" class="img_footer" />
+		</div>
+
+	</div>
+
+</body>
+</html>
+
+
+
+
