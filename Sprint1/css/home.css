@@ -1,0 +1,454 @@
+.footer {
+	display: block;
+	height: 15%;
+}
+
+.corpo_footer {
+	border-radius: 3px 3px 3px 3px;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	background-repeat: repeat;
+	height: 80%;
+	width: 100%;
+}
+
+.img_footer {
+	
+}
+
+.carrosel{
+	position: fixed;
+	bottom: 5%;
+	margin-left: 5%;
+	margin-right: 5%;
+	border: 2px solid #999999;
+box-shadow: 0px 0px 20px #000000;
+}
+
+.mblCarouselHeaderBar{
+	display: none;
+}
+
+
+.carrosel-content{
+	position: fixed;
+	bottom: 5%;
+	margin-left: 5%;
+	margin-right: 5%;
+
+}
+
+.topo{
+	height: 24%;
+}
+
+.topo img{
+	position: fixed;
+	left: 43%;
+	top: 13;
+}
+
+
+.space {
+	background-repeat: repeat;
+	height: 15px;
+	width: 100%;
+	z-index: 3000;
+}
+
+#barra_footer {
+	border-radius: 3px 3px 0 0;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	background-repeat: repeat;
+	height: 15px;
+	width: 100%;
+	z-index: 3000;
+}
+
+#barra_botoes {
+	float: right;
+	top:-50%;
+	
+	
+}
+
+.esquerda {
+	display: inline;
+	float: left;
+	height: 85%;
+	width: 28%;
+}
+
+.content {
+    height: 80%;
+    margin: 10px auto 0;
+    overflow: hidden;
+    padding: 0;
+    width: 65%;
+}
+
+.geral {
+	margin: auto;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.menu_categoria {
+	border-radius: 3px 3px 3px 3px;
+	height: 67.5% !important;
+	opacity: 0.91;
+}
+
+.menu_produto {
+	border-radius: 3px 3px 3px 3px;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	opacity: 0.85;
+}
+
+.btn_adicionar_pedido {
+	padding: 0.3em 1.5em;
+	float: right;
+	bottom: 0;
+	position: absolute; 
+  right: 0; 
+  z-index:10; 
+	
+}
+.modal_pedido{
+	height:100% !important;
+	
+}
+
+.btn_adicionar_pedido_lista,.btn_mostrar_descricao {
+	padding: 0.3em 1.5em;
+	float: right;
+}
+
+.right {
+	float: right;
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	min-height: 100%;
+	
+	
+}
+
+.img-bacground {
+	filter: blur(2px);
+	-webkit-filter: blur(4px);
+	-moz-filter: blur(4px);
+	-o-filter: blur(4px);
+	-ms-filter: blur(4px);
+	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 3.5+ */
+    filter: grayscale(100%);
+	border: 5px solid #d5c9e8;
+	width: 100%;
+}
+
+.label {
+	color: black;
+}
+
+.modal_nome_pedido {
+	height: 280px !important;
+}
+
+#logo {
+	display: block;
+	height: 30%;
+	width: 100%;
+}
+
+.img_logo {
+	height: 100%;
+	left: 0;
+	margin: 0;
+	max-height: 100%;
+	max-width: 100%;
+	width: 100%;
+	z-index: -1;
+}
+#carousel1 {
+	display: block;
+	height: 33% !important;
+	width: 60%;
+	top: 230;
+	position: fixed;
+	left: 22.2%;
+}
+
+.mblSwapView{
+	height:100% !important;
+}
+
+
+.itemCarrosel{
+}
+
+
+.mblCarouselItemImage{
+	height: 80% !important;
+	left: 0;
+	margin: 0;
+	max-height: 100%;
+	max-width: 100%;
+	width: 95%;
+	z-index: -1;
+	border: 1px solid white;
+	border-radius: 3 3 3 3 ;
+	box-shadow: 0px 0px 20px #000000 !important;
+}
+
+.mblCarouselItemFooterText{
+background-color: #171717;
+height: 13%;
+position: relative;
+top: -27;
+border-radius: 11 11 2 2 ;
+width: 97.7%;
+left: 2.2;
+box-shadow: 0px 0px 20px #000000;
+padding-top: 8px;
+
+}
+
+.sh_bottom{
+    width: 100%; height: 95%;
+    position:absolute;
+    z-index: -2;
+    bottom: 20; right: 0;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    -webkit-box-shadow: 0px 10px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 10px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 10px 2px rgba(0, 0, 0, 0.2);
+}
+.sh_bottom:after{
+    content: "";
+    position:absolute;
+    right: 0; bottom:0;
+    width:70%; height: 20;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 20px 30px 10px rgba(0, 0, 0, 0.27);
+    -webkit-box-shadow: 20px 30px 10px rgba(0, 0, 0, 0.27);
+    box-shadow: 20px 30px 10px rgba(0, 0, 0, 0.27);
+    -moz-transform:skew(10deg,10deg) translate(-40px,-15px);
+    -webkit-transform:skew(10deg,10deg) translate(-40px,-15px);
+    transform:skew(10deg,10deg) translate(-40px,-15px);
+}
+.sh_bottom:before{
+    content: "";
+    position:absolute;
+    left: 0; bottom:0;
+    width:70%; height: 20;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: -20px 30px 10px rgba(0, 0, 0, 0.27);
+    -webkit-box-shadow: -20px 30px 10px rgba(0, 0, 0, 0.27);
+    box-shadow: -20px 30px 10px rgba(0, 0, 0, 0.27);
+    -webkit-transform:skew(-10deg,-10deg) translate(40px,-15px);
+    -moz-transform:skew(-10deg,-10deg) translate(40px,-15px);
+    transform:skew(-10deg,-10deg) translate(40px,-15px);
+}
+
+
+
+.mblCarouselSlot{
+	height: 80% !important;
+}
+
+
+.modal_image {
+	width:50%;
+	height:100%;
+	float: left;
+}
+
+.img_modal {
+	max-width: 300px;
+}
+
+
+
+.modal_descricao {
+	height: 100%;
+	width:50%;
+	max-width:50%;
+	float: right;
+}
+
+#btn_adicionar_pedido_descricao_pedido{
+	clear: both;
+	height: 10%;
+}
+
+.modal_descricao p{
+	color: black;
+}
+
+#detalhes_produto{
+	max-height: 50%;
+	height: 200px;
+}
+
+.scroll_detalhes{
+	height: 80% !important;
+}
+
+.modal_descricao_produtos {
+	display:block;
+	height: 100% !important;
+}
+
+#minhaUL {
+	max-width: 1000px;
+	margin: 0 auto;
+	border-radius: inherit;
+}
+
+.minhaLII {
+	width: 23%;
+	height: 230px;
+	margin: 10px 1%;
+	float: left;
+	box-shadow: 0 0 9px #111111;
+	border-width: 0;
+	background-image: none;
+	border-color: #222222;
+	transition: all 500ms ease 0s;
+	border-radius: inherit;
+	overflow: visible;
+	position: relative;
+	text-align: left;
+	display: block;
+	list-style: none outside none;
+	padding: 0;
+	cursor: pointer;
+	font-family: Helvetica, Arial, sans-serif;
+	text-decoration: none;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-shadow: 0 1px 0 #111111;
+}
+
+.imagemMinha {
+	border-radius: inherit;
+	height: auto;
+	max-width: 100%;
+	max-height: none;
+	margin: 0;
+	left: 0;
+	z-index: -1;
+}
+
+.menu_pedido {
+	height: 200px !important;
+}
+
+.meuH2 {
+	bottom: 20%;
+	padding: 10px;
+	background: none repeat scroll 0 0 padding-box rgba(0, 0, 0, 0.8);
+	margin: 0;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	right: 0;
+	white-space: normal;
+	display: block;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0.6em 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #FFFFFF;
+	text-align: left;
+}
+
+.meuP {
+	border-bottom-left-radius: inherit;
+	border-bottom-right-radius: inherit;
+	min-height: 20%;
+	padding: 0 10px;
+	background: none repeat scroll 0 0 padding-box rgba(0, 0, 0, 0.8);
+	bottom: 0;
+	line-height: 1.5;
+	margin: 0;
+	min-height: 50%;
+	padding: 0 20px;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	right: 0;
+	white-space: normal;
+	color: #C0C0C0;
+	display: block;
+	font-size: 12px;
+	font-weight: normal;
+	margin: -0.5em 0 0.6em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.div1 {
+	-moz-border-bottom-colors: inherit;
+	-moz-border-left-colors: inherit;
+	-moz-border-right-colors: inherit;
+	-moz-border-top-colors: inherit;
+	border-color: inherit;
+	border-image: inherit;
+	border-style: inherit;
+	border-width: 1px;
+	margin: -1px;
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+	display: block;
+	padding: 0;
+	position: relative;
+}
+
+.div2 {
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+}
+
+#preloader {
+	background: #000;
+	position:fixed;
+	left:0px; 
+	top:0px; 
+	width:100%; 
+	height:100%; 
+	text-align:center;
+	color:#fff;
+	z-index: 200;
+}
+#preloader div {
+	width:400px;
+	height:100% !important;
+	margin:auto;
+	height: 3px;
+	text-align:center;
+	position: relative;
+    top: 50%;
+	overflow:hidden;
+	z-index: 400;
+}
+#preloader_image {
+	position: relative;
+	left:0px;
+	z-index: 500;
+}
