@@ -4,6 +4,10 @@ var iconesForm = {
 		image:""
 };
 
+var propagandasForm = {
+		image:""
+};
+
 var homeForm = {
 	background: "",
 	logo: ""
