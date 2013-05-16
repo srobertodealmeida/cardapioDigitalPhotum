@@ -5,7 +5,7 @@ var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var pathAplicativo = "/CardapioPhotum";
-var rulFullImage = "";
+var rulFullImage = "" ;
 
 var sucessBanco = false;
 var sucessDadosDrupal = true;
