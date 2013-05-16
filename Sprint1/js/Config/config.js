@@ -1,7 +1,9 @@
 
 // Variaveis globais
-var urlViewConfig = "http://192.168.0.104/drupal-7.20/?q=rest/views/configuracao";
-var urlViewHome = "http://192.168.0.104/drupal-7.20/?q=rest/views/view_home";
+
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var urlViewConfig = ipServidorDrupal + "/views/configuracao";
+var urlViewHome = ipServidorDrupal + "/views/view_home";
 var pathAplicativo = "/CardapioPhotum";
 var rulFullImage = "";
 
@@ -30,7 +32,7 @@ function getDadosDrupal(tx){
 	///////////////////////////HOME/////////////////////////////////
 	var ajax = getAjax(urlViewHome);
 	
-	
+	var titleIcone ="";
 	
 	ajax.success(function (data) {
 	  $.each(data, function(key, val) {
@@ -43,7 +45,7 @@ function getDadosDrupal(tx){
 		     var pathDestino = pathAplicativo + "/home/background." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "background";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
 		     
 		     
 		     //////////////////Logo//////////////////////
@@ -54,7 +56,7 @@ function getDadosDrupal(tx){
 		     var pathDestino = pathAplicativo + "/home/logo." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "logo";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
 		     
              //////////////////Icones//////////////////////
 		     
@@ -62,8 +64,9 @@ function getDadosDrupal(tx){
 		      var arrayIconesAux =    val.icones.split(',');
 			  $.each(arrayIconesAux, function(key1, val1) {
 				  
+				  // Pega o valor do title do icone.
 				  var positionTitle = val1.search('title="');
-				  var titleIcone = val1.substring(positionTitle + 7, val1.length - 8);
+				  titleIcone = val1.substring(positionTitle + 7, val1.length - 8);
 				 
 					  
 			  
@@ -76,8 +79,10 @@ function getDadosDrupal(tx){
 				  var extencao =  urlString.substr(urlString.length - 3);
 				  var pathDestino = pathAplicativo + "/home/Icones" + key1 + "."+ extencao; // url onde será salvo a imagen
 				  var typeImagen = "icones";
-				     
-				  downloadImages(url,pathDestino,tx,titleIcone); //faz donwload da imagen;
+				  
+				  // Faz download das imagens e faz o insert dos dados
+				  //TODO fazer com que download das imagens não faça insenrt de dados separar.
+				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
 			  });
 	    	
 	     });
@@ -92,7 +97,7 @@ function getDadosDrupal(tx){
 /*
  * Método que faz download das imagens
  */
-function downloadImages(url,pathDestino,tx,titleIcone){
+function downloadImages(url,pathDestino,tx,titleIcone,typeImagen){
     var fileTransfer = new FileTransfer();
     var url = encodeURI(url);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
