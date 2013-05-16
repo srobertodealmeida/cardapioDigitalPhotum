@@ -1,0 +1,149 @@
+*{margin:0; padding:0;}
+
+html		  {overflow-y:scroll;}
+
+body          {background:#fead20; font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#000; height:100%;}
+
+img           {border:0; vertical-align:top;}
+
+a             {color:#000; text-decoration:none;}
+a:hover       {text-decoration:none;}
+:focus        {outline:0;}
+
+html, #wrapper {height:100%;}
+
+body > #wrapper {height:auto; min-height:100%; margin:0;}
+
+/* CLEAR FIX*/
+.clearfix:after {content: "."; display:block; height:0; clear:both; visibility:hidden;}
+.clearfix {display:inline-block;}
+
+/* Hides from IE-mac */
+*html .clearfix {height:1%;}
+.clearfix {display:block;}
+/* End hide from IE-mac */
+
+.left {float:left;}
+.right {float:right;}
+.clear {clear:both;}
+
+ul, li {list-style:none;} fieldset {border:0;} textarea {resize:none;}
+
+#wrapper {background:url(../images/bg.jpg) bottom center no-repeat;}
+
+.geral {width: 980px; margin: auto; position:relative; overflow: hidden;}
+
+.topo {overflow: hidden; background:url(../images/bg-menu.png) bottom center no-repeat; height: 272px;}
+.topo .logo {float:left;}
+.topo .disk {float:right; margin: 55px 20px 0 0;}
+.topo .menu {width:952px; overflow: hidden; position: absolute; top:197px; left:25px;}
+.topo .menu li {float:left; margin: 12px 18px;}
+
+.cardapio, .kintal, .galeria {background-image: url(../images/menu.png); display: block;}
+.cardapio {background-position: -31px -21px; width: 335px; height: 41px;}
+.cardapio:hover {background-position: -31px -104px; width: 335px; height: 41px;}
+.cardapio.hover {background-position: -31px -104px; width: 335px; height: 41px;}
+.kintal {background-position: -402px -21px; width: 218px; height: 41px;}
+.kintal:hover {background-position: -402px -104px; width: 218px; height: 41px;}
+.kintal.hover {background-position: -402px -104px; width: 218px; height: 41px;}
+.galeria {background-position: -654px -21px; width: 264px; height: 41px;}
+.galeria:hover {background-position: -654px -104px; width: 264px; height: 41px;}
+.galeria.hover {background-position: -654px -104px; width: 264px; height: 41px;}
+
+.content, .sign, .fullbanner, .blocos, .logos, .sobre, .sidebar, .container, .gallery, .lanches, .pratos {border:5px #fff solid;}
+
+.content {width:940px; margin: 10px auto 0; overflow: hidden; background:#fff;}
+.sign {background: url(../images/bg-sign.png) top center repeat; height: 43px;}
+.fullbanner {height:400px; position: relative; background: #fff;}
+.fullbanner #banner {width:930px !important; height: 370px; overflow: hidden;}
+.fullbanner .nav {background:url(../images/bg-nav.jpg) top center no-repeat; width:100%; height: 41px; position: absolute; bottom:0; z-index: 10;}
+.fullbanner .nav li {float:left; margin:0 20px; height: 41px; line-height: 41px; font-size:16px; font-style: italic; font-weight:bold; letter-spacing:-1px;}
+.fullbanner .nav #first {font-size:14px; margin: 0 20px 0 15px; letter-spacing: normal; color:#fff;}
+.fullbanner .nav #last {margin: 0 30px;}
+.fullbanner .nav a {color:#fff; padding: 0 12px; display:block;}
+.fullbanner .nav a:hover {color:#fff200;}
+.fullbanner .nav a.current {color:#fff200;}
+
+.blocos {float:left; width: 32%;}
+.blocos#mid {margin: 0 3px;}
+
+.news {background: #efae23; color:#000; padding: 15px;}
+.news li {border-bottom:1px #000 solid; padding: 15px 0; font-weight:bold; font-size:16px; font-style:italic; display:block;}
+.news li.f {padding: 0 0 15px;}
+.news li.l {border:none; padding: 15px 0 0;}
+.news a:hover {color:#ef4223;}
+
+.stream {background: url(../images/bg-stream.jpg) top center no-repeat; height:226px; overflow: hidden; padding: 15px;}
+.twitter, .twitter:hover, .facebook, .facebook:hover {background:url(../images/sprite-stream.png); display: block; height: 34px; float:left;}
+.twitter {background-position: 0 0; width: 101px;} .twitter:hover, .twitter.hover {background-position: 0 -34px; width: 101px;}
+.facebook {background-position: -118px 0; width: 156px; float:right;} .facebook:hover, .facebook.hover {background-position: -118px -34px; width: 156px; float:right;}
+.stream li {background: url(../images/bg-li-stream.png) bottom center no-repeat; width: 100%; display: block; float:left; overflow: hidden; padding: 0 0 10px;}
+.stream #stream #twitter_update_list li {font-size:10px; letter-spacing:1px; padding: 5px 0 15px; margin: 3px 0;}
+.stream #stream #twitter_update_list li a {font-size:12px; float:left; clear:left;}
+.stream #stream #twitter_update_list li span {display:block; clear:left;}
+.stream #stream #twitter_update_list li span a {float:none;}
+.stream li.l {background: none; margin: 5px 0 0;}
+.stream li.l a {float:right;}
+.stream .face_feed {height: 165px;}
+.stream .face_feed li {padding: 10px 5% 20px; width: 90%;}
+.stream .face_feed li .title {margin: 0 0 10px;}
+.stream .face_feed li .ago {margin: 10px 0 0;}
+.stream .face_feed li a:hover {text-decoration: underline}
+.stream .face_feed li a.img {float:left; width: 100px; display: block;}
+.stream .face_feed li span {float:left; width: 115px; display: block; margin: 0 0 0 10px;}
+
+.estive {background: url(../images/bg-galeria.jpg) repeat;}
+.estive .rand {padding: 10px;}
+
+.logos {float:left; margin: 0 0 30px;}
+.sobre {float:left; width: 730px; font-family: "Trebuchet MS"; font-style:italic; font-size:14px; font-weight:bold; margin: 0 0 30px 20px;}
+.sobre p {padding: 18px 0;}
+.sobre b {color:#ff0000;}
+
+.sidebar {float:left; width: 190px;}
+.sidebar ul {background:#ef4223; padding: 10px 0 0;}
+.sidebar ul li {height: 25px; line-height: 25px; padding:0 0 0 10px; font-family: "Trebuchet MS"; font-style:italic; font-size:14px;}
+.sidebar ul li a {display:block; color:#fff; padding: 0 0 0 20px; background: url(../images/gal-bull.png) left center no-repeat;}
+.sidebar ul li a.current {color:#ffd401;}
+.sidebar ul li.odd {background: #dd3d20;}
+
+.gallery {float:left; width: 620px; background:#f8f2ea; margin: 0 0 0 60px; position:relative;}
+.gallery li {float:left; margin: 0 5px;}
+.gallery h2 {background: #fff; font-size:20px; padding: 0 0 7px; font-family: "Trebuchet MS"; font-style:italic;}
+.jLite {width: 600px; margin: 8px 17px;}
+.next, .prev {position: absolute; bottom:0; cursor:pointer; z-index: 10;}
+.prev {left:0;}
+.next {right:0;}
+
+.lanches {float:left; width: 190px;}
+.lanches ul {background:#efae23; padding: 10px 0 0;}
+.lanches ul li {line-height: 25px; padding:0 0 0 10px; font-family: "Trebuchet MS"; font-style:italic; font-size:13px;}
+.lanches ul li a {display:block; color:#000000; padding: 5px 2px 5px 14px; line-height: 16px; background: url(../images/gal-bull.png) left center no-repeat;}
+.lanches ul li a.current {color:#ef4223; background: url(../images/gal-bull-r.png) left center no-repeat;}
+.lanches ul li.odd {background: #f5c617;}
+
+.pratos {float:left; width: 695px; margin: 0 0 0 15px; overflow: hidden;}
+.pratos li {float:left; width: 31%; margin: 20px 1%; font-family: "Trebuchet MS"; font-size:12px; font-style:italic; text-align: center; font-weight:bold;}
+.pratos li h3 {color:#ff0000; margin: 10px 0 0;}
+.pratos .imagem-prato{ height: 166px; }
+
+.list {float:left; width: 190px;}
+.list ul {background:#efae23; padding: 10px 0 0;}
+.list ul li {line-height: 25px; padding:0 10px 0 10px; font-family: "Trebuchet MS"; font-style:italic; font-size:14px;}
+.list ul li a {display:block; color:#000000; padding: 5px 2px 5px 20px; line-height:16px; background: url(../images/gal-bull.png) left center no-repeat;}
+.list ul li a.current {color:#ef4223; background: url(../images/gal-bull-r.png) left center no-repeat;}
+.list ul li.odd {background: #f5c617;}
+
+.noticias {float:left; width: 695px; margin: 0 0 0 15px; overflow: hidden;}
+.noticias img {float:left; margin: 0 15px 15px 0;}
+.noticias h2 {margin: 0 0 10px;}
+.noticias h4 {margin: 10px 0;}
+
+.footer {margin: 15px; background: #fff; padding: 10px 15px; overflow: hidden;}
+.footer p {float:left; font-size:10px;}
+.footer .redhot {color:#df0316; float:right; font-weight: bold; font-size:9px; margin: 1px 0 0;}
+
+
+
+
+
