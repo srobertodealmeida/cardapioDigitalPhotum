@@ -27,16 +27,14 @@ function getDadosDrupal(tx){
 	
 	
 	
-	 
 	
-	///////////////////////////HOME/////////////////////////////////
+	/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
 	var ajax = getAjax(urlViewHome);
 	
 	var titleIcone ="";
 	
 	ajax.success(function (data) {
 	  $.each(data, function(key, val) {
-		     
 		  
 		     ///////////////Background//////////
 		     var url = $.parseHTML(val.background); //pega apenas href
@@ -85,6 +83,25 @@ function getDadosDrupal(tx){
 				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
 			  });
 	    	
+			//////////////////////Propagandas///////////////////////////
+			
+			  var arrayPropagandasAux =    val.propaganda.split(',');
+			   $.each(arrayPropagandasAux, function(key1, val1) {
+				   var url = $.parseHTML(val1); //pega apenas href
+					  // esse if ´´e por causa dos outros elementos do array sem ser o primeiro a url vem como array sendo que o segundo é a url mesmo
+					  if(key1 >= 1){
+						 url = url[1];
+					   }
+					  var urlString = url.toString();
+					  var extencao =  urlString.substr(urlString.length - 3);
+					  var pathDestino = pathAplicativo + "/home/Propagandas" + key1 + "."+ extencao; // url onde será salvo a imagen
+					  var typeImagen = "propagandas";
+					  
+					  // Faz download das imagens e faz o insert dos dados
+					  //TODO fazer com que download das imagens não faça insenrt de dados separar.
+					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
+			   });
+			  
 	     });
      });
 	
@@ -141,6 +158,10 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 		iconesForm.title = titleIcone
 		insertTable(tx,"icones");
 		console.log("form icones" + homeForm.icones);
+	}else if (typeImagen == "propagandas") {
+		propagandasForm.image = imagePath;
+		insertTable(tx,"propagandas");
+		console.log("form propagandas" + propagandasForm.image);
 	}
 	
 	if(homeForm.background != "" && homeForm.logo != ""){
@@ -177,7 +198,7 @@ function createTable(tx){
 	
 	// Table home (propaganda)
 	tx.executeSql('DROP TABLE IF EXISTS Propaganda');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, imagem TEXT NOT NULL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
 	
 	
 }
@@ -193,6 +214,10 @@ function insertTable(tx,nome){
 	}else if (nome == "icones") {
 		console.log('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")');
 		tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")');	
+	
+	}else if (nome == "propagandas") {
+		console.log('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');
+		tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');	
 	}
 }
 
