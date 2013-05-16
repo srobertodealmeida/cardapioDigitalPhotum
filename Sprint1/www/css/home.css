@@ -175,7 +175,7 @@ body {
 	width: 100%;
 	z-index: -1;
 }
-#carousel1 {
+.content-carousel1 {
 	display: block;
 	height: 33% !important;
 	width: 60%;

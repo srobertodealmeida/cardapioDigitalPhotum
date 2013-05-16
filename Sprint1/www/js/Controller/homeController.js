@@ -19,11 +19,24 @@ function  atualizar(){
 	
 }
 
+//function selectDados(tx){
+	//alert('selectDados');
+	// tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
+//}
+
+
+
+//function montaBackgroundLogo(){
+    
+    //console.log("teste",result.rows);
+//}
+
+
 $(document).ready(function(){
 	 // Atualiza caso checbox no backend esteja setado como true;
 	 atualizar();
 	 
-	 
+	 //db.transaction(selectDados,errorCB);
 	
      // Carrosel propaganda
 	 $("#foo").carouFredSel({

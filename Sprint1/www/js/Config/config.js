@@ -6,27 +6,24 @@ var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var pathAplicativo = "/CardapioPhotum";
 var rulFullImage = "" ;
-
+var logo = false;
+var background = false;
 var sucessBanco = false;
 var sucessDadosDrupal = true;
-
-
+var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
+var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
 function init(){
 	
 	
 	console.log("antes sucessDadosDrupal" + homeForm.icones);
 	if(sucessDadosDrupal == true){
 		console.log("sucessDadosDrupal" + homeForm.icones);
-	var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 	db.transaction(populateDB, errorCB, successCB);
 	}
 }
 
 
 function getDadosDrupal(tx){
-	
-	
-	
 	
 	/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
 	var ajax = getAjax(urlViewHome);
@@ -35,8 +32,15 @@ function getDadosDrupal(tx){
 	
 	ajax.success(function (data) {
 	  $.each(data, function(key, val) {
-		  
+		     
+		     var arrayIconesAux =    val.icones.split(',');
+		     var arrayPropagandasAux =    val.propaganda.split(',');
+		     quantidadeRegistros += arrayIconesAux.length + arrayPropagandasAux.length;
+		     console.log('testeTamanhoArrays',quantidadeRegistros);
+		     
+
 		     ///////////////Background//////////
+		  
 		     var url = $.parseHTML(val.background); //pega apenas href
 		     var urlString = url.toString();
 		     var extencao =  urlString.substr(urlString.length - 3);
@@ -59,7 +63,7 @@ function getDadosDrupal(tx){
              //////////////////Icones//////////////////////
 		     
 		     
-		      var arrayIconesAux =    val.icones.split(',');
+		      
 			  $.each(arrayIconesAux, function(key1, val1) {
 				  
 				  // Pega o valor do title do icone.
@@ -85,7 +89,7 @@ function getDadosDrupal(tx){
 	    	
 			//////////////////////Propagandas///////////////////////////
 			
-			  var arrayPropagandasAux =    val.propaganda.split(',');
+			  
 			   $.each(arrayPropagandasAux, function(key1, val1) {
 				   var url = $.parseHTML(val1); //pega apenas href
 					  // esse if ´´e por causa dos outros elementos do array sem ser o primeiro a url vem como array sendo que o segundo é a url mesmo
@@ -112,7 +116,7 @@ function getDadosDrupal(tx){
 }
 
 /*
- * Método que faz download das imagens
+ * Método que faz download das imagense faz inserts
  */
 function downloadImages(url,pathDestino,tx,titleIcone,typeImagen){
     var fileTransfer = new FileTransfer();
@@ -148,10 +152,11 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 	console.log('nomeImage  : '+typeImagen);
 	if(typeImagen == "background"){
 		homeForm.background = imagePath;
-		
+		 background = true;
 		console.log("form background" + homeForm.background);
 	}else if (typeImagen == "logo") {
 		homeForm.logo = imagePath;
+		logo = true;
 		console.log("form logo" + homeForm.logo);
 	}else if (typeImagen == "icones") {
 		iconesForm.image = imagePath;
@@ -164,8 +169,10 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 		console.log("form propagandas" + propagandasForm.image);
 	}
 	
-	if(homeForm.background != "" && homeForm.logo != ""){
+	if(background == true && logo == true){
 		insertTable(tx,"home");
+		background = false;
+		logo = false;
 	}
 	
 	
@@ -203,23 +210,42 @@ function createTable(tx){
 	
 }
 
+function montaHome(tx){
+	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
+}
+
+function montaBackgroundLogo(tx,result){
+	
+	alert(result.rows.length);
+	
+}
+
 /*
  * Faz os inserts
  */
 function insertTable(tx,nome){
+	quantidadeRegistros = quantidadeRegistros - 1;
+	
+	if(quantidadeRegistros < 1){
+		db.transaction(montaHome,errorCB);
+	}
+	
 	if(nome == "home"){
 		console.log('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
-		tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');	
+		tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")',successInsert);	
 		
 	}else if (nome == "icones") {
 		console.log('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")');
-		tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")');	
+		tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")',successInsert);	
 	
 	}else if (nome == "propagandas") {
 		console.log('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');
-		tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');	
+		tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")',successInsert);	
 	}
+	
 }
+
+
 
 //Método de erro sqLite
 function errorCB(err) {

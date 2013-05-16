@@ -36,38 +36,9 @@
 <script type="text/javascript">
 
 require([
-         "dojo/ready",
-         "dojo/_base/connect",
-         "dijit/registry",
-         "dojox/mobile",
          "dojox/mobile/Carousel",
-         "dijit/dijit",
-         "dojo/parser",
-         "maqetta/space",
-         "dojox/mobile/deviceTheme",
-         "dojox/mobile/compat",
-         "dojo/hash",
          "dojox/mobile/CarouselItem",
-         "dojox/mobile/ScrollableView",
-         "dojox/mobile/SwapView",
-         "dojox/mobile/IconItem",
-         "dojox/mobile/IconContainer",
-         "dojo/_base/window",
-		 "dojo/_base/Deferred",
-		 "dijit/registry",
-		 "dojox/mobile/ViewController",
-		 "dojox/mobile/parser",
-		 "dojox/mobile",
-		 "dojox/mobile/compat",
-		 "dojox/mobile/Button",
-			"dojo/dom", "dojo/on", "dojo/_base/xhr", 
-			"dijit/registry", "dojox/mobile/ProgressIndicator"
      ]);
-
-
-
-
-
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
@@ -81,7 +52,7 @@ require([
 	<img alt="" src="img/background3.jpg" class="img-bacground"/>
 		<div class="topo">
 		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
-		<img alt="" src="img/logo.jpg">
+		<img alt="" src="img/logo.jpg" class="img-logo">
 		
 		</div>
 
@@ -92,41 +63,11 @@ require([
 		<div class="content" >
 				
  
-				<div id="div_carousel1">
-					<div id="carousel1" class="" data-dojo-type="dojox.mobile.Carousel"
+				<div id="div-icones">
+					<div id="content-carousel1" class="content-carousel1" data-dojo-type="dojox.mobile.Carousel"
 						data-dojo-props='height:0, pageIndicator:false, navButton:false, numVisible:3'>
 						<!-- View #1 -->
 						<div data-dojo-type="dojox.mobile.SwapView">
-							
-							
-							<div class="mblCarouselItem itemCarrosel mblCarouselSlot">
-							<a href="template1Ios.html" >
-							<div class="sh_bottom"></div>
-							<div class="mblCarouselItemHeaderText"></div>
-							<img id = "idTeste" class="mblCarouselItemImage" src="img/cardapio.jpg" style="height: 96px;">
-							<div class="mblCarouselItemFooterText">CARDAPIO </div>
-							</a>
-							</div>
-							
-							<div class="mblCarouselItem itemCarrosel mblCarouselSlot">
-							<a href="template1Ios.html" >
-							<div class="sh_bottom"></div>
-							<div class="mblCarouselItemHeaderText"></div>
-							<img class="mblCarouselItemImage" src="img/galeria.png" style="height: 96px;">
-							<div class="mblCarouselItemFooterText">GALERIA </div>
-							</a>
-							</div>
-							
-							<div class="mblCarouselItem itemCarrosel mblCarouselSlot">
-							<a href="template1Ios.html" >
-							<div class="sh_bottom"></div>
-							<div class="mblCarouselItemHeaderText"></div>
-							<img class="mblCarouselItemImage" src="img/chat.png" style="height: 96px;">
-							<div class="mblCarouselItemFooterText">CHAT </div>
-							</a>
-							</div>
-							
-							
 								
 						</div>
 						
@@ -139,12 +80,6 @@ require([
 
 		<div class="footer" class="carrosel">
 			<div id="foo" class="carrosel-content">
-				<img src="img/prop1.jpg" width="940" height="150"/> 
-				<img src="img/prop2.jpg" width="940" height="150"/>
-				<img src="img/prop3.jpg" width="940" height="150"/>
-				<img src="img/prop4.jpg" width="940" height="150"/>
-				<img src="img/prop5.jpg" width="940" height="150"/>
-				<img src="img/prop6.jpg" width="940" height="150"/>
 				
 			</div>
 
