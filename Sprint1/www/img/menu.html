@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Untitled</title>
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<script type="text/javascript" src="./lib/dojo/dojo/dojo.js"
+	data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], mblLoadCompatPattern: /\/project1\/themes\/.*\.css$/"></script>
+<script type="text/javascript" src="./cordova-2.5.0.js"></script>
+<script type="text/javascript">
+require([
+  "dijit/dijit",
+  "dojo/parser",
+  "maqetta/space",
+  "maqetta/AppStates",
+  "dojox/mobile",
+  "dojox/mobile/deviceTheme",
+  "dojox/mobile/compat",
+  "dojo/hash",
+  "dojox/mobile/ScrollableView",
+  "dojox/mobile/SwapView",
+  "dojox/mobile/IconItem",
+  "dojox/mobile/IconContainer"
+]);
+
+</script>
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
+</style>
+<script type="text/javascript" src="app.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
+</head>
+<body class="claro" data-maq-device="androidtablet"
+	data-maq-flow-layout="true" data-maq-comptype="mobile"
+	data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+	<div id="mobileTransitions" dojoType="dojox.mobile.View">
+		<div id="mobileTransitionView1" dojoType="dojox.mobile.ScrollableView"
+			style="background-color: #A6CEDD" selected="true">
+			
+		<div id="logo" data-dojo-type="dojox.mobile.Pane">
+		<img alt="" src="img/logo.png">
+		</div>
+		
+		<div id="menu" data-dojo-type="dojox.mobile.Pane">
+		
+		<ul dojoType="dojox.mobile.EdgeToEdgeList" id="minhaUL">
+		<li dojoType="dojox.mobile.ListItem" moveTo="filmListView" transition="slide" class="minhaLI">
+		</li>
+		
+		</ul>
+		
+		</div>
+		
+		</div>
+	</div>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,291 @@
+.footer {
+	display: block;
+	height: 15%;
+}
+
+.corpo_footer {
+	border-radius: 3px 3px 3px 3px;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	background-repeat: repeat;
+	height: 80%;
+	width: 100%;
+}
+
+.img_footer {
+		height: 100%;
+	left: 0;
+	margin: 0;
+	max-height: 100%;
+	max-width: 100%;
+	width: 100%;
+	z-index: -1;
+}
+
+#topo{
+}
+
+.space {
+	background-repeat: repeat;
+	height: 15px;
+	width: 100%;
+	z-index: 3000;
+}
+
+#barra_footer {
+	border-radius: 3px 3px 0 0;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	background-repeat: repeat;
+	height: 15px;
+	width: 100%;
+	z-index: 3000;
+}
+
+#barra_botoes {
+	float: right;
+	border-right: 20%;
+}
+
+.esquerda {
+	display: inline;
+	float: left;
+	height: 79%;
+	width: 28%;
+	
+}
+
+.content {
+    height: 75%;
+    margin: 10px auto 0;
+    overflow: hidden;
+    padding: 0;
+    width: 65%;
+}
+
+.geral {
+	margin: auto;
+	overflow: hidden;
+	position: relative;
+	width: 97%;
+	height: 100%;
+}
+
+.menu_categoria {
+	border-radius: 3px 3px 3px 3px;
+	height: 67.5% !important;
+	opacity: 0.91;
+}
+
+.menu_produto {
+	border-radius: 3px 3px 3px 3px;
+	background: -moz-linear-gradient(center top, #FFFFFF 0%, #FFFFFF 87%, #F4F4F4 100%)
+		repeat scroll 0 0 transparent;
+	opacity: 0.85;
+}
+
+.btn_adicionar_pedido {
+	padding: 0.3em 1.5em;
+	float: left;
+}
+
+.btn_adicionar_pedido_lista,.btn_mostrar_descricao {
+	padding: 0.3em 1.5em;
+	float: right;
+}
+
+.right {
+	float: right;
+}
+
+body {
+	height: auto;
+	margin: 0;
+	min-height: 100%;
+	background: url("../img/background.jpg") no-repeat scroll center bottom
+		transparent;
+}
+
+.label {
+	color: black;
+}
+
+.modal_nome_pedido {
+	height: 280px !important;
+}
+
+#logo {
+	display: block;
+	height: 30%;
+	width: 100%;
+}
+
+.img_logo {
+	height: 100%;
+	left: 0;
+	margin: 0;
+	max-height: 100%;
+	max-width: 100%;
+	width: 100%;
+	z-index: -1;
+}
+#carousel1{
+	display: block;
+	height: 50% !important;
+	width: 100%;
+}
+.mblSwapView{
+	height:100% !important;
+}
+
+
+.itemCarrosel{
+}
+
+
+.mblCarouselItemImage{
+	height: 70% !important;
+	left: 0;
+	margin: 0;
+	max-height: 100%;
+	max-width: 100%;
+	width: 90%;
+	z-index: -1;
+}
+
+.mblCarouselSlot{
+	height: 80% !important;
+}
+
+
+.modal_image {
+	float: left;
+}
+
+.img_modal {
+	max-width: 300px;
+}
+
+.modal_descricao {
+	float: right;
+}
+
+.modal_descricao_produtos {
+	width: 2000px;
+}
+
+#minhaUL {
+	max-width: 1000px;
+	margin: 0 auto;
+	border-radius: inherit;
+}
+
+.minhaLII {
+	width: 23%;
+	height: 230px;
+	margin: 10px 1%;
+	float: left;
+	box-shadow: 0 0 9px #111111;
+	border-width: 0;
+	background-image: none;
+	border-color: #222222;
+	transition: all 500ms ease 0s;
+	border-radius: inherit;
+	overflow: visible;
+	position: relative;
+	text-align: left;
+	display: block;
+	list-style: none outside none;
+	padding: 0;
+	cursor: pointer;
+	font-family: Helvetica, Arial, sans-serif;
+	text-decoration: none;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-shadow: 0 1px 0 #111111;
+}
+
+.imagemMinha {
+	border-radius: inherit;
+	height: auto;
+	max-width: 100%;
+	max-height: none;
+	margin: 0;
+	left: 0;
+	z-index: -1;
+}
+
+.menu_pedido {
+	height: 400px !important;
+}
+
+.meuH2 {
+	bottom: 20%;
+	padding: 10px;
+	background: none repeat scroll 0 0 padding-box rgba(0, 0, 0, 0.8);
+	margin: 0;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	right: 0;
+	white-space: normal;
+	display: block;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0.6em 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #FFFFFF;
+	text-align: left;
+}
+
+.meuP {
+	border-bottom-left-radius: inherit;
+	border-bottom-right-radius: inherit;
+	min-height: 20%;
+	padding: 0 10px;
+	background: none repeat scroll 0 0 padding-box rgba(0, 0, 0, 0.8);
+	bottom: 0;
+	line-height: 1.5;
+	margin: 0;
+	min-height: 50%;
+	padding: 0 20px;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	right: 0;
+	white-space: normal;
+	color: #C0C0C0;
+	display: block;
+	font-size: 12px;
+	font-weight: normal;
+	margin: -0.5em 0 0.6em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.div1 {
+	-moz-border-bottom-colors: inherit;
+	-moz-border-left-colors: inherit;
+	-moz-border-right-colors: inherit;
+	-moz-border-top-colors: inherit;
+	border-color: inherit;
+	border-image: inherit;
+	border-style: inherit;
+	border-width: 1px;
+	margin: -1px;
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+	display: block;
+	padding: 0;
+	position: relative;
+}
+
+.div2 {
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+}
