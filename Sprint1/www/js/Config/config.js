@@ -264,7 +264,6 @@ function montaIcones(tx,result){
 	console.log("Fora iamgesicones: " + result.rows.item(1).image);
 	console.log("Fora iamgesicones: " + result.rows.item(2).image);
 	for(var i=0;i<result.rows.length;i++){
-		alert(""+result.rows.item(i).image);
 		console.log("iamgesicones: " + result.rows.item(i));
 		console.log("iamgesicones: " + result.rows.item(i).image);
 		if(i==0){
@@ -282,9 +281,18 @@ function montaIcones(tx,result){
 function montaPropaganda(tx,result){
 	
 	for(var i=0;i<result.rows.length;i++){
-		alert(""+result.rows.item(i).image);
-    	console.log(result.rows.item(i));
+		$("#foo").append('<img src="'+result.rows.item(i).image+'" width="940" height="150"/> ')
+		console.log(result.rows.item(i));
     }
+	
+	 $("#foo").carouFredSel({
+         items               : 1,
+         scroll : {
+             items           : 1,
+             duration        : 1000,                        
+             pauseOnHover    : true
+         }                  
+     });
 }
 
 /*
@@ -353,7 +361,6 @@ function successCB() {
 
 function successInsert(){
 	console.log('dentro success'+ quantidadeRegistros);
-	
 	if(quantidadeRegistros < 1){
 		db.transaction(montaHome,errorCB);
 	}
@@ -397,15 +404,15 @@ function Mock(){
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image1")');
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("img/prop1.jpg")');
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image2")');
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("img/prop2.jpg")');
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image3")');
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("img/prop3.jpg")');
         },errorCB, successInsert);
 	
 }
