@@ -1,19 +1,24 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var pathAplicativo = "/CardapioPhotum";
 var rulFullImage = "" ;
+var nomeTable = "";
 var logo = false;
 var background = false;
 var sucessBanco = false;
+var qtdIcones = 0;
+var qtdPropaganda = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
 function init(){
 	
+
+	console.log("arrayMeu"+arrayIconesForm);
 	
 	console.log("antes sucessDadosDrupal" + homeForm.icones);
 	if(sucessDadosDrupal == true){
@@ -35,8 +40,10 @@ function getDadosDrupal(tx){
 		     
 		     var arrayIconesAux =    val.icones.split(',');
 		     var arrayPropagandasAux =    val.propaganda.split(',');
+		     qtdIcones = arrayIconesAux.length;
+		     qtdPropaganda = arrayPropagandasAux.length;
 		     quantidadeRegistros += arrayIconesAux.length + arrayPropagandasAux.length;
-		     console.log('testeTamanhoArrays',quantidadeRegistros);
+		     console.log('testeTamanhoArrays',"" + quantidadeRegistros);
 		     
 
 		     ///////////////Background//////////
@@ -159,18 +166,34 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 		logo = true;
 		console.log("form logo" + homeForm.logo);
 	}else if (typeImagen == "icones") {
-		iconesForm.image = imagePath;
-		iconesForm.title = titleIcone
-		insertTable(tx,"icones");
-		console.log("form icones" + homeForm.icones);
+		
+		var iconesForm1 = {
+				title:"",
+				image:""
+		};
+		iconesForm1.image = imagePath;
+		iconesForm1.title = titleIcone;
+		arrayIconesForm.push(iconesForm1);
+		if(arrayIconesForm.length == qtdIcones){
+			insertTable("icones");
+		}
+		//insertTable("icones");
+		console.log("form icones" + homeForm.image);
 	}else if (typeImagen == "propagandas") {
-		propagandasForm.image = imagePath;
-		insertTable(tx,"propagandas");
+		var propagandasForm1 = {
+				image:""
+		};
+		propagandasForm1.image = imagePath;
+		arrayPropagandasForm.push(propagandasForm1);
+		if(arrayPropagandasForm.length == qtdPropaganda){
+			insertTable("propagandas");
+		}
+		//insertTable("propagandas");
 		console.log("form propagandas" + propagandasForm.image);
 	}
 	
 	if(background == true && logo == true){
-		insertTable(tx,"home");
+		insertTable("home");
 		background = false;
 		logo = false;
 	}
@@ -184,6 +207,8 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
+	//quantidadeRegistros = 7;
+	//Mock();
 	getDadosDrupal(tx);
 }
 
@@ -197,6 +222,7 @@ function createTable(tx){
 	// Table home (logo/background)
 	tx.executeSql('DROP TABLE IF EXISTS Home');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Home (id INTEGER PRIMARY KEY AUTOINCREMENT, logo TEXT NOT NULL, background TEXT NOT NULL)');
+	
 	console.log('create_tx',tx);
 	
 	// Table home (icones)
@@ -212,38 +238,104 @@ function createTable(tx){
 
 function montaHome(tx){
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
+	tx.executeSql('SELECT * FROM Icones',[],montaIcones,errorCB);
+	
+	tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
 }
 
 function montaBackgroundLogo(tx,result){
+	for(var i=0;i<result.rows.length;i++){
+    	
+		$("#background-home").attr('src', "" + result.rows.item(i).background);
+		$("#logo-home").attr('src', "" + result.rows.item(i).logo);
+		
+		console.log(result.rows.item(i).logo);
+		console.log(result.rows.item(i).background);
+		
+    }
+    
 	
-	alert(result.rows.length);
 	
+}
+
+function montaIcones(tx,result){
+	
+	console.log("Fora iamgesicones: " + result.rows.item(0).image);
+	console.log("Fora iamgesicones: " + result.rows.item(1).image);
+	console.log("Fora iamgesicones: " + result.rows.item(2).image);
+	for(var i=0;i<result.rows.length;i++){
+		alert(""+result.rows.item(i).image);
+		console.log("iamgesicones: " + result.rows.item(i));
+		console.log("iamgesicones: " + result.rows.item(i).image);
+		if(i==0){
+		$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"template1Ios.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"  </div></a></div>");
+		}else{
+			var idAnterior = i-1;
+			$("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"template1Ios.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"</div></a></div>").insertAfter('#itemIcones-'+ idAnterior);
+		}
+		
+    	console.log(result.rows.item(i));
+    }
+	
+}
+
+function montaPropaganda(tx,result){
+	
+	for(var i=0;i<result.rows.length;i++){
+		alert(""+result.rows.item(i).image);
+    	console.log(result.rows.item(i));
+    }
 }
 
 /*
  * Faz os inserts
  */
-function insertTable(tx,nome){
-	quantidadeRegistros = quantidadeRegistros - 1;
+function insertTable(nomeTable){
 	
-	if(quantidadeRegistros < 1){
-		db.transaction(montaHome,errorCB);
-	}
 	
-	if(nome == "home"){
-		console.log('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
-		tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")',successInsert);	
+	
+	if(nomeTable == "home"){
 		
-	}else if (nome == "icones") {
-		console.log('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")');
-		tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + iconesForm.title + '", "' + iconesForm.image + '")',successInsert);	
+		 db.transaction(function(tx) {
+			 quantidadeRegistros = quantidadeRegistros - 1;
+             tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
+             },errorCB,successInsert);
+		
+		console.log('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
+		
+	}else if (nomeTable == "icones") {
+		
+		
+		
+			db.transaction(function(tx) {
+				for(i=0; i < arrayIconesForm.length;i++){
+					console.log("legaleim "+i);
+				console.log("legaleim"+arrayIconesForm[i].title);
+				console.log("legaleim"+arrayIconesForm[i].image);
+			    console.log("DebugMeud-Insert" + arrayIconesForm[i].title);
+			    console.log('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
+			    quantidadeRegistros = quantidadeRegistros - 1;
+	            tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
+				}
+	            },errorCB,successInsert);
+		
+		
 	
-	}else if (nome == "propagandas") {
+	}else if (nomeTable == "propagandas") {
 		console.log('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');
-		tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")',successInsert);	
+		
+		db.transaction(function(tx) {
+			for(i=0;i<arrayPropagandasForm.length;i++){
+			console.log('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
+			quantidadeRegistros = quantidadeRegistros - 1;
+            tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
+			}
+            },errorCB,successInsert);
 	}
 	
 }
+
+
 
 
 
@@ -251,11 +343,20 @@ function insertTable(tx,nome){
 function errorCB(err) {
     alert("Error processing SQL: "+err.code);
     alert("Error processing SQL: "+err);
+    console.log('errorCodevamosver',err);
 }
 
 //function will be called when process succeed
 function successCB() {
 	sucessBanco = true;
+}
+
+function successInsert(){
+	console.log('dentro success'+ quantidadeRegistros);
+	
+	if(quantidadeRegistros < 1){
+		db.transaction(montaHome,errorCB);
+	}
 }
 
 /*
@@ -274,5 +375,37 @@ function getAjax(url){
 	    	console.log('erro ajax: '+ url);
 	      }
 	});
+	
+}
+
+function Mock(){
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Home(logo,background) VALUES ("img/logo.jpg", "img/background3.jpg")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Icones(title,image) VALUES ("title1", "img/cardapio.jpg")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Icones(title,image) VALUES ("title2", "img/galeria.png")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Icones(title,image) VALUES ("title3", "img/chat.png")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image1")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image2")');
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Propaganda(image) VALUES ("image3")');
+        },errorCB, successInsert);
 	
 }
