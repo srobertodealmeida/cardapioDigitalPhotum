@@ -69,8 +69,6 @@ function getDadosDrupal(tx){
 		     
              //////////////////Icones//////////////////////
 		     
-		     
-		      
 			  $.each(arrayIconesAux, function(key1, val1) {
 				  
 				  // Pega o valor do title do icone.
