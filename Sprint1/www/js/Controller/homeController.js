@@ -3,6 +3,7 @@ function hide_preloader() { // DOM
 	$("#preloader").fadeOut(1000);
 }
 
+var versao;
 function  atualizar(){
 	
 	var ajax = getAjax(urlViewConfig);
@@ -10,13 +11,29 @@ function  atualizar(){
 	 ajax.success(function (data) {
 		 $.each(data, function(key, val) {
 	    	 if(val.atualizar == 'true'){
-		    	 console.log(val);
-		    	 init();
+	    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
+	    			 alert('versao == 1');
+	    			 init(val.versao);
+	    		 } else {
+	    			 versao = val.versao;
+	    			 db.transaction(pegarUltimaVersao,errorCB); 
+	    		 }
+		    	 
 		     }
 	    	
 	       });
      });
 	
+}
+
+function pegarUltimaVersao(tx){
+	tx.executeSql('SELECT versao, MAX(id) FROM Config',[],function(tx,result) {
+		  console.log(result.rows.item(0).versao);
+		  if(versao > parseInt(result.rows.item(0).versao)){// Caso versao for maior atualiza banco.
+			  init(versao);
+		  }
+	    	
+         },errorCB);
 }
 
 //function selectDados(tx){

@@ -10,20 +10,22 @@ var nomeTable = "";
 var logo = false;
 var background = false;
 var sucessBanco = false;
+var versaoAtual = 0;
 var qtdIcones = 0;
 var qtdPropaganda = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
-function init(){
-	
+
+function init(versao){
+	versaoAtual = versao;
 
 	console.log("arrayMeu"+arrayIconesForm);
 	
 	console.log("antes sucessDadosDrupal" + homeForm.icones);
 	if(sucessDadosDrupal == true){
 		console.log("sucessDadosDrupal" + homeForm.icones);
-	db.transaction(populateDB, errorCB, successCB);
+	    db.transaction(populateDB, errorCB, successCB);
 	}
 }
 
@@ -231,8 +233,13 @@ function createTable(tx){
 	tx.executeSql('DROP TABLE IF EXISTS Propaganda');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
 	
+	////////////////////////////////////////////CONFIG//////////////////////////////////////
+	// Table Config ()
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
+	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
 	
 }
+
 
 function montaHome(tx){
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
