@@ -1,0 +1,3738 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Untitled</title>
+
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<link rel="stylesheet" href="css/template1.css" />
+
+
+<script type="text/javascript" src="js/jquery-1.9.min.js"></script>
+
+<script type="text/javascript" src="dojox/mobile/deviceTheme.js"
+	data-dojo-config="mblThemeFiles: ['base','Button']"></script>
+
+
+
+
+
+
+<script type="text/javascript" src="./lib/dojo/dojo/dojo.js"
+	data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], mblLoadCompatPattern: /\/project1\/themes\/.*\.css$/"></script>
+
+
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.ui.position.js"></script>
+
+
+<script type="text/javascript" src="js/iscroll-lite.js"></script>
+
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<link rel="stylesheet" href="css/queryLoader.css" type="text/css" />
+<script type='text/javascript' src='js/queryLoader.js'></script>
+<script type="text/javascript" src="js/meuJSIos.js"></script>
+
+<script type="text/javascript" src="js/jquery.jeditable.js"></script>
+
+<script type="text/javascript">
+
+		require([
+			"dojo/_base/window",
+			"dojo/_base/Deferred",
+			"dijit/registry",
+			"dojox/mobile/ViewController",
+			"dojox/mobile/parser",
+			"dojox/mobile",
+			"dojox/mobile/compat",
+			"dojox/mobile/Button"
+		], function(win, Deferred, registry, ViewController){
+			var vc = ViewController.getInstance();
+			onBtn3Clicked = function(e){
+				vc.openExternalView({url:"home.html", transition:"slide"}, win.body());
+			};
+			
+			
+		});
+		rotate = 1;
+		function hide_preloader() { //DOM
+		rotate = 0;
+		$("#preloader").fadeOut(1000);
+		}
+
+
+
+		
+</script>
+</head>
+
+<body id="bodyTeste" onload="hide_preloader();">
+<div id="preloader">Page loading...
+<div><img src="img/loading.gif" id="preloader_image" ></div>
+</div>
+<div id="view1"  dojoType="dojox.mobile.View">
+	
+	<div id="geral" class="geral">
+	
+		<div class="esquerda">
+			<!-- 
+			<div id="logo" data-dojo-type="dojox.mobile.Pane">
+				
+			</div>
+			 -->
+			 
+			 <div class="panel-trasnparente-esquerda">
+			 
+			 </div>
+			<div id="mobileTransitionView1" class="menu_categoria"
+				dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
+				<div id="menu" data-dojo-type="dojox.mobile.Pane">
+
+					<ul dojoType="dojox.mobile.EdgeToEdgeList" data-dojo-props='stateful:false,noArrow:true'  class="minhaUL">
+						<div class="divClicavel" id="categoria-1" 
+								onclick="chamarProdutos(this)" >
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">PODEROSOS</span>
+							</div>
+
+							<div class="divClicavel" id="categoria-2"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">CROCANTES</span>
+							</div>
+
+							<div class="divClicavel" id="categoria-3"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">SPEED</span>
+							</div>
+							<div class="divClicavel" id="categoria-4"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">LEVÍSSIMAS</span>
+							</div>
+							<div class="divClicavel" id="categoria-5"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">LANCHES</span>
+							</div>
+							<div class="divClicavel" id="categoria-6"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">PASTÉIS</span>
+							</div>
+
+							<div class="divClicavel" id="categoria-7"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">PETISCOS</span>
+							</div>
+
+							<div class="divClicavel" id="categoria-8"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">SOBREMESAS</span>
+							</div>
+
+							<div class="divClicavel" id="categoria-9"
+								onclick="chamarProdutos(this)">
+								<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <span
+									class="nome_categoria">BEBIDAS</span>
+							</div>
+
+					</ul>
+
+				</div>
+			</div>
+		</div>
+		<div class="space"></div>
+
+
+		<!-- Dicas Especiais ---------------------------------------------------------------------------------------------------------------------------->
+		<div class="content">
+			<div class="panel-trasnparente-content"></div>
+
+               <!--produto-dicas-especiais  -------------------------------------------------------------------------------------------------------->
+			<div id="produtos-categoria-1"class="menu_content escondido">
+			<div id="mobileTransitionView21" class="menu_produto"
+				dojoType="dojox.mobile.ScrollableView"   data-dojo-props='threshold:100'>
+					<div class="mblView mblScrollableView menu_produto">
+							<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+
+								<div class="divClicavel" id="categoria-1-1"
+									onclick="show('categoria-1-1')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img1.png">
+									</div>
+									
+									<span class="nome_produto">30 PODEROSO PICANHA</span>
+									<p class="preco_produto">R$ 29,95</p>
+									
+									
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino,picanha fatiada, queijo e molho barbecue</span>
+										
+									</div>
+									
+
+								</div>
+
+								<div class="divClicavel" id="categoria-1-2"
+									onclick="show('categoria-1-2')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img2.png">
+									</div>
+
+									<span class="nome_produto">31 PODEROSO BACON</span>
+									<p class="preco_produto">R$ 22,45</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, 3 hambúrgueres, bacon, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-3"
+									onclick="show('categoria-1-3')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img3.png">
+									</div>
+
+									<span class="nome_produto">32 PODEROSO HAMBÚRGUER</span>
+									<p class="preco_produto">R$ 19,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, 3 hambúrgueres, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-4"
+									onclick="show('categoria-1-4')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img4.png">
+									</div>
+
+									<span class="nome_produto">33 PODEROSO FRANGO</span>
+									<p class="preco_produto">R$ 18,45</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, peito de frango, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-5"
+									onclick="show('categoria-1-5')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img5.png">
+									</div>
+
+									<span class="nome_produto">34 PODEROSO CALABRESA</span>
+									<p class="preco_produto">R$ 15,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, calabresa, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-6"
+									onclick="show('categoria-1-6')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img6.png">
+									</div>
+
+									<span class="nome_produto">35 PODEROSO DOG</span>
+									<p class="preco_produto">R$ 14,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, salsichas, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-7"
+									onclick="show('categoria-1-7')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img7.png">
+									</div>
+
+									<span class="nome_produto">36 PODEROSO MIGNON</span>
+									<p class="preco_produto">R$ 24,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, mignon fatiado, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-8"
+									onclick="show('categoria-1-8')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img8.png">
+									</div>
+
+									<span class="nome_produto">37 FRANGO & BACON</span>
+									<p class="preco_produto">R$ 22,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, peito de frango, bacon, queijo e molho...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-9"
+									onclick="show('categoria-1-9')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img9.png">
+									</div>
+
+									<span class="nome_produto">38 PODEROSO CORAÇÃO</span>
+									<p class="preco_produto">R$ 21,45</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, coração, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-1-10"
+									onclick="show('categoria-1-10')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria1-img10.png">
+									</div>
+
+									<span class="nome_produto">39 PODEROSO EGG</span>
+									<p class="preco_produto">R$ 22,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, pepino, 3 hambúrgueres, 2 ovos, queijo...</span>
+									</div>
+									
+
+								</div>
+
+							</ul>
+					</div>
+				</div>
+			</div>
+
+
+			<!--porcoes-frias  -------------------------------------------------------------------------------------------------------->
+			<div id="produtos-categoria-2" class="menu_content escondido">
+				<div id="mobileTransitionView20" class="menu_produto"
+				dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
+					<div class="mblView mblScrollableView menu_produto">
+					<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+
+								<div class="divClicavel" id="categoria-2-1"
+									onclick="show('categoria-2-1')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img1.png">
+									</div>
+
+									<span class="nome_produto">42 QUEIJO & BACON</span>
+									<p class="preco_produto">R$ 13,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, 2 caprichadas fatias de queijo, saborosas lascas de bacon...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-2"
+									onclick="show('categoria-2-2')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img2.png">
+									</div>
+
+									<span class="nome_produto">43 CROCANTE MISTO</span>
+									<p class="preco_produto">R$ 10,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, 2 fatias de presunto, 2 caprichadas fatias de queijo...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-3"
+									onclick="show('categoria-2-3')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img3.png">
+									</div>
+
+									<span class="nome_produto">44 CROCANTE BAURU</span>
+									<p class="preco_produto">R$ 11,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, fatias de tomate selecionado, 2 caprichadas fatias de queijo...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-4"
+									onclick="show('categoria-2-4')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img4.png">
+									</div>
+
+									<span class="nome_produto">45 CROCANTE ALCATRA</span>
+									<p class="preco_produto">R$ 22,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, gostosas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-5"
+									onclick="show('categoria-2-5')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img5.png">
+									</div>
+
+									<span class="nome_produto">46 CROCANTE MIGNON</span>
+									<p class="preco_produto">R$ 27,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, gostosas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-6"
+									onclick="show('categoria-2-6')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img6.png">
+									</div>
+
+									<span class="nome_produto">47 CROCANTE CORAÇÃO</span>
+									<p class="preco_produto">R$ 19,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, saborosos...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-7"
+									onclick="show('categoria-2-7')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img7.png">
+									</div>
+
+									<span class="nome_produto">48 CROCANTE VEGETARIANA</span>
+									<p class="preco_produto">R$ 19,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, champignon...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-8"
+									onclick="show('categoria-2-8')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img8.png">
+									</div>
+
+									<span class="nome_produto">49 CROCANTE BANANA</span>
+									<p class="preco_produto">R$ 10,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, 2 deliciosas bananas-caturras cortadas ao meio, 2 caprichadas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-9"
+									onclick="show('categoria-2-9')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img9.png">
+									</div>
+
+									<span class="nome_produto">50 CROCANTE OMELETE</span>
+									<p class="preco_produto">R$ 15,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, saborosas lascas de bacon, 3 ovos, vinagrete, 2 caprichadas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-10"
+									onclick="show('categoria-2-10')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img10.png">
+									</div>
+
+									<span class="nome_produto">51 CROCANTE 3 QUEIJOS & BACON</span>
+									<p class="preco_produto">R$ 19,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, 2 caprichadas fatias de queijo, cheddar de bisnaga, provolone...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-11"
+									onclick="show('categoria-2-11')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img11.png">
+									</div>
+
+									<span class="nome_produto">52 CROCANTE STROGONOFF</span>
+									<p class="preco_produto">R$ 19,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, saboroso strogonoff de carne, lascas de bacon, 2 caprichadas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-12"
+									onclick="show('categoria-2-12')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img12.png">
+									</div>
+
+									<span class="nome_produto">53 CROCANTE DA CASA</span>
+									<p class="preco_produto">R$ 34,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, deliciosas fatias de calabresa, frango desfiado, 2 salsichas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-13"
+									onclick="show('categoria-2-13')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img13.png">
+									</div>
+
+									<span class="nome_produto">54 CROCANTE FRANGO</span>
+									<p class="preco_produto">R$ 15,45</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, fatias de tomate selecionado, frango desfiado, 2 caprichadas...</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-2-14"
+									onclick="show('categoria-2-14')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria2-img14.png">
+									</div>
+
+									<span class="nome_produto">55 CROCANTE PICANHA</span>
+									<p class="preco_produto">R$ 33,95</p>
+									<div class="previa_descricao_produto">
+										<span>2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, fatias de pepino...</span>
+									</div>
+									
+
+								</div>
+								
+								
+							</ul>
+					</div>
+					
+				</div>
+			</div>
+			
+			<!--porcoes-frias  -------------------------------------------------------------------------------------------------------->
+				<div id="produtos-categoria-3" class="menu_content escondido">
+
+<div id="mobileTransitionView19" class="menu_produto"
+				dojoType="dojox.mobile.ScrollableView"  data-dojo-props='threshold:100'>
+					<div class="mblView mblScrollableView menu_produto">
+
+							<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+								<div class="divClicavel" id="categoria-3-1"
+									onclick="show('categoria-3-1')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img1.png">
+									</div>
+
+									<span class="nome_produto">21 SPEED FRANGO & BACON</span>
+									<p class="preco_produto">R$ 13,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, frango, bacon, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-2"
+									onclick="show('categoria-3-2')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img2.png">
+									</div>
+
+									<span class="nome_produto">22 SPEED DOG</span>
+									<p class="preco_produto">R$ 9,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, salsichas, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-3"
+									onclick="show('categoria-3-3')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img3.png">
+									</div>
+
+									<span class="nome_produto">23 SPEED BURGER</span>
+									<p class="preco_produto">R$ 7,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, hambúrguer, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-4"
+									onclick="show('categoria-3-4')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img4.png">
+									</div>
+
+									<span class="nome_produto">24 SPEED FRANGO</span>
+									<p class="preco_produto">R$ 10,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, frango, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-5"
+									onclick="show('categoria-3-5')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img5.png">
+									</div>
+
+									<span class="nome_produto">25 SPEED MIGNON</span>
+									<p class="preco_produto">R$ 19,25</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, mignon, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-6"
+									onclick="show('categoria-3-6')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img6.png">
+									</div>
+
+									<span class="nome_produto">26 SPEED EGG BURGER</span>
+									<p class="preco_produto">R$ 9,25</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, hambúrguer, queijo, ovo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-7"
+									onclick="show('categoria-3-7')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img7.png">
+									</div>
+
+									<span class="nome_produto">27 SPEED BACON</span>
+									<p class="preco_produto">R$ 12,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, hambúrguer, bacon, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-8"
+									onclick="show('categoria-3-8')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img8.png">
+									</div>
+
+									<span class="nome_produto">28 SPEED CALABRESA</span>
+									<p class="preco_produto">R$ 10,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, calabresa, queijo e molho de mel e mostarda</span>
+									</div>
+									
+
+								</div>
+								
+								<div class="divClicavel" id="categoria-3-9"
+									onclick="show('categoria-3-9')">
+									<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+									<div class="imagem_categoria">
+										<img src="img/categoria3-img9.png">
+									</div>
+
+									<span class="nome_produto">29 SPEED CORAÇÃO</span>
+									<p class="preco_produto">R$ 12,95</p>
+									<div class="previa_descricao_produto">
+										<span>Pão especial, alface, tomate, coração, queijo e molho barbecue</span>
+									</div>
+									
+
+								</div>
+								
+
+							</ul>
+						</div>
+</div>
+</div>
+						<div id="produtos-categoria-4" class="menu_content escondido">
+
+							<div id="mobileTransitionView30" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-4-1"
+											onclick="show('categoria-4-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria4-img1.png">
+											</div>
+
+											<span class="nome_produto">300 CAESAR</span>
+											<p class="preco_produto">R$ 22,95</p>
+											<div class="previa_descricao_produto">
+												<span>Alface, cenoura ralada, frango, tomate seco,
+													croutons de pão e morango</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-4-2"
+											onclick="show('categoria-4-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria4-img2.png">
+											</div>
+
+											<span class="nome_produto">301 EL MARE</span>
+											<p class="preco_produto">R$ 16,95</p>
+											<div class="previa_descricao_produto">
+												<span>Alface, cenoura, kani kama, tomate, croutons de pão e morango</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-4-3"
+											onclick="show('categoria-4-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria4-img3.png">
+											</div>
+
+											<span class="nome_produto">302 NOBRE</span>
+											<p class="preco_produto">R$ 27,95</p>
+											<div class="previa_descricao_produto">
+												<span>Alface, ovo de codorna, tomate seco, croutons de pão, champignon e cubos...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-4-4"
+											onclick="show('categoria-4-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria4-img4.png">
+											</div>
+
+											<span class="nome_produto">303 MIX</span>
+											<p class="preco_produto">R$ 16,95</p>
+											<div class="previa_descricao_produto">
+												<span>Alface, cenoura ralada, atum, tomate seco, croutons de pão, morango e abacaxi</span>
+											</div>
+											
+
+										</div>
+
+
+
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+						<div id="produtos-categoria-5" class="menu_content escondido">
+
+							<div id="mobileTransitionView31" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-5-1"
+											onclick="show('categoria-5-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img1.jpg">
+											</div>
+
+											<span class="nome_produto">03 MADRUGA GALINHA</span>
+											<p class="preco_produto">R$ 12,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, galinha, queijo, presunto e salada composta por alface, tomate...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-2"
+											onclick="show('categoria-5-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img2.png">
+											</div>
+
+											<span class="nome_produto">04 MADRUGA BACON</span>
+											
+											<p class="preco_produto">R$ 14,45</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, hambúrguer, bacon, queijo, presunto e salada composta por alface...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-3"
+											onclick="show('categoria-5-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img3.jpg">
+											</div>
+
+											<span class="nome_produto">05 MADRUGA SALADA</span>
+											<p class="preco_produto">R$ 9,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, hambúrguer, queijo, presunto e salada composta por alface, tomate...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-4"
+											onclick="show('categoria-5-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img4.jpg">
+											</div>
+
+											<span class="nome_produto">06 MADRUGA BURGER</span>
+											<p class="preco_produto">R$ 7,45</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, hambúrguer, queijo e presunto</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-5"
+											onclick="show('categoria-5-5')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img5.jpg">
+											</div>
+
+											<span class="nome_produto">07 X-CALABRESA</span>
+											<p class="preco_produto">R$ 13,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, calabresa, queijo, presunto e salada composta por alface, tomate...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-6"
+											onclick="show('categoria-5-6')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img6.jpg">
+											</div>
+
+											<span class="nome_produto">08 X-EGG</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, hambúrguer, ovo, queijo, presunto e salada composta por alface...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-7"
+											onclick="show('categoria-5-7')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img7.jpg">
+											</div>
+
+											<span class="nome_produto">09 GALINHA COM BACON</span>
+											<p class="preco_produto">R$ 19,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, bacon, galinha, queijo, presunto e salada composta por alface...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-5-8"
+											onclick="show('categoria-5-8')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria5-img8.jpg">
+											</div>
+
+											<span class="nome_produto">10 MADRUGA PICANHA (ABERTO)</span>
+											<p class="preco_produto">R$ 32,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pão, picanha, queijo, alface, tomate e fritas</span>
+											</div>
+											
+
+										</div>
+										
+
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+						<div id="produtos-categoria-6" class="menu_content escondido">
+
+							<div id="mobileTransitionView32" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-6-1"
+											onclick="show('categoria-6-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img1.jpg">
+											</div>
+
+											<span class="nome_produto">100 DA CASA CARNE</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Carne, palmito, calabresa, mussarela, provolone e orégano</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-2"
+											onclick="show('categoria-6-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img2.jpg">
+											</div>
+
+											<span class="nome_produto">101 DA CASA FRANGO</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Frango, palmito, catupiry, milho, provolone e orégano</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-3"
+											onclick="show('categoria-6-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img3.jpg">
+											</div>
+
+											<span class="nome_produto">102 PORTUGUESA</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Ovo, presunto, azeitona, cebola, mussarela e orégano</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-4"
+											onclick="show('categoria-6-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img4.jpg">
+											</div>
+
+											<span class="nome_produto">103 PIZZA</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Tomate, cebola, mussarela, calabresa e orégano</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-5"
+											onclick="show('categoria-6-5')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img5.jpg">
+											</div>
+
+											<span class="nome_produto">104 STROGONOFF DE CARNE</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Strogonoff de carne, batata palha e champignon</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-6"
+											onclick="show('categoria-6-6')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img6.jpg">
+											</div>
+
+											<span class="nome_produto">105 STROGONOFF DE FRANGO</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Strogonoff de carne, batata palha e champignon</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-7"
+											onclick="show('categoria-6-7')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img7.jpg">
+											</div>
+
+											<span class="nome_produto">106 QUATRO QUEIJOS</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Mussarela, catupiry, provolone e cheddar</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-6-8"
+											onclick="show('categoria-6-8')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria6-img8.jpg">
+											</div>
+
+											<span class="nome_produto">107 PERU</span>
+											<p class="preco_produto">R$ 10,95</p>
+											<div class="previa_descricao_produto">
+												<span>Peito de peru defumado, catupiry e mussarela</span>
+											</div>
+											
+
+										</div>
+										
+
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+						<div id="produtos-categoria-7" class="menu_content escondido">
+
+							<div id="mobileTransitionView33" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-7-1"
+											onclick="show('categoria-7-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img1.png">
+											</div>
+
+											<span class="nome_produto">201 MADRUGADÃO (INTEIRO)</span>
+											<p class="preco_produto">R$ 44,95</p>
+											<div class="previa_descricao_produto">
+												<span>Frango à passarinho, batata e polenta frita</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-2"
+											onclick="show('categoria-7-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img2.png">
+											</div>
+
+											<span class="nome_produto">205 ASINHA DE FRANGO</span>
+											<p class="preco_produto">R$ 29,95</p>
+											<div class="previa_descricao_produto">
+												<span>Asinhas de frango e polenta frita</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-3"
+											onclick="show('categoria-7-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img3.png">
+											</div>
+
+											<span class="nome_produto">211 POLENTA FRITA</span>
+											<p class="preco_produto">R$ 16,85</p>
+											<div class="previa_descricao_produto">
+												<span>Pedaços de polenta fritos</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-4"
+											onclick="show('categoria-7-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img4.png">
+											</div>
+
+											<span class="nome_produto">214 BATATA SMILE</span>
+											<p class="preco_produto">R$ 15,75</p>
+											<div class="previa_descricao_produto">
+												<span>18 unidades</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-5"
+											onclick="show('categoria-7-5')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img5.png">
+											</div>
+
+											<span class="nome_produto">231 ISCA DE TILÁPIA</span>
+											<p class="preco_produto">R$ 34,95</p>
+											<div class="previa_descricao_produto">
+												<span>Isca de tilápia à milanesa</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-6"
+											onclick="show('categoria-7-6')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img6.png">
+											</div>
+
+											<span class="nome_produto">237 MISTA ESPECIAL C/ FRITAS</span>
+											<p class="preco_produto">R$ 52,95</p>
+											<div class="previa_descricao_produto">
+												<span>Coração, alcatra, calabresa, frango, batatas fritas, pão com queijo...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-7-7"
+											onclick="show('categoria-7-7')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria7-img7.png">
+											</div>
+
+											<span class="nome_produto">239 PRATO DE FRIOS</span>
+											<p class="preco_produto">R$ 34,95</p>
+											<div class="previa_descricao_produto">
+												<span>Pedaços de queijo provolone, fatias de salame italiano, azeitonas verdes, ovos de codorna...</span>
+											</div>
+											
+
+										</div>
+										
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+						<div id="produtos-categoria-8" class="menu_content escondido">
+
+							<div id="mobileTransitionView34" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-8-1"
+											onclick="show('categoria-8-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria8-img1.png">
+											</div>
+
+											<span class="nome_produto">307 SALADA DE FRUTAS</span>
+											<p class="preco_produto">R$ 9,45</p>
+											<div class="previa_descricao_produto">
+												<span>Salada de frutas</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-8-2"
+											onclick="show('categoria-8-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria8-img2.png">
+											</div>
+
+											<span class="nome_produto">309 SUNDAE DE CHOCOLATE - SUNDAE DE MORANGO</span>
+											<p class="preco_produto">R$ 4,95</p>
+											<div class="previa_descricao_produto">
+												<span>SUNDAE DE CHOCOLATE ou de Morango</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-8-3"
+											onclick="show('categoria-8-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria8-img3.png">
+											</div>
+
+											<span class="nome_produto">311 MINISORVETE (CREME)</span>
+											<p class="preco_produto">R$ 3,45</p>
+											<div class="previa_descricao_produto">
+												<span>MINISORVETE (CREME)</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-8-4"
+											onclick="show('categoria-8-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria8-img4.png">
+											</div>
+
+											<span class="nome_produto">312 PETIT GATEAU</span>
+											<p class="preco_produto">R$ 14,95</p>
+											<div class="previa_descricao_produto">
+												<span>PETIT GATEAU</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-8-5"
+											onclick="show('categoria-8-5')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria8-img5.png">
+											</div>
+
+											<span class="nome_produto">315 TORTINHA HOLANDESA</span>
+											<p class="preco_produto">R$ 6,95</p>
+											<div class="previa_descricao_produto">
+												<span>TORTINHA HOLANDESA</span>
+											</div>
+											
+
+										</div>
+										
+							
+										
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+						<div id="produtos-categoria-9" class="menu_content escondido">
+
+							<div id="mobileTransitionView35" class="menu_produto"
+								dojoType="dojox.mobile.ScrollableView"
+								data-dojo-props='threshold:100'>
+								<div class="mblView mblScrollableView menu_produto">
+
+									<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
+										
+										<div class="divClicavel" id="categoria-9-1"
+											onclick="show('categoria-9-1')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img1.jpg">
+											</div>
+
+											<span class="nome_produto">600 LUA CHEIA</span>
+											<p class="preco_produto">R$ 11,60</p>
+											<div class="previa_descricao_produto">
+												<span>Suco de uva, suco de morango, suco de maracujá, suco de abacaxi e leite de coco</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-2"
+											onclick="show('categoria-9-2')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img2.jpg">
+											</div>
+
+											<span class="nome_produto">601 ALEXANDER</span>
+											<p class="preco_produto">R$ 11,60</p>
+											<div class="previa_descricao_produto">
+												<span>Conhaque, licor de cacau, creme de leite e canela</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-3"
+											onclick="show('categoria-9-3')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img3.jpg">
+											</div>
+
+											<span class="nome_produto">602 PIÑA COLADA</span>
+											<p class="preco_produto">R$ 14,95</p>
+											<div class="previa_descricao_produto">
+												<span>Rum Bacardi, licor Triple seco, suco de laranja, suco de abacaxi, leite de coco e açúcar</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-4"
+											onclick="show('categoria-9-4')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img4.jpg">
+											</div>
+
+											<span class="nome_produto">603 MARGARITA</span>
+											<p class="preco_produto">R$ 18,65</p>
+											<div class="previa_descricao_produto">
+												<span>Tequila, Cointreau e limão</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-5"
+											onclick="show('categoria-9-5')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img5.jpg">
+											</div>
+
+											<span class="nome_produto">607 MENINA DA NOITE</span>
+											<p class="preco_produto">R$ 14,95</p>
+											<div class="previa_descricao_produto">
+												<span>Concentrado de morango, groselha e Smirnoff</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-6"
+											onclick="show('categoria-9-6')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img6.jpg">
+											</div>
+
+											<span class="nome_produto">608 SEX ON THE BEACH</span>
+											<p class="preco_produto">R$ 13,90</p>
+											<div class="previa_descricao_produto">
+												<span>Smirnoff, licor de pêssego e suco de laranja</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-7"
+											onclick="show('categoria-9-7')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img7.png">
+											</div>
+
+											<span class="nome_produto">609 Pilsen Top Line</span>
+											<p class="preco_produto">R$ 8,45</p>
+											<div class="previa_descricao_produto">
+												<span>A cerveja mais consumida no mundo...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-8"
+											onclick="show('categoria-9-8')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img8.png">
+											</div>
+
+											<span class="nome_produto">610 Lager Premium</span>
+											<p class="preco_produto">R$ 8,45</p>
+											<div class="previa_descricao_produto">
+												<span>Produzida com técnicas de baixa fermentação...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-9"
+											onclick="show('categoria-9-9')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img9.png">
+											</div>
+
+											<span class="nome_produto">611 Rauch Weiss</span>
+											<p class="preco_produto">R$ 10,75</p>
+											<div class="previa_descricao_produto">
+												<span>A famosa cerveja de trigo...</span>
+											</div>
+											
+
+										</div>
+										
+										<div class="divClicavel" id="categoria-9-10"
+											onclick="show('categoria-9-10')">
+											<li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li>
+											<div class="imagem_categoria">
+												<img src="img/categoria9-img10.png">
+											</div>
+
+											<span class="nome_produto">611 Wine</span>
+											<p class="preco_produto">R$ 10,75</p>
+											<div class="previa_descricao_produto">
+												<span>Uma cerveja diferenciada, que leva em sua elaboração a adição de vinho tinto...</span>
+											</div>
+											
+
+										</div>
+										
+										
+									</ul>
+								</div>
+
+							</div>
+						</div>
+						
+					</div>
+
+
+		<div id="barra_botoes">
+			<div class="panel-trasnparente-botoes"></div>
+			<div id="botoes">
+				<a href="home.html">
+				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" href="home1.html"  class="button">Home</button>
+				</a>
+				<button  id="btn_fecharConta" class="button" onclick="showChamarPrevia('modal_previa_pedido')">Fechar
+					Conta</button>
+				
+				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button">Chamar
+					Garçom</button>
+			</div>
+
+		</div>
+		
+		</div>
+		
+
+
+		<!-- 
+		<div class="footer">
+			<div class="space"></div>
+			<img alt="" src="img/footer.jpg" class="img_footer" />
+		</div>
+	</div>
+	
+	-->
+
+		
+
+
+
+		
+	
+	<!-- Modal Nome pessoa -->
+	<div id="modal_nome_pessoa" dojoType="dojox.mobile.SimpleDialog" class="modal_nome_pessoa">
+		<form onsubmit=" return false;">
+		<h2 data-dojo-type="dojox.mobile.Heading"
+				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
+				align="center" class="title_modal_nome_pessoa">Pessoas da Mesa</h2>
+		<div id="mobileTransitionView5" class="modal_nome_pedido"
+			dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
+			
+			<ul dojoType="dojox.mobile.EdgeToEdgeList"  class="minhaUL-modal-nome-pessoa">
+				
+				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
+					id="addnum1"  name="1" class="liEditavel" onclick="chamarInput(this)" >
+					 	
+					<span  class="editavel">Adicionar pessoa...</span>
+					<input  type="checkbox"   class="mblCheckBox meuCheckBox"/>
+				</li>
+				
+				<input  onkeypress="salvarInput(this)"  name="addnum1" style="display:none" class="inputNome" type="text" />
+				
+				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
+					id="addnum2" name="2" class="liEditavel" onclick="chamarInput(this)">
+					<span  class="editavel">Adicionar pessoa...</span>
+					<input  type="checkbox"  class="mblCheckBox meuCheckBox"/>
+				</li>
+				<input onkeypress="salvarInput(this)"  name="addnum2" style="display:none" class="inputNome" type="text" />
+				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
+					id="add3" name="3" class="liEditavel" onclick="chamarInput(this)">
+					<span  class="editavel">Adicionar pessoa...</span>
+					<input   type="checkbox"  class=" mblCheckBox meuCheckBox"/>
+				</li>
+				<input   onkeypress="salvarInput(this)"  name="add3" style="display:none" class="inputNome" type="text" />
+				
+			</ul>
+			</div>
+			<div data-dojo-type="dojox.mobile.Heading" data-dojo-props='moveTo:"#"'
+				data-dojo-props="fixed:'bottom'" style="font-size: 19px;"
+				align="center" class="mblListItem div_conjunto" onclick="selecionarPessoa(this)">
+				
+				<span class="editavel">Conta Conjunto</span>
+				<input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="meuCheckBox"/>
+				
+
+			</div>
+
+		<div class="form-adiconar-pessoa">
+			
+			<div class="observacao_pedido">
+			<label class="label label-observacao">Observação do Pedido:</label><br/>
+			<textarea class="textarea-observacao-produto" ></textarea>
+			</div>
+			
+	   </div>
+
+            <div class="btn_adicionar_pedido_modal_pessoa">
+				<button  value="modal_nome_pessoa" class="btn_adicionar_pedido btn-tamanho-adicionar-pessoa"  onclick="showModal_pedido(this)">Adicionar</button>
+				<button  id="btn_efetuar_pedido_2" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa" onclick="hide('modal_nome_pessoa')">Cancelar</button>
+			</div>
+</form>
+	</div>
+
+	<!-- Modal Lista pedido carrinho
+	<div id="modal_pedido" class="modal_pedido" style="display: none">
+		<div id="mobileTransitionView4" class="menu_pedido"
+			dojoType="dojox.mobile.ScrollableView">
+			<ul dojoType="dojox.mobile.EdgeToEdgeList">
+				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
+					class="minhaLI" data-dojo-props='moveTo:"bar", onClick:chamarDescricao' >247 - Cachaça
+
+					<button id="btn_adcionar_produto">+</button>
+					<button id="btn_tirar_produto">-</button>
+				</li>
+
+			</ul>
+		</div>
+
+
+		<button id="btn_mesma_pessoa" class="btn_adicionar_mais_itens">
+			+ mesma pessoa</button>
+
+		<button id="btn_outra_pessoa" class="btn_adicionar_mais_itens">
+			+ outra pessoa</button>
+			
+			
+		<button id="btn_efetuar_pedido" class="right">Efetuar pedido</button>
+
+	</div>
+	-->
+	
+	<!-- Modal Lista individual -->
+	<div id="modal_pedido" dojoType="dojox.mobile.SimpleDialog" class="modal_pedido">
+		
+		<h2 data-dojo-type="dojox.mobile.Heading"
+				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
+				align="center" class="title_modal_nome_pessoa">Pedido da Mesa</h2>
+		<div id="mobileTransitionView4" class="menu_pedido_confirmacao"
+			dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
+
+				<ul dojoType="dojox.mobile.EdgeToEdgeList"
+					class="minhaUL-modal-nome-pessoa">
+					<li dojoType="dojox.mobile.ListItem" 
+						class="li_detalhe_pedido">
+						<div class="modal_pedido_nome_pessoa">
+							<span>Sergio </span>
+						</div>
+						<div class="modal_pedido_nome_produto">
+							<span>30 PODEROSO PICANHA</span>
+
+						</div>
+
+						<div class="modal_pedido_preco_produto">
+							<span>R$ 29,95</span>
+
+						</div>
+
+						<div id="quantidade-1" class="div-quantidade-somar-diminuir">
+							<button class="btn-decremento">-</button>
+							<span class="modal_pedido_quantidade">1</span>
+							<button class="btn-incremento">+</button>
+
+						</div>
+
+					</li>
+					<li dojoType="dojox.mobile.ListItem"
+						class="li_detalhe_pedido">
+						<div class="modal_pedido_nome_pessoa">
+							<span>Sergio </span>
+						</div>
+						<div class="modal_pedido_nome_produto">
+							<span>31 PODEROSO BACON</span>
+
+						</div>
+
+						<div class="modal_pedido_preco_produto">
+							<span>R$ 22,45</span>
+
+						</div>
+						<div id="quantidade-2" class="div-quantidade-somar-diminuir">
+							<button class="btn-decremento">-</button>
+							<span class="modal_pedido_quantidade">1</span>
+							<button class="btn-incremento">+</button>
+						</div>
+
+					</li>
+
+
+					<li dojoType="dojox.mobile.ListItem" 
+						class="li_detalhe_pedido">
+						<div class="modal_pedido_nome_pessoa">
+							<span>William </span>
+						</div>
+						<div class="modal_pedido_nome_produto">
+							<span>42 QUEIJO & BACON</span>
+
+						</div>
+
+						<div class="modal_pedido_preco_produto">
+							<span>R$ 13,95</span>
+
+						</div>
+
+						<div id="quantidade-3" class="div-quantidade-somar-diminuir">
+							<button class="btn-decremento">-</button>
+							<span class="modal_pedido_quantidade">1</span>
+							<button class="btn-incremento">+</button>
+						</div>
+
+					</li>
+
+					<li dojoType="dojox.mobile.ListItem"
+						class="li_detalhe_pedido">
+						<div class="modal_pedido_nome_pessoa">
+							<span>William </span>
+						</div>
+						<div class="modal_pedido_nome_produto">
+							<span>22 SPEED DOG</span>
+
+						</div>
+
+						<div class="modal_pedido_preco_produto">
+							<span>R$ 9,95</span>
+
+						</div>
+						<div id="quantidade-4" class="div-quantidade-somar-diminuir">
+							<button class="btn-decremento">-</button>
+							<span class="modal_pedido_quantidade">1</span>
+							<button class="btn-incremento">+</button>
+						</div>
+					</li>
+
+
+
+
+				</ul>
+			</div>
+		<div class="btn_adicionar_pedido_descricao_pedido">
+		    
+		    
+		    <div class="label-efetuar-pedido">
+		     <button   value="descricao-categoria-1-1" class="btn_adicionar_mais_itens btn-tamanho-confirmacao-pedido" onclick="hide('modal_pedido')">Adicionar mais Itens</button>
+		    </div>
+		    <div class="buttons-wfwtuar-pedido">
+		   
+			<button  value="modal_pedido" class="btn_adicionar_pedido  btn-tamanho-confirmacao-pedido"  onclick="showConfirmacaoPedido(this)">Efetuar pedido</button>
+	    </div>
+	    </div>	
+		
+		
+		
+
+	</div>
+	
+	<!-- Previa Lista individual -->
+	<div id="modal_previa_pedido" dojoType="dojox.mobile.SimpleDialog" class="modal_fechar_conta">
+		
+		
+		<h2 data-dojo-type="dojox.mobile.Heading"
+				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
+				align="center" class="title_modal_nome_pessoa">Total</h2>
+		<div id="mobileTransitionView335" class="menu_pedido"
+			dojoType="dojox.mobile.ScrollableView" style="display:block !important" data-dojo-props='threshold:100'>
+				<ul data-dojo-type="dojox.mobile.GridLayout"
+					class="minhaUL-modal-nome-pessoa">
+					<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+						class="liEditavel mostrarDetalhado" value="pedido_1" >
+						<div class="modal_pedido_nome_pessoa">
+							<div class="div-incremento">
+							<span class="incremento mais">+</span>
+							</div>
+							<span>Sergio </span>
+						</div>
+
+						<div class="modal_previa_preco_produto">
+							<span>R$ 52,40</span>
+                        <button id="btn_pedido_1" value="Sergio" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button>
+						</div>
+						
+					</li>
+
+					<div id="pedido_1" style="display: none" class="pedido_detalhado">
+         
+		                 <ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL-modal-nome-pessoa" >
+				
+								<li dojoType="dojox.mobile.ListItem"
+									data-dojo-props='moveTo:"#"' class="minhaLI li_detalhe_pedido">
+									<div class="modal_pedido_nome_pessoa">
+										<span>Sergio </span>
+									</div>
+									<div class="modal_pedido_nome_produto">
+										<span>30 PODEROSO PICANHA</span>
+
+									</div>
+
+									<div class="modal_pedido_preco_produto">
+										<span>R$ 29,95</span>
+									
+									</div>
+
+								</li>
+								<li dojoType="dojox.mobile.ListItem"
+									data-dojo-props='moveTo:"#"' class="minhaLI li_detalhe_pedido">
+									<div class="modal_pedido_nome_pessoa">
+										<span >Sergio </span>
+									</div>
+									<div class="modal_pedido_nome_produto">
+										<span>31 PODEROSO BACON</span>
+
+									</div>
+
+									<div class="modal_pedido_preco_produto">
+									<span>R$ 22,45</span>
+
+								</div>
+
+							</li>
+								</ul>
+								
+
+					</div>
+
+
+					<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+						class="liEditavel mostrarDetalhado" value="pedido_2" >
+						<div class="modal_pedido_nome_pessoa">
+							<div class="div-incremento">
+							<span class="incremento mais">+</span>
+							</div>
+							<span>William </span>
+						</div>
+
+						<div class="modal_previa_preco_produto">
+							<span>R$ 23,90</span>
+							<button id="btn_pedido_2" value="William" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button>
+
+						</div>
+						
+						
+					</li>
+					
+					<div id="pedido_2" style="display: none" class="pedido_detalhado">
+					<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL-modal-nome-pessoa" >
+						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+							class="minhaLI li_detalhe_pedido">
+							<div class="modal_pedido_nome_pessoa">
+								<span>William </span>
+							</div>
+							<div class="modal_pedido_nome_produto">
+								<span>42 QUEIJO & BACON</span>
+
+							</div>
+
+							<div class="modal_pedido_preco_produto">
+								<span>R$ 13,95</span>
+
+							</div>
+
+						</li>
+
+						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+							class="minhaLI li_detalhe_pedido">
+							<div class="modal_pedido_nome_pessoa">
+								<span>teste </span>
+							</div>
+							<div class="modal_pedido_nome_produto">
+								<span>22 SPEED DOG</span>
+
+							</div>
+
+							<div class="modal_pedido_preco_produto">
+								<span>R$ 9,95</span>
+
+							</div>
+
+						</li>
+						
+						</ul>
+					</div>
+					
+					
+
+				</ul>
+			</div>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		
+		<div class="btn_adicionar_pedido_previa_pedido">
+	        <button  id="mesa" value="mesa" class="btn-fechar-conta-previa-pedido"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta da Mesa</button>
+			<button  id="btn_efetuar_pedido_22" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-previa-pedido" onclick="hide('modal_previa_pedido')">Cancelar</button>
+	    </div>
+	</div>
+
+
+	<div id="modal_pedido_confirmacao" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao">Deseja realmente excluir essa pessoa?</p>
+		<button  class="btn-sim-excluir-pessoa" onclick="excluirPessoa(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_pedido_confirmacao')">Não</button>
+	</div>
+	
+	
+	<div id="modal_chamar_garcon" value="modal_chamar_garcon" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao">Deseja realmente chamar o garçom?</p>
+		<button  class="btn-sim-excluir-pessoa" value="modal_chamar_garcon" onclick="showConfirmacaoGarcom(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_chamar_garcon')">Não</button>
+	</div>
+	
+	<div id="modal_fechar_conta" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao"></p>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_fechar_conta')">Não</button>
+	</div>
+	
+	<div id="modal_chamar_garcom_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span>Aguarde, logo um de nossos garçons irá atendê-lo</span>
+		</div>
+		<button class="btn_ok_mensagem" onclick="hide('modal_chamar_garcom_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<div id="modal_pedido_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span>Aguarde, logo seu pedido será atendido</span>
+		</div>
+		<button class="btn_ok_mensagem" onclick="hide('modal_pedido_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<!-- Produtos ------------------------------------------------------------------------------------------------------------->
+	<!-- Dicas Especiais ------------------------------------------------------------------------------------------------------------->
+		<div id="descricao-categoria-1-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img1.png" class="img_modal">
+			</div>
+<div class="parte_transparente"></div>
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">30 PODEROSO PICANHA</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino,picanha fatiada, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 29,95</p>
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-1-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">31 PODEROSO BACON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, 3 hambúrgueres, bacon, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 22,45</p>
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-2')">Cancelar</button>
+			</div>
+		</div>
+	
+	<!--------------------------------------------------------------------------------------------------------------->	
+	
+	<div id="descricao-categoria-1-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog">
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">32 PODEROSO HAMBÚRGUER</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, 3 hambúrgueres, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-3')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">33 PODEROSO FRANGO</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, peito de frango, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 18,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-4')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img5.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">34 PODEROSO CALABRESA</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, calabresa, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 15,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-5')">Cancelar</button>
+			</div>
+		</div>
+		
+	 <!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img6.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">35 PODEROSO DOG</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, salsichas, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 14,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-6')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img7.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">36 PODEROSO MIGNON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, mignon fatiado, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 24,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-7')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img8.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">37 FRANGO & BACON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, peito de frango, bacon, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 22,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-8')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-9" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img9.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">38 PODEROSO CORAÇÃO</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, coração, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 21,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-9" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-9" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-9')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+		<div id="descricao-categoria-1-10" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria1-img10.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">39 PODEROSO EGG</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, pepino, 3 hambúrgueres, 2 ovos, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 22,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-1-10" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-1-10" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-1-10')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->		
+		<div id="descricao-categoria-2-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img1.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">42 QUEIJO & BACON</h2>
+				<p class="title_descricao">2 fatias de pão crocante, 2 caprichadas fatias de queijo, saborosas lascas de bacon e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 13,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">43 CROCANTE MISTO</h2>
+				<p class="title_descricao">2 fatias de pão crocante, 2 fatias de presunto, 2 caprichadas fatias de queijo e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-2')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->	
+	<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">44 CROCANTE BAURU</h2>
+				<p class="title_descricao">2 fatias de pão crocante, fatias de tomate selecionado, 2 caprichadas fatias de queijo, 2 irresistíveis fatias de presunto e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 11,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-3')">Cancelar</button>
+			</div>
+		</div>
+	
+	<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">45 CROCANTE ALCATRA</h2>
+				<p class="title_descricao">2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, gostosas fatias de pepino, saborosos pedaços de alcatra, 2 caprichadas fatias de queijo e delicioso molho barbecue</p>
+				<p class="title_preco">R$ 22,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-4')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img5.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">46 CROCANTE MIGNON</h2>
+				<p class="title_descricao">2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, gostosas fatias de pepino, palmito picado, saborosas fatias de mignon, 2 caprichadas fatias de queijo e delicioso molho barbecue</p>
+				<p class="title_preco">R$ 27,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-5')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img6.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">47 CROCANTE CORAÇÃO</h2>
+				<p class="title_descricao">2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, saborosos corações de frango, 2 caprichadas fatias de queijo, irresistíveis lascas de bacon e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-6')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img7.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">48 CROCANTE VEGETARIANA</h2>
+				<p class="title_descricao">2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, champignon, palmito picado, brócolis, tomate seco, 2 caprichadas fatias de queijo, e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-7')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img8.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">49 CROCANTE BANANA</h2>
+				<p class="title_descricao">2 fatias de pão crocante, 2 deliciosas bananas-caturras cortadas ao meio, 2 caprichadas fatias de queijo, açúcar e canela</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-8')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-9" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img9.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">50 CROCANTE OMELETE</h2>
+				<p class="title_descricao">2 fatias de pão crocante, saborosas lascas de bacon, 3 ovos, vinagrete, 2 caprichadas fatias de queijo e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 15,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-9" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-9" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-9')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-10" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img10.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">51 CROCANTE 3 QUEIJOS & BACON</h2>
+				<p class="title_descricao">2 fatias de pão crocante, 2 caprichadas fatias de queijo, cheddar de bisnaga, provolone ralado, saborosas lascas de bacon e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-10" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-10" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-10')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-11" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img11.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">52 CROCANTE STROGONOFF</h2>
+				<p class="title_descricao">2 fatias de pão crocante, saboroso strogonoff de carne, lascas de bacon, 2 caprichadas fatias de queijo e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-11" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-11" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-11')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-12" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img12.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">53 CROCANTE DA CASA</h2>
+				<p class="title_descricao">2 fatias de pão crocante, deliciosas fatias de calabresa, frango desfiado, 2 salsichas, 2 ovos, palmito picado, lascas de bacon, fatias de mignon, 2 caprichadas fatias de queijo e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 34,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-12" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-12" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-12')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-13" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img13.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">54 CROCANTE FRANGO</h2>
+				<p class="title_descricao">2 fatias de pão crocante, fatias de tomate selecionado, frango desfiado, 2 caprichadas fatias de queijo e o inconfundível molho Madrugadão</p>
+				<p class="title_preco">R$ 15,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-13" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-13" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-13')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+
+<div id="descricao-categoria-2-14" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria2-img14.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">55 CROCANTE PICANHA</h2>
+				<p class="title_descricao">2 fatias de pão crocante, folhas de alface, fatias de tomate selecionado, fatias de pepino, palmito picado, 2 saborosas fatias de picanha em tiras, 2 caprichadas fatias de queijo e delicioso molho barbecue</p>
+				<p class="title_preco">R$ 33,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-2-14" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-2-14" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-2-14')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->		
+		
+		<div id="descricao-categoria-3-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img1.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">21 SPEED FRANGO & BACON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, frango, bacon, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 13,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">22 SPEED DOG</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, salsichas, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 9,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-2')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">23 SPEED BURGER</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, hambúrguer, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 7,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-3')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">24 SPEED FRANGO</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, frango, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-4')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img5.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">25 SPEED MIGNON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, mignon, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 19,25</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-5')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img6.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">26 SPEED EGG BURGER</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, hambúrguer, queijo, ovo e molho barbecue</p>
+				<p class="title_preco">R$ 9,25</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-6')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img7.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">27 SPEED BACON</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, hambúrguer, bacon, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 12,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-7')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img8.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">28 SPEED CALABRESA</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, calabresa, queijo e molho de mel e mostarda</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-8')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-3-9" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria3-img9.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">29 SPEED CORAÇÃO</h2>
+				<p class="title_descricao">Pão especial, alface, tomate, coração, queijo e molho barbecue</p>
+				<p class="title_preco">R$ 12,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-3-9" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-3-9" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-3-9')">Cancelar</button>
+			</div>
+		</div>
+
+<!--------------------------------------------------------------------------------------------------------------->		
+<div id="descricao-categoria-4-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria4-img1.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">300 CAESAR</h2>
+				<p class="title_descricao">Alface, cenoura ralada, frango, tomate seco,croutons de pão e morango<</p>
+				<p class="title_preco">R$ 22,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-4-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-4-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-4-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-4-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria4-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">301 EL MARE</h2>
+				<p class="title_descricao">Alface, cenoura, kani kama, tomate, croutons de pão e morango</p>
+				<p class="title_preco">R$ 16,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-4-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-4-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-4-2')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-4-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria4-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">302 NOBRE</h2>
+				<p class="title_descricao">Alface, ovo de codorna, tomate seco, croutons de pão, champignon e cubos de mussarela e morango</p>
+				<p class="title_preco">R$ 27,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-4-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-4-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-4-3')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-4-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria4-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">303 MIX</h2>
+				<p class="title_descricao">Alface, cenoura ralada, atum, tomate seco, croutons de pão, morango e abacaxi</p>
+				<p class="title_preco">R$ 16,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-4-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-4-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-4-4')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->	
+	<div id="descricao-categoria-5-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img1.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">03 MADRUGA GALINHA</h2>
+				<p class="title_descricao">Pão, galinha, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 12,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">04 MADRUGA BACON</h2>
+				<p class="title_descricao">Pão, hambúrguer, bacon, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 14,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-2')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img3.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">05 MADRUGA SALADA</h2>
+				<p class="title_descricao">Pão, hambúrguer, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 9,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-3')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img4.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">06 MADRUGA BURGER</h2>
+				<p class="title_descricao">Pão, hambúrguer, queijo e presunto</p>
+				<p class="title_preco">R$ 7,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-4')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img5.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">07 X-CALABRESA</h2>
+				<p class="title_descricao">Pão, calabresa, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 13,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-5')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img6.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">08 X-EGG</h2>
+				<p class="title_descricao">Pão, hambúrguer, ovo, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-6')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img7.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">09 GALINHA COM BACON</h2>
+				<p class="title_descricao">Pão, bacon, galinha, queijo, presunto e salada composta por alface, tomate, pepino e vinagrete</p>
+				<p class="title_preco">R$ 19,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-7')">Cancelar</button>
+			</div>
+		</div>
+		
+<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-5-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria5-img8.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">10 MADRUGA PICANHA (ABERTO)</h2>
+				<p class="title_descricao">Pão, picanha, queijo, alface, tomate e fritas</p>
+				<p class="title_preco">R$ 32,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-5-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-5-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-5-8')">Cancelar</button>
+			</div>
+		</div>
+
+<!--------------------------------------------------------------------------------------------------------------->		
+<div id="descricao-categoria-6-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img1.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">100 DA CASA CARNE</h2>
+				<p class="title_descricao">Carne, palmito, calabresa, mussarela, provolone e orégano</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img2.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">101 DA CASA FRANGO</h2>
+				<p class="title_descricao">Frango, palmito, catupiry, milho, provolone e orégano</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-2')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img3.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">102 PORTUGUESA</h2>
+				<p class="title_descricao">Ovo, presunto, azeitona, cebola, mussarela e orégano</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-3')">Cancelar</button>
+			</div>
+		</div>
+		
+
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img4.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">103 PIZZA</h2>
+				<p class="title_descricao">Tomate, cebola, mussarela, calabresa e orégano</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-4')">Cancelar</button>
+			</div>
+		</div>
+		
+
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img5.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">104 STROGONOFF DE CARNE</h2>
+				<p class="title_descricao">Strogonoff de carne, batata palha e champignon</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-5')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img6.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">105 STROGONOFF DE FRANGO</h2>
+				<p class="title_descricao">Strogonoff de carne, batata palha e champignon</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-6')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img7.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">106 QUATRO QUEIJOS</h2>
+				<p class="title_descricao">Mussarela, catupiry, provolone e cheddar</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-7')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-6-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria6-img8.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">107 PERU</h2>
+				<p class="title_descricao">Peito de peru defumado, catupiry e mussarela</p>
+				<p class="title_preco">R$ 10,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-6-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-6-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-6-8')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+		
+	<div id="descricao-categoria-7-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img1.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">201 MADRUGADÃO (INTEIRO)</h2>
+				<p class="title_descricao">Frango à passarinho, batata e polenta frita</p>
+				<p class="title_preco">R$ 44,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+<div id="descricao-categoria-7-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">205 ASINHA DE FRANGO</h2>
+				<p class="title_descricao">Asinhas de frango e polenta frita</p>
+				<p class="title_preco">R$ 29,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-2')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-7-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">211 POLENTA FRITA</h2>
+				<p class="title_descricao">Pedaços de polenta fritos</p>
+				<p class="title_preco">R$ 16,85</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-3')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-7-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">214 BATATA SMILE</h2>
+				<p class="title_descricao">18 unidades</p>
+				<p class="title_preco">R$ 15,75</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-4')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-7-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img5.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">231 ISCA DE TILÁPIA</h2>
+				<p class="title_descricao">Isca de tilápia à milanesa</p>
+				<p class="title_preco">R$ 34,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-5')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-7-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img6.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">237 MISTA ESPECIAL C/ FRITAS</h2>
+				<p class="title_descricao">Coração, alcatra, calabresa, frango, batatas fritas, pão com queijo, pepino, tomate, alface e cebola</p>
+				<p class="title_preco">R$ 52,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-6')">Cancelar</button>
+			</div>
+		</div>
+		
+	<!--------------------------------------------------------------------------------------------------------------->
+<div id="descricao-categoria-7-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria7-img7.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">239 PRATO DE FRIOS</h2>
+				<p class="title_descricao">Pedaços de queijo provolone, fatias de salame italiano, azeitonas verdes, ovos de codorna, pepino em conserva fatiado, tomate e pão torrado</p>
+				<p class="title_preco">R$ 34,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-7-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-7-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-7-7')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-8-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria8-img1.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">307 SALADA DE FRUTAS</h2>
+				<p class="title_descricao">Salada de frutas</p>
+				<p class="title_preco">R$ 9,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-8-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-8-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-8-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-8-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria8-img2.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">309 SUNDAE DE CHOCOLATE - SUNDAE DE MORANGO</h2>
+				<p class="title_descricao">SUNDAE DE CHOCOLATE ou de Morango</p>
+				<p class="title_preco">R$ 4,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-8-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-8-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-8-2')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	<div id="descricao-categoria-8-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria8-img3.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">311 MINISORVETE (CREME)</h2>
+				<p class="title_descricao">MINISORVETE (CREME)</p>
+				<p class="title_preco">R$ 3,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-8-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-8-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-8-3')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-8-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria8-img4.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">312 PETIT GATEAU</h2>
+				<p class="title_descricao">PETIT GATEAU</p>
+				<p class="title_preco">R$ 14,95</p>
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-8-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-8-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-8-4')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-8-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria8-img5.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">315 TORTINHA HOLANDESA</h2>
+				<p class="title_descricao">TORTINHA HOLANDESA</p>
+				<p class="title_preco">R$ 6,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-8-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-8-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-8-5')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-1" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img1.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">600 LUA CHEIA</h2>
+				<p class="title_descricao">Suco de uva, suco de morango, suco de maracujá, suco de abacaxi e leite de coco</p>
+				<p class="title_preco">R$ 11,60</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-1" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-1" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-1')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+
+	<div id="descricao-categoria-9-2" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img2.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">601 ALEXANDER</h2>
+				<p class="title_descricao">Conhaque, licor de cacau, creme de leite e canela</p>
+				<p class="title_preco">R$ 11,60</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-2" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-2')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-3" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img3.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">602 PIÑA COLADA</h2>
+				<p class="title_descricao">Rum Bacardi, licor Triple seco, suco de laranja, suco de abacaxi, leite de coco e açúcar</p>
+				<p class="title_preco">R$ 14,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-3" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-3" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-3')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-4" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img4.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">603 MARGARITA</h2>
+				<p class="title_descricao">Tequila, Cointreau e limão</p>
+				<p class="title_preco">R$ 18,65</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-4" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-4" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-4')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-5" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img5.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">607 MENINA DA NOITE</h2>
+				<p class="title_descricao">Concentrado de morango, groselha e Smirnoff</p>
+				<p class="title_preco">R$ 14,95</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-5" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-5" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-5')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-6" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img6.jpg" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">608 SEX ON THE BEACH</h2>
+				<p class="title_descricao">Smirnoff, licor de pêssego e suco de laranja</p>
+				<p class="title_preco">R$ 13,90</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-6" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-6" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-6')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-7" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img7.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">609 Pilsen Top Line</h2>
+				<p class="title_descricao">A cerveja mais consumida no mundo e com certeza a mais popular no Brasil. De cor clara e dourada, em função de ser filtrada, possui um corpo leve e de baixo amargor. Os lúpulos aromáticos utilizados em sua composição lembram o sabor das frutas da família das mirtáceas.</p>
+				<p class="title_preco">R$ 8,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-7" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-7" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-7')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+	<div id="descricao-categoria-9-8" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img8.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">610 Lager Premium</h2>
+				<p class="title_descricao">Produzida com técnicas de baixa fermentação, a lager não é filtrada e possui coloração dourada e opaca. De leve amargor, harmoniza com pratos leves e com saladas.</p>
+				<p class="title_preco">R$ 8,45</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-8" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-8" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-8')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+<div id="descricao-categoria-9-9" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img9.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">611 Rauch Weiss</h2>
+				<p class="title_descricao">A famosa cerveja de trigo. Com cor de cobre e turva, ela não é filtrada e utiliza em sua composição cinco tipos diferentes de maltes. Sua espuma é densa, com a cerveja exibindo fielmente o sabor de trigo defumado e aromas de cravo e banana</p>
+				<p class="title_preco">R$ 10,75</p>
+
+				
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-9" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-9" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-9')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+	
+<div id="descricao-categoria-9-10" dojoType="dojox.mobile.SimpleDialog" class="meuDialog"
+			>
+			<div class="modal_image">
+				<img alt="" src="img/categoria9-img10.png" class="img_modal">
+			</div>
+
+			<div class="modal_descricao">
+
+				<h2 class="title_modal">611 Wine</h2>
+				<p class="title_descricao">Uma cerveja diferenciada, que leva em sua elaboração a adição de vinho tinto. Dessa forma, o resultado é um sabor mais adocicado, e ainda assim refrescante e leve.</p>
+				<p class="title_preco">R$ 10,75</p>
+
+				
+				
+				
+			</div>
+			<div class="btn_adicionar_pedido_descricao_pedido">
+				<button  value="descricao-categoria-9-10" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>
+				<button  value="descricao-categoria-9-10" class="btn_cancelar_pedido" onclick="hide('descricao-categoria-9-10')">Cancelar</button>
+			</div>
+		</div>
+	<!--------------------------------------------------------------------------------------------------------------->
+		
+</div>	
+
+</body>
+
+</html>
+
+
+
+
