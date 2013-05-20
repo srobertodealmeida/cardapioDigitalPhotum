@@ -322,6 +322,11 @@ function createTable(tx){
 	tx.executeSql('DROP TABLE IF EXISTS Categorias');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL)');
 	
+    ////////////////////////////////////////////Produtos//////////////////////////////////////
+	// Table Produtos
+	tx.executeSql('DROP TABLE IF EXISTS Produtos');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,)');
+	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
 	// Table Config ()
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');

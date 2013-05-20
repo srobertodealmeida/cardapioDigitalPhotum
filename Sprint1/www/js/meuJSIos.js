@@ -283,7 +283,7 @@ function loaded(id){
 }
 
 
-function chamarProdutos(div){
+function chamarProdutos2(div){
 	
 	$(".selecionado").removeClass("selecionado");
 	$(".menu_content").addClass("escondido");
