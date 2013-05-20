@@ -1,4 +1,4 @@
-
+                                                            
 function montaCardapio(tx){
 	tx.executeSql('SELECT * FROM Categorias',[],montaCategoria,errorCB);
 }
@@ -18,24 +18,8 @@ function montaCategoria(tx,result){
 
 $(document).ready(function(){
 //TODO passar para config getdadosDrupal
-	db.transaction(createTable, errorCB, successCB);
-var ajaxCategoria = getAjax(urlViewCategoria);
-	
-	ajaxCategoria.success(function (data) {
-		  $.each(data, function(key, val) {
-			  console.log(val);
-			  arrayCategorias.push(val.node_title);
-			  
-		  });
-		  insertTable("categorias");
-		  
-    });
-	
-	ajaxCategoria.error(function (jqXHR, textStatus, errorThrown) {
-		sucessDadosDrupal = false;
-		alert('error');
-	});
-	
+
+	db.transaction(montaCardapio,errorCB);
 	
 	
 });

@@ -1,8 +1,7 @@
 
 // Variaveis globais
 
-//// Url /ips
-var ipServidorDrupal = "http://192.169.1.101/cardapio/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -126,12 +125,16 @@ function getDadosDrupal(tx){
 	
 	/////////////////Categoria/////////////////////////////////////
 	
-	var ajaxCategoria = getAjax(urlViewCategoria);
+    var ajaxCategoria = getAjax(urlViewCategoria);
 	
 	ajaxCategoria.success(function (data) {
 		  $.each(data, function(key, val) {
-			  alert(val.title);
+			  console.log(val);
+			  arrayCategorias.push(val.node_title);
+			  
 		  });
+		  quantidadeRegistros += arrayCategorias.length;
+		  insertTable("categorias");
 		  
     });
 	
@@ -226,9 +229,9 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
-	quantidadeRegistros = 7;
-	Mock();
-	//getDadosDrupal(tx);
+	//quantidadeRegistros = 7;
+	//Mock();
+	getDadosDrupal(tx);
 }
 
 
@@ -370,22 +373,23 @@ function insertTable(nomeTable){
 			}
             },errorCB,successInsert);
 	}else if (nomeTable == "categorias") {
-		
+        console.log("insertCategoria")
 		db.transaction(function(tx) {
+		    console.log("transactionCategoria");
 			var teste = arrayCategorias.length;
+			  console.log("arrayCategorias "+ teste);
 			for(i=0;i<arrayCategorias.length;i++){
 				console.log('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+				quantidadeRegistros = quantidadeRegistros - 1;
 				tx.executeSql('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
 			}
-            },errorCB,testeSucces);
+            },errorCB,successInsert);
 		
 	}
 	
 }
 
-function testeSucces(){
-	db.transaction(montaCardapio,errorCB); 
-}
+
 
 
 
@@ -402,7 +406,7 @@ function successCB() {
 }
 
 function successInsert(){
-	quantidadeRegistros = quantidadeRegistros - 1;
+	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
 		db.transaction(montaHome,errorCB);

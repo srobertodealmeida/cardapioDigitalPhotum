@@ -12,7 +12,6 @@ function  atualizar(){
 		 $.each(data, function(key, val) {
 	    	 if(val.atualizar == 'true'){
 	    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
-	    			 alert('versao == 1');
 	    			 init(val.versao);
 	    		 } else {
 	    			 versao = val.versao;
@@ -23,7 +22,7 @@ function  atualizar(){
 	    	
 	       });
      });
-	
+	 
 }
 
 function pegarUltimaVersao(tx){
@@ -31,6 +30,8 @@ function pegarUltimaVersao(tx){
 		  console.log(result.rows.item(0).versao);
 		  if(versao > parseInt(result.rows.item(0).versao)){// Caso versao for maior atualiza banco.
 			  init(versao);
+		  }else{
+			  db.transaction(montaHome,errorCB);
 		  }
 	    	
          },errorCB);
