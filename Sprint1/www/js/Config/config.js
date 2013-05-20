@@ -1,10 +1,14 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+//// Url /ips
+var ipServidorDrupal = "http://192.169.1.101/cardapio/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
+var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
 var pathAplicativo = "/CardapioPhotum";
+
+
 var rulFullImage = "" ;
 var nomeTable = "";
 var logo = false;
@@ -33,11 +37,11 @@ function init(versao){
 function getDadosDrupal(tx){
 	
 	/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
-	var ajax = getAjax(urlViewHome);
+	var ajaxHome = getAjax(urlViewHome);
 	
 	var titleIcone ="";
 	
-	ajax.success(function (data) {
+	ajaxHome.success(function (data) {
 	  $.each(data, function(key, val) {
 		     
 		     var arrayIconesAux =    val.icones.split(',');
@@ -116,10 +120,25 @@ function getDadosDrupal(tx){
 	     });
      });
 	
-	ajax.error(function (jqXHR, textStatus, errorThrown) {
+	ajaxHome.error(function (jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 	});
 	
+	/////////////////Categoria/////////////////////////////////////
+	
+	var ajaxCategoria = getAjax(urlViewCategoria);
+	
+	ajaxCategoria.success(function (data) {
+		  $.each(data, function(key, val) {
+			  alert(val.title);
+		  });
+		  
+    });
+	
+	ajaxCategoria.error(function (jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	});
 }
 
 /*
@@ -207,38 +226,12 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
-	//quantidadeRegistros = 7;
-	//Mock();
-	getDadosDrupal(tx);
+	quantidadeRegistros = 7;
+	Mock();
+	//getDadosDrupal(tx);
 }
 
-/*
- * Cria tabelas.
- */
-function createTable(tx){
-	
-	////////////////////////HOME//////////////////////////////////
 
-	// Table home (logo/background)
-	tx.executeSql('DROP TABLE IF EXISTS Home');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Home (id INTEGER PRIMARY KEY AUTOINCREMENT, logo TEXT NOT NULL, background TEXT NOT NULL)');
-	
-	console.log('create_tx',tx);
-	
-	// Table home (icones)
-	tx.executeSql('DROP TABLE IF EXISTS Icones');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Icones (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, image TEXT NOT NULL)');
-	
-	// Table home (propaganda)
-	tx.executeSql('DROP TABLE IF EXISTS Propaganda');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
-	
-	////////////////////////////////////////////CONFIG//////////////////////////////////////
-	// Table Config ()
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
-	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
-	
-}
 
 
 function montaHome(tx){
@@ -272,10 +265,10 @@ function montaIcones(tx,result){
 		console.log("iamgesicones: " + result.rows.item(i));
 		console.log("iamgesicones: " + result.rows.item(i).image);
 		if(i==0){
-		$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"template1Ios.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"  </div></a></div>");
+		$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"  </div></a></div>");
 		}else{
 			var idAnterior = i-1;
-			$("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"template1Ios.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"</div></a></div>").insertAfter('#itemIcones-'+ idAnterior);
+			$("<div id=\"itemIcones-" + i + "\" class=\"mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"</div></a></div>").insertAfter('#itemIcones-'+ idAnterior);
 		}
 		
     	console.log(result.rows.item(i));
@@ -300,6 +293,38 @@ function montaPropaganda(tx,result){
      });
 }
 
+/*
+ * Cria tabelas.
+ */
+function createTable(tx){
+	
+	////////////////////////HOME//////////////////////////////////
+
+	// Table home (logo/background)
+	tx.executeSql('DROP TABLE IF EXISTS Home');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Home (id INTEGER PRIMARY KEY AUTOINCREMENT, logo TEXT NOT NULL, background TEXT NOT NULL)');
+	
+	console.log('create_tx',tx);
+	
+	// Table home (icones)
+	tx.executeSql('DROP TABLE IF EXISTS Icones');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Icones (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, image TEXT NOT NULL)');
+	
+	// Table home (propaganda)
+	tx.executeSql('DROP TABLE IF EXISTS Propaganda');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
+	
+    ////////////////////////////////////////////Categorias//////////////////////////////////////
+	// Table cATEGORIAS
+	tx.executeSql('DROP TABLE IF EXISTS Categorias');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL)');
+	
+	////////////////////////////////////////////CONFIG//////////////////////////////////////
+	// Table Config ()
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
+	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
+	
+}
 /*
  * Faz os inserts
  */
@@ -344,11 +369,23 @@ function insertTable(nomeTable){
             tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
 			}
             },errorCB,successInsert);
+	}else if (nomeTable == "categorias") {
+		
+		db.transaction(function(tx) {
+			var teste = arrayCategorias.length;
+			for(i=0;i<arrayCategorias.length;i++){
+				console.log('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+				tx.executeSql('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+			}
+            },errorCB,testeSucces);
+		
 	}
 	
 }
 
-
+function testeSucces(){
+	db.transaction(montaCardapio,errorCB); 
+}
 
 
 
@@ -365,6 +402,7 @@ function successCB() {
 }
 
 function successInsert(){
+	quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
 		db.transaction(montaHome,errorCB);
