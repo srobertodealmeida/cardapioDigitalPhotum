@@ -1,10 +1,11 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
 var pathAplicativo = "/CardapioPhotum";
 
 
@@ -16,6 +17,7 @@ var sucessBanco = false;
 var versaoAtual = 0;
 var qtdIcones = 0;
 var qtdPropaganda = 0;
+var qtdProdutos = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
@@ -35,10 +37,21 @@ function init(versao){
 
 function getDadosDrupal(tx){
 	
+	
 	/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
 	var ajaxHome = getAjax(urlViewHome);
 	
 	var titleIcone ="";
+	
+	var produtosForm = {
+			title:"",
+			previa_descricao:"",
+			preco:"",
+			descricao:"",
+			descricao_saiba_mais:"",
+			categoria:"",
+			image:""
+  };
 	
 	ajaxHome.success(function (data) {
 	  $.each(data, function(key, val) {
@@ -55,11 +68,12 @@ function getDadosDrupal(tx){
 		  
 		     var url = $.parseHTML(val.background); //pega apenas href
 		     var urlString = url.toString();
+		    
 		     var extencao =  urlString.substr(urlString.length - 3);
 		     var pathDestino = pathAplicativo + "/home/background." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "background";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
 		     
 		     
 		     //////////////////Logo//////////////////////
@@ -70,7 +84,7 @@ function getDadosDrupal(tx){
 		     var pathDestino = pathAplicativo + "/home/logo." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "logo";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
 		     
              //////////////////Icones//////////////////////
 		     
@@ -94,14 +108,14 @@ function getDadosDrupal(tx){
 				  
 				  // Faz download das imagens e faz o insert dos dados
 				  //TODO fazer com que download das imagens não faça insenrt de dados separar.
-				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
+				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
 			  });
 	    	
 			//////////////////////Propagandas///////////////////////////
 			
 			  
 			   $.each(arrayPropagandasAux, function(key1, val1) {
-				   var url = $.parseHTML(val1); //pega apenas href
+				      var url = $.parseHTML(val1); //pega apenas href
 					  // esse if ´´e por causa dos outros elementos do array sem ser o primeiro a url vem como array sendo que o segundo é a url mesmo
 					  if(key1 >= 1){
 						 url = url[1];
@@ -113,7 +127,7 @@ function getDadosDrupal(tx){
 					  
 					  // Faz download das imagens e faz o insert dos dados
 					  //TODO fazer com que download das imagens não faça insenrt de dados separar.
-					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen); //faz donwload da imagen;
+					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
 			   });
 			  
 	     });
@@ -128,7 +142,7 @@ function getDadosDrupal(tx){
     var ajaxCategoria = getAjax(urlViewCategoria);
 	
 	ajaxCategoria.success(function (data) {
-		  $.each(data, function(key, val) {
+		$.each(data, function(key, val) {
 			  console.log(val);
 			  arrayCategorias.push(val.node_title);
 			  
@@ -142,12 +156,50 @@ function getDadosDrupal(tx){
 		sucessDadosDrupal = false;
 		alert('error');
 	});
+	
+   /////////////////////Produtos/////////////////////////////////////
+	
+    var ajaxProdutos = getAjax(urlViewProdutos);
+	
+    ajaxProdutos.success(function (data) {
+    	  qtdProdutos = data.length;  
+    	  quantidadeRegistros += qtdProdutos;
+		  $.each(data, function(key, val) {
+			  
+			  
+			  produtosForm.title = val.node_title;
+			  produtosForm.previa_descricao = val.previa_descricao;
+			  produtosForm.preco = val.preco;
+			  produtosForm.descricao = val.descricao;
+			  produtosForm.descricao_saiba_mais = val.descricao_saiba_mais;
+			  produtosForm.categoria = val.categoria;
+			  
+			  var url = $.parseHTML(val.imagem); //pega apenas href
+			  var urlString = url.toString();
+			  var extencao =  urlString.substr(urlString.length - 3);
+			  var pathDestino = pathAplicativo + "/home/produto." + key  + "."+ extencao; // url onde será salvo a imagen
+			  var typeImagen = "produtos";
+			  
+			  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
+			  
+			 
+			  
+    });
+		  
+    });
+	
+    ajaxProdutos.error(function (jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	});
+	
+    
 }
 
 /*
  * Método que faz download das imagense faz inserts
  */
-function downloadImages(url,pathDestino,tx,titleIcone,typeImagen){
+function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm){
     var fileTransfer = new FileTransfer();
     var url = encodeURI(url);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
@@ -164,7 +216,7 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen){
     	      };
     	      fileTransfer.download(url, imagePath, function (entry) {
     	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
-    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone);
+    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm);
     	      }, function (error) {
     	    	  sucessDadosDrupal = false;
     	    	  console.log("download error source " + error.source);
@@ -177,7 +229,7 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen){
 }
 
 // Método que salva path da imagem no form
-function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
+function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm){
 	console.log('nomeImage  : '+typeImagen);
 	if(typeImagen == "background"){
 		homeForm.background = imagePath;
@@ -212,6 +264,13 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone){
 		}
 		//insertTable("propagandas");
 		console.log("form propagandas" + propagandasForm.image);
+	}else if (typeImagen == "produtos") {
+		
+		produtosForm.image = imagePath;
+		arrayProdutos.push(produtosForm);
+		if(arrayProdutos.length == qtdProdutos){
+			insertTable("produtos");
+		}
 	}
 	
 	if(background == true && logo == true){
@@ -325,7 +384,7 @@ function createTable(tx){
     ////////////////////////////////////////////Produtos//////////////////////////////////////
 	// Table Produtos
 	tx.executeSql('DROP TABLE IF EXISTS Produtos');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, previa_descricao TEXT NOT NULL, preco TEXT NOT NULL, descricao TEXT NOT NULL, descricao_saiba_mais TEXT NOT NULL,  categoria TEXT NOT NULL, image TEXT NOT NULL)');
 	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
 	// Table Config ()
@@ -387,6 +446,32 @@ function insertTable(nomeTable){
 				console.log('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
 				quantidadeRegistros = quantidadeRegistros - 1;
 				tx.executeSql('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+			}
+            },errorCB,successInsert);
+		
+	}else if (nomeTable == "produtos") {
+        console.log("insertProdutos")
+		db.transaction(function(tx) {
+			
+			for(i=0;i<arrayProdutos.length;i++){
+				console.log('INSERT INTO Produtos(title) VALUES ("' + arrayCategorias[i] + '")');
+				quantidadeRegistros = quantidadeRegistros - 1;
+								tx
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image) VALUES ("'
+												+ arrayProdutos[i].title
+												+ '","'
+												+ arrayProdutos[i].previa_descricao
+												+ '","'
+												+ arrayProdutos[i].preco
+												+ '","'
+												+ arrayProdutos[i].descricao
+												+ '","'
+												+ arrayProdutos[i].descricao_saiba_mais
+												+ '","'
+												+ arrayProdutos[i].categoria
+												+ '","'
+												+ arrayProdutos[i].image +
+												'" )');
 			}
             },errorCB,successInsert);
 		
