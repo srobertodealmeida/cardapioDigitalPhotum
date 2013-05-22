@@ -36,6 +36,8 @@ function montaProdutos(tx,result){
 	 console.log( "NUmeroProdutoscomwhere" + result.rows.length);
 	 for(var i=0;i<result.rows.length;i++){
 		 console.log( "testantoselecProdutos" + result.rows.item(i).title);
+		 $(".mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+		 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 		 $("#UL-Produtos").append('<div class="divClicavel" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="show(\'categoria-2-1\')"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+result.rows.item(i).title+'</span><p class="preco_produto">'+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
 	 }
 }
