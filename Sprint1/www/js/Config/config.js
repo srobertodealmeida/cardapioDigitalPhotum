@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -43,7 +43,7 @@ function getDadosDrupal(tx){
 	
 	var titleIcone ="";
 	
-	var produtosForm = {
+	 var produtosFormVazio = {
 			title:"",
 			previa_descricao:"",
 			preco:"",
@@ -51,7 +51,8 @@ function getDadosDrupal(tx){
 			descricao_saiba_mais:"",
 			categoria:"",
 			image:""
-  };
+      };
+	
 	
 	ajaxHome.success(function (data) {
 	  $.each(data, function(key, val) {
@@ -73,7 +74,7 @@ function getDadosDrupal(tx){
 		     var pathDestino = pathAplicativo + "/home/background." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "background";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio); //faz donwload da imagen;
 		     
 		     
 		     //////////////////Logo//////////////////////
@@ -84,7 +85,7 @@ function getDadosDrupal(tx){
 		     var pathDestino = pathAplicativo + "/home/logo." + extencao; // url onde será salvo a imagen
 		     var typeImagen = "logo";
 		     
-		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
+		     downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio); //faz donwload da imagen;
 		     
              //////////////////Icones//////////////////////
 		     
@@ -108,7 +109,7 @@ function getDadosDrupal(tx){
 				  
 				  // Faz download das imagens e faz o insert dos dados
 				  //TODO fazer com que download das imagens não faça insenrt de dados separar.
-				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
+				  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio); //faz donwload da imagen;
 			  });
 	    	
 			//////////////////////Propagandas///////////////////////////
@@ -127,7 +128,7 @@ function getDadosDrupal(tx){
 					  
 					  // Faz download das imagens e faz o insert dos dados
 					  //TODO fazer com que download das imagens não faça insenrt de dados separar.
-					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm); //faz donwload da imagen;
+					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio); //faz donwload da imagen;
 			   });
 			  
 	     });
@@ -166,7 +167,15 @@ function getDadosDrupal(tx){
     	  quantidadeRegistros += qtdProdutos;
 		  $.each(data, function(key, val) {
 			  
-			  
+			  var produtosForm = {
+						title:"",
+						previa_descricao:"",
+						preco:"",
+						descricao:"",
+						descricao_saiba_mais:"",
+						categoria:"",
+						image:""
+			  };
 			  produtosForm.title = val.node_title;
 			  produtosForm.previa_descricao = val.previa_descricao;
 			  produtosForm.preco = val.preco;
@@ -290,6 +299,7 @@ function populateDB(tx) {
 	createTable(tx);
 	//quantidadeRegistros = 7;
 	//Mock();
+	
 	getDadosDrupal(tx);
 }
 
@@ -384,7 +394,7 @@ function createTable(tx){
     ////////////////////////////////////////////Produtos//////////////////////////////////////
 	// Table Produtos
 	tx.executeSql('DROP TABLE IF EXISTS Produtos');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, previa_descricao TEXT NOT NULL, preco TEXT NOT NULL, descricao TEXT NOT NULL, descricao_saiba_mais TEXT NOT NULL,  categoria TEXT NOT NULL, image TEXT NOT NULL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT )');
 	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
 	// Table Config ()
@@ -454,7 +464,21 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			
 			for(i=0;i<arrayProdutos.length;i++){
-				console.log('INSERT INTO Produtos(title) VALUES ("' + arrayCategorias[i] + '")');
+				console.log('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image) VALUES ("'
+						+ arrayProdutos[i].title
+						+ '","'
+						+ arrayProdutos[i].previa_descricao
+						+ '","'
+						+ arrayProdutos[i].preco
+						+ '","'
+						+ arrayProdutos[i].descricao
+						+ '","'
+						+ arrayProdutos[i].descricao_saiba_mais
+						+ '","'
+						+ arrayProdutos[i].categoria
+						+ '","'
+						+ arrayProdutos[i].image +
+						'" )');
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
 										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image) VALUES ("'
@@ -487,11 +511,24 @@ function insertTable(nomeTable){
 function errorCB(err) {
     alert("Error processing SQL: "+err.code);
     alert("Error processing SQL: "+err);
-    console.log('errorCodevamosver',err);
+    console.log('errorCodevamosver'+err);
 }
 
 //function will be called when process succeed
-function successCB() {
+function successCB(tx,result) {
+	console.log("deposi daki");
+	alert("d");
+	console.log(result);
+    for(var i=0;i<result.rows.length;i++){
+    	console.log("deposi daki ai sim");
+    	console.log(result.rows.item(i));
+		$("#background-home").attr('src', "" + result.rows.item(i).background);
+		$("#logo-home").attr('src', "" + result.rows.item(i).logo);
+		
+		
+		
+    }
+    
 	sucessBanco = true;
 }
 
@@ -552,4 +589,22 @@ function Mock(){
         tx.executeSql('INSERT INTO Propaganda(image) VALUES ("img/prop3.jpg")');
         },errorCB, successInsert);
 	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Produtos(categoria) VALUES ("PODEROSOS")');
+        
+        },errorCB, successInsert);
+	
+	db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Produtos(categoria) VALUES ("OUTROS")');
+        
+        },errorCB, successInsert);
+	db.transaction(montaHome,errorCB);
+	db.transaction(testeSelect,errorCB);
+	
+	
+	
+}
+
+function testeSelect(tx){
+	tx.executeSql('SELECT * FROM Produtos where categoria = "OUTROS"',[],successCB,errorCB);
 }

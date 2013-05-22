@@ -18,6 +18,7 @@ function montaCategoria(tx,result){
 
 function chamarProdutos(div){
 	categoriaSelecionado = $("#"+ div.id + " li").next('span').text();
+	console.log("catergoriaSelecionado: " + categoriaSelecionado);
 	
 	$("#UL-Produtos").html("");
 	$(".selecionado").removeClass("selecionado");
@@ -26,14 +27,16 @@ function chamarProdutos(div){
 }
 
 function selectDadosProdutos(tx){
-	 
-	tx.executeSql('SELECT * FROM Produtos where',[],montaProdutos,errorCB);
-	 
+	console.log("selectDadosProdutos: " + categoriaSelecionado);
+	console.log('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" ');
+	tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" ',[],montaProdutos,errorCB);
 }
 
 function montaProdutos(tx,result){
+	 console.log( "NUmeroProdutoscomwhere" + result.rows.length);
 	 for(var i=0;i<result.rows.length;i++){
-		 $("#UL-Produtos").append('<div class="divClicavel" id="categoria-2-1" onclick="show(\'categoria-2-1\')"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/categoria2-img1.png"></div> <span class="nome_produto">42 QUEIJO & BACON</span><p class="preco_produto">R$ 13,95</p><div class="previa_descricao_produto"><span>2 fatias de pão crocante, 2 caprichadas fatias de queijo, saborosas lascas de bacon...</span></div></div>');
+		 console.log( "testantoselecProdutos" + result.rows.item(i).title);
+		 $("#UL-Produtos").append('<div class="divClicavel" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="show(\'categoria-2-1\')"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+result.rows.item(i).title+'</span><p class="preco_produto">'+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
 	 }
 }
 

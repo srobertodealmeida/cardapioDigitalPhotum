@@ -51,6 +51,9 @@ function pegarUltimaVersao(tx){
 
 
 $(document).ready(function(){
+	
+	// db.transaction(populateDB, errorCB, successCB);
+	//quantidadeRegistros = 7;
 	 // Atualiza caso checbox no backend esteja setado como true;
 	 atualizar();
 	 
