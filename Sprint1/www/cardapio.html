@@ -160,72 +160,84 @@
 		</div>
 
 
-		
-	
-	<!-- Modal Nome pessoa -->
-	<div id="modal_nome_pessoa" dojoType="dojox.mobile.SimpleDialog" class="modal_nome_pessoa">
-		<form onsubmit=" return false;">
-		<h2 data-dojo-type="dojox.mobile.Heading"
-				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
-				align="center" class="title_modal_nome_pessoa">Pessoas da Mesa</h2>
-		<div id="mobileTransitionView5" class="modal_nome_pedido"
-			dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
-			
-			<ul dojoType="dojox.mobile.EdgeToEdgeList"  class="minhaUL-modal-nome-pessoa">
-				
-				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
-					id="addnum1"  name="1" class="liEditavel" onclick="chamarInput(this)" >
-					 	
-					<span  class="editavel">Adicionar pessoa...</span>
-					<input  type="checkbox"   class="mblCheckBox meuCheckBox"/>
-				</li>
-				
-				<input  onkeypress="salvarInput(this)"  name="addnum1" style="display:none" class="inputNome" type="text" />
-				
-				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
-					id="addnum2" name="2" class="liEditavel" onclick="chamarInput(this)">
-					<span  class="editavel">Adicionar pessoa...</span>
-					<input  type="checkbox"  class="mblCheckBox meuCheckBox"/>
-				</li>
-				<input onkeypress="salvarInput(this)"  name="addnum2" style="display:none" class="inputNome" type="text" />
-				<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'  
-					id="add3" name="3" class="liEditavel" onclick="chamarInput(this)">
-					<span  class="editavel">Adicionar pessoa...</span>
-					<input   type="checkbox"  class=" mblCheckBox meuCheckBox"/>
-				</li>
-				<input   onkeypress="salvarInput(this)"  name="add3" style="display:none" class="inputNome" type="text" />
-				
-			</ul>
-			</div>
-			<div data-dojo-type="dojox.mobile.Heading" data-dojo-props='moveTo:"#"'
-				data-dojo-props="fixed:'bottom'" style="font-size: 19px;"
-				align="center" class="mblListItem div_conjunto" onclick="selecionarPessoa(this)">
-				
-				<span class="editavel">Conta Conjunto</span>
-				<input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="meuCheckBox"/>
-				
 
-			</div>
 
-		<div class="form-adiconar-pessoa">
-			
-			<div class="observacao_pedido">
-			<label class="label label-observacao">Observação do Pedido:</label><br/>
-			<textarea class="textarea-observacao-produto" ></textarea>
-			</div>
-			
-	   </div>
+		<!-- Modal Nome pessoa -->
+		<div id="modal_nome_pessoa" dojoType="dojox.mobile.SimpleDialog"
+			class="modal_nome_pessoa">
+			<form onsubmit=" return false;">
+				<h2 data-dojo-type="dojox.mobile.Heading"
+					data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
+					align="center" class="title_modal_nome_pessoa">Pessoas da Mesa</h2>
+				<div id="mobileTransitionView5" class="modal_nome_pedido"
+					dojoType="dojox.mobile.ScrollableView"
+					data-dojo-props='threshold:100'>
 
-            <div class="btn_adicionar_pedido_modal_pessoa">
-				<button  value="modal_nome_pessoa" class="btn_adicionar_pedido btn-tamanho-adicionar-pessoa"  onclick="showModal_pedido(this)">Adicionar</button>
-				<button  id="btn_efetuar_pedido_2" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa" onclick="hide('modal_nome_pessoa')">Cancelar</button>
-			</div>
-</form>
-	</div>
+					<ul dojoType="dojox.mobile.EdgeToEdgeList"
+						class="minhaUL-modal-nome-pessoa">
 
-	
-	
-	<!-- Modal Lista individual -->
+						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+							id="addnum1" name="1" class="liEditavel"
+							onclick="chamarInput(this)"><span class="editavel">Adicionar
+								pessoa...</span> <input type="checkbox" class="mblCheckBox meuCheckBox" />
+						</li>
+
+						<input onkeypress="salvarInput(this)" name="addnum1"
+							style="display: none" class="inputNome" type="text" />
+
+						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+							id="addnum2" name="2" class="liEditavel"
+							onclick="chamarInput(this)"><span class="editavel">Adicionar
+								pessoa...</span> <input type="checkbox" class="mblCheckBox meuCheckBox" />
+						</li>
+						<input onkeypress="salvarInput(this)" name="addnum2"
+							style="display: none" class="inputNome" type="text" />
+						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
+							id="add3" name="3" class="liEditavel" onclick="chamarInput(this)">
+							<span class="editavel">Adicionar pessoa...</span> <input
+							type="checkbox" class=" mblCheckBox meuCheckBox" />
+						</li>
+						<input onkeypress="salvarInput(this)" name="add3"
+							style="display: none" class="inputNome" type="text" />
+
+					</ul>
+				</div>
+				<div data-dojo-type="dojox.mobile.Heading"
+					data-dojo-props='moveTo:"#"' data-dojo-props="fixed:'bottom'"
+					style="font-size: 19px;" align="center"
+					class="mblListItem div_conjunto" onclick="selecionarPessoa(this)">
+
+					<span class="editavel">Conta Conjunto</span> <input
+						data-dojo-type="dojox/mobile/CheckBox" type="checkbox"
+						class="meuCheckBox" />
+
+
+				</div>
+
+				<div class="form-adiconar-pessoa">
+
+					<div class="observacao_pedido">
+						<label class="label label-observacao">Observação do
+							Pedido:</label><br />
+						<textarea class="textarea-observacao-produto"></textarea>
+					</div>
+
+				</div>
+
+				<div class="btn_adicionar_pedido_modal_pessoa">
+					<button value="modal_nome_pessoa"
+						class="btn_adicionar_pedido btn-tamanho-adicionar-pessoa"
+						onclick="showModal_pedido(this)">Adicionar</button>
+					<button id="btn_efetuar_pedido_2" value="descricao-categoria-1-1"
+						class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa"
+						onclick="hide('modal_nome_pessoa')">Cancelar</button>
+				</div>
+			</form>
+		</div>
+
+
+
+		<!-- Modal Lista individual -->
 	<div id="modal_pedido" dojoType="dojox.mobile.SimpleDialog" class="modal_pedido">
 		
 		<h2 data-dojo-type="dojox.mobile.Heading"
