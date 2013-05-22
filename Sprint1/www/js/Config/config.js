@@ -396,10 +396,24 @@ function createTable(tx){
 	tx.executeSql('DROP TABLE IF EXISTS Produtos');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT )');
 	
+     ////////////////////////////////////////////Mesa//////////////////////////////////////
+	// Table Mesa
+	tx.executeSql('DROP TABLE IF EXISTS Mesa');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Mesa (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+	
+	
+	////////////////////////////////////////////Pessoas//////////////////////////////////////
+	// Table Mesa
+	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, pessoa TEXT NOT NULL)');
+	
+	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
 	// Table Config ()
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
 	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
+	
+	
 	
 }
 /*

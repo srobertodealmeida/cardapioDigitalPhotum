@@ -1,3 +1,5 @@
+var idProdutoAtual;
+
 require([
 "dojo/dom",
 "dijit/dijit",
@@ -137,13 +139,31 @@ function montaDescricao(tx,result){
 		$("#id-modal-descricao .modal_descricao .title_modal").text(result.rows.item(0).title);
 		$("#id-modal-descricao .modal_descricao .title_descricao").text(result.rows.item(0).descricao);
 		$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
-		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="showModalPessoa(this)">Adicionar</button>');
+		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="selectPessoa('+result.rows.item(0).id+')">Adicionar</button>');
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido" onclick="hide(\'id-modal-descricao\')">Cancelar</button>');
 		
 		show('id-modal-descricao');
 	}
 	
 }
+
+function selectPessoa(idProduto){
+	idProdutoAtual = idproduto;
+	hide('id-modal-descricao');
+	db.transaction(function(tx){
+		console.log("nameProdutoTentativa: "+ name);
+		tx.executeSql('SELECT * FROM Pessoas',[],montaAdicionarPessoa,errorCB);
+		
+	},errorCB);
+	
+}
+
+function montaAdicionarPessoa(tx,result){
+	
+	
+	
+}
+
 
 
 
