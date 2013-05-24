@@ -405,7 +405,12 @@ function createTable(tx){
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, pessoa TEXT NOT NULL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)');
+	
+    ////////////////////////////////////////////Pedido//////////////////////////////////////
+	// Table Mesa
+	tx.executeSql('DROP TABLE IF EXISTS Pedido');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,  nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT )');
 	
 	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
@@ -525,22 +530,15 @@ function insertTable(nomeTable){
 function errorCB(err) {
     alert("Error processing SQL: "+err.code);
     alert("Error processing SQL: "+err);
-    console.log('errorCodevamosver'+err);
+    console.log(err);
 }
 
 //function will be called when process succeed
 function successCB(tx,result) {
-	console.log("deposi daki");
-	alert("d");
-	console.log(result);
     for(var i=0;i<result.rows.length;i++){
-    	console.log("deposi daki ai sim");
     	console.log(result.rows.item(i));
 		$("#background-home").attr('src', "" + result.rows.item(i).background);
 		$("#logo-home").attr('src', "" + result.rows.item(i).logo);
-		
-		
-		
     }
     
 	sucessBanco = true;
@@ -604,16 +602,16 @@ function Mock(){
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Produtos(categoria) VALUES ("PODEROSOS")');
+        tx.executeSql('INSERT INTO Produtos(categoria,title) VALUES ("OUTROS","teste")');
         
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Produtos(categoria) VALUES ("OUTROS")');
+        tx.executeSql('INSERT INTO Categorias(title) VALUES ("OUTROS")');
         
         },errorCB, successInsert);
-	db.transaction(montaHome,errorCB);
-	db.transaction(testeSelect,errorCB);
+	//db.transaction(montaHome,errorCB);
+	//db.transaction(testeSelect,errorCB);
 	
 	
 	

@@ -130,7 +130,7 @@
 				<a href="home.html">
 				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" href="home1.html"  class="button">Home</button>
 				</a>
-				<button  id="btn_fecharConta" class="button" onclick="showChamarPrevia('modal_previa_pedido')">Fechar
+				<button  id="btn_fecharConta" class="button" onclick="montaPreviaPedido()">Fechar
 					Conta</button>
 				
 				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button">Chamar
@@ -163,7 +163,7 @@
 
 
 		<!-- Modal Nome pessoa -->
-		<div id="modal_nome_pessoa" dojoType="dojox.mobile.SimpleDialog"
+		<div id="id_modal_nome_pessoa" dojoType="dojox.mobile.SimpleDialog"
 			class="modal_nome_pessoa">
 			<form onsubmit=" return false;">
 				<h2 data-dojo-type="dojox.mobile.Heading"
@@ -173,44 +173,19 @@
 					dojoType="dojox.mobile.ScrollableView"
 					data-dojo-props='threshold:100'>
 
-					<ul dojoType="dojox.mobile.EdgeToEdgeList"
+					<ul id="id_ul_modal_nome_pessoa" dojoType="dojox.mobile.EdgeToEdgeList"
 						class="minhaUL-modal-nome-pessoa">
-
-						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-							id="addnum1" name="1" class="liEditavel"
-							onclick="chamarInput(this)"><span class="editavel">Adicionar
-								pessoa...</span> <input type="checkbox" class="mblCheckBox meuCheckBox" />
-						</li>
-
-						<input onkeypress="salvarInput(this)" name="addnum1"
-							style="display: none" class="inputNome" type="text" />
-
-						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-							id="addnum2" name="2" class="liEditavel"
-							onclick="chamarInput(this)"><span class="editavel">Adicionar
-								pessoa...</span> <input type="checkbox" class="mblCheckBox meuCheckBox" />
-						</li>
-						<input onkeypress="salvarInput(this)" name="addnum2"
-							style="display: none" class="inputNome" type="text" />
-						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-							id="add3" name="3" class="liEditavel" onclick="chamarInput(this)">
-							<span class="editavel">Adicionar pessoa...</span> <input
-							type="checkbox" class=" mblCheckBox meuCheckBox" />
-						</li>
-						<input onkeypress="salvarInput(this)" name="add3"
-							style="display: none" class="inputNome" type="text" />
 
 					</ul>
 				</div>
 				<div data-dojo-type="dojox.mobile.Heading"
 					data-dojo-props='moveTo:"#"' data-dojo-props="fixed:'bottom'"
 					style="font-size: 19px;" align="center"
-					class="mblListItem div_conjunto" onclick="selecionarPessoa(this)">
+					class="mblListItem div_conjunto naoEditavel" onclick="selecionarPessoa(this)">
 
 					<span class="editavel">Conta Conjunto</span> <input
 						data-dojo-type="dojox/mobile/CheckBox" type="checkbox"
 						class="meuCheckBox" />
-
 
 				</div>
 
@@ -227,10 +202,10 @@
 				<div class="btn_adicionar_pedido_modal_pessoa">
 					<button value="modal_nome_pessoa"
 						class="btn_adicionar_pedido btn-tamanho-adicionar-pessoa"
-						onclick="showModal_pedido(this)">Adicionar</button>
+						onclick="selectProdutoPedido(this)">Adicionar</button>
 					<button id="btn_efetuar_pedido_2" value="descricao-categoria-1-1"
 						class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa"
-						onclick="hide('modal_nome_pessoa')">Cancelar</button>
+						onclick="hide('id_modal_nome_pessoa')">Cancelar</button>
 				</div>
 			</form>
 		</div>
@@ -246,101 +221,9 @@
 		<div id="mobileTransitionView4" class="menu_pedido_confirmacao"
 			dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
 
-				<ul dojoType="dojox.mobile.EdgeToEdgeList"
+				<ul id="id-ul-modal-pedidos" dojoType="dojox.mobile.EdgeToEdgeList"
 					class="minhaUL-modal-nome-pessoa">
-					<li dojoType="dojox.mobile.ListItem" 
-						class="li_detalhe_pedido">
-						<div class="modal_pedido_nome_pessoa">
-							<span>Sergio </span>
-						</div>
-						<div class="modal_pedido_nome_produto">
-							<span>30 PODEROSO PICANHA</span>
-
-						</div>
-
-						<div class="modal_pedido_preco_produto">
-							<span>R$ 29,95</span>
-
-						</div>
-
-						<div id="quantidade-1" class="div-quantidade-somar-diminuir">
-							<button class="btn-decremento">-</button>
-							<span class="modal_pedido_quantidade">1</span>
-							<button class="btn-incremento">+</button>
-
-						</div>
-
-					</li>
-					<li dojoType="dojox.mobile.ListItem"
-						class="li_detalhe_pedido">
-						<div class="modal_pedido_nome_pessoa">
-							<span>Sergio </span>
-						</div>
-						<div class="modal_pedido_nome_produto">
-							<span>31 PODEROSO BACON</span>
-
-						</div>
-
-						<div class="modal_pedido_preco_produto">
-							<span>R$ 22,45</span>
-
-						</div>
-						<div id="quantidade-2" class="div-quantidade-somar-diminuir">
-							<button class="btn-decremento">-</button>
-							<span class="modal_pedido_quantidade">1</span>
-							<button class="btn-incremento">+</button>
-						</div>
-
-					</li>
-
-
-					<li dojoType="dojox.mobile.ListItem" 
-						class="li_detalhe_pedido">
-						<div class="modal_pedido_nome_pessoa">
-							<span>William </span>
-						</div>
-						<div class="modal_pedido_nome_produto">
-							<span>42 QUEIJO & BACON</span>
-
-						</div>
-
-						<div class="modal_pedido_preco_produto">
-							<span>R$ 13,95</span>
-
-						</div>
-
-						<div id="quantidade-3" class="div-quantidade-somar-diminuir">
-							<button class="btn-decremento">-</button>
-							<span class="modal_pedido_quantidade">1</span>
-							<button class="btn-incremento">+</button>
-						</div>
-
-					</li>
-
-					<li dojoType="dojox.mobile.ListItem"
-						class="li_detalhe_pedido">
-						<div class="modal_pedido_nome_pessoa">
-							<span>William </span>
-						</div>
-						<div class="modal_pedido_nome_produto">
-							<span>22 SPEED DOG</span>
-
-						</div>
-
-						<div class="modal_pedido_preco_produto">
-							<span>R$ 9,95</span>
-
-						</div>
-						<div id="quantidade-4" class="div-quantidade-somar-diminuir">
-							<button class="btn-decremento">-</button>
-							<span class="modal_pedido_quantidade">1</span>
-							<button class="btn-incremento">+</button>
-						</div>
-					</li>
-
-
-
-
+					
 				</ul>
 			</div>
 		<div class="btn_adicionar_pedido_descricao_pedido">

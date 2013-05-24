@@ -15,6 +15,7 @@ function  atualizar(){
 	    			 init(val.versao);
 	    		 } else {
 	    			 versao = val.versao;
+	    			 //init(5);
 	    			 db.transaction(pegarUltimaVersao,errorCB); 
 	    		 }
 		    	 
@@ -56,7 +57,7 @@ $(document).ready(function(){
 	//quantidadeRegistros = 7;
 	 // Atualiza caso checbox no backend esteja setado como true;
 	 atualizar();
-	 
+	//init(5);
 	 //db.transaction(selectDados,errorCB);
 	
      // Carrosel propaganda
