@@ -494,7 +494,7 @@ background-image: -webkit-linear-gradient(top, #00a200 0%, #00ba00 20%, #00ba00 
 
 .modal_pedido_nome_pessoa{
 	float: left;
-	width: 45%;
+	width: 20%;
 }
 .modal_pedido_quantidade{
 	left: 10;
@@ -504,9 +504,11 @@ background-image: -webkit-linear-gradient(top, #00a200 0%, #00ba00 20%, #00ba00 
 	width: 80%;
 }
 
+
+
 .modal_pedido_nome_produto{
 	float: left;
-	width: 33%;
+	width: 23%;
 }
 .div-quantidade-somar-diminuir{
 	width: 30%;
@@ -1569,6 +1571,7 @@ background-image: #4d4d4d !important;
 right: 33%;
 }
 
+
 .btn-incremento{
 	height: 35;
 	width: 40;
@@ -1618,4 +1621,14 @@ margin-left: 50;
 
 .preco-fechamento-conta{
 margin-right: 80;
+}
+
+.modal_pedido_nome_pessoa_detalhado{
+	float: left;
+	width: 45%;
+}
+
+.modal_pedido_nome_produto_detalhados{
+	float: left;
+	width: 33%;
 }
