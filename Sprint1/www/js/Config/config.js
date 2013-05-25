@@ -298,9 +298,9 @@ function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
 	//quantidadeRegistros = 7;
-	//Mock();
+	Mock();
 	
-	getDadosDrupal(tx);
+	//getDadosDrupal(tx);
 }
 
 
@@ -569,6 +569,25 @@ function getAjax(url){
 	      }
 	});
 	
+}
+
+function postAjax(){
+$.ajax({
+	dataType:'application/json',
+	url : "http://192.168.0.105/drupal-7.20/?q=rest/node.json",
+	type : "POST",
+	data : 'title=meutitulopelocodigoissosimfoieim&type=article',
+	// as specied in web service doc
+	success : function(data) {
+
+		alert('sucess');
+
+	},
+	error : function(data) {
+		console.log(data);
+		alert('error');
+	}
+});
 }
 
 function Mock(){

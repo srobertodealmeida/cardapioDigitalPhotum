@@ -15,8 +15,8 @@ function  atualizar(){
 	    			 init(val.versao);
 	    		 } else {
 	    			 versao = val.versao;
-	    			 //init(5);
-	    			 db.transaction(pegarUltimaVersao,errorCB); 
+	    			 init(5);
+	    			 //db.transaction(pegarUltimaVersao,errorCB); 
 	    		 }
 		    	 
 		     }
@@ -38,17 +38,6 @@ function pegarUltimaVersao(tx){
          },errorCB);
 }
 
-//function selectDados(tx){
-	//alert('selectDados');
-	// tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
-//}
-
-
-
-//function montaBackgroundLogo(){
-    
-    //console.log("teste",result.rows);
-//}
 
 
 $(document).ready(function(){

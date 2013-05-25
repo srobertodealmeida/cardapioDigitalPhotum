@@ -217,7 +217,7 @@
 		
 		<h2 data-dojo-type="dojox.mobile.Heading"
 				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
-				align="center" class="title_modal_nome_pessoa">Pedido da Mesa</h2>
+				align="center" class="title_modal_nome_pessoa">Pedidos da Mesa</h2>
 		<div id="mobileTransitionView4" class="menu_pedido_confirmacao"
 			dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
 
@@ -252,123 +252,8 @@
 				align="center" class="title_modal_nome_pessoa">Total</h2>
 		<div id="mobileTransitionView335" class="menu_pedido"
 			dojoType="dojox.mobile.ScrollableView" style="display:block !important" data-dojo-props='threshold:100'>
-				<ul data-dojo-type="dojox.mobile.GridLayout"
+				<ul id="id-ul-fechamento-conta" data-dojo-type="dojox.mobile.GridLayout"
 					class="minhaUL-modal-nome-pessoa">
-					<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-						class="liEditavel mostrarDetalhado" value="pedido_1" >
-						<div class="modal_pedido_nome_pessoa">
-							<div class="div-incremento">
-							<span class="incremento mais">+</span>
-							</div>
-							<span>Sergio </span>
-						</div>
-
-						<div class="modal_previa_preco_produto">
-							<span>R$ 52,40</span>
-                        <button id="btn_pedido_1" value="Sergio" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button>
-						</div>
-						
-					</li>
-
-					<div id="pedido_1" style="display: none" class="pedido_detalhado">
-         
-		                 <ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL-modal-nome-pessoa" >
-				
-								<li dojoType="dojox.mobile.ListItem"
-									data-dojo-props='moveTo:"#"' class="minhaLI li_detalhe_pedido">
-									<div class="modal_pedido_nome_pessoa">
-										<span>Sergio </span>
-									</div>
-									<div class="modal_pedido_nome_produto">
-										<span>30 PODEROSO PICANHA</span>
-
-									</div>
-
-									<div class="modal_pedido_preco_produto">
-										<span>R$ 29,95</span>
-									
-									</div>
-
-								</li>
-								<li dojoType="dojox.mobile.ListItem"
-									data-dojo-props='moveTo:"#"' class="minhaLI li_detalhe_pedido">
-									<div class="modal_pedido_nome_pessoa">
-										<span >Sergio </span>
-									</div>
-									<div class="modal_pedido_nome_produto">
-										<span>31 PODEROSO BACON</span>
-
-									</div>
-
-									<div class="modal_pedido_preco_produto">
-									<span>R$ 22,45</span>
-
-								</div>
-
-							</li>
-								</ul>
-								
-
-					</div>
-
-
-					<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-						class="liEditavel mostrarDetalhado" value="pedido_2" >
-						<div class="modal_pedido_nome_pessoa">
-							<div class="div-incremento">
-							<span class="incremento mais">+</span>
-							</div>
-							<span>William </span>
-						</div>
-
-						<div class="modal_previa_preco_produto">
-							<span>R$ 23,90</span>
-							<button id="btn_pedido_2" value="William" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button>
-
-						</div>
-						
-						
-					</li>
-					
-					<div id="pedido_2" style="display: none" class="pedido_detalhado">
-					<ul dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL-modal-nome-pessoa" >
-						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-							class="minhaLI li_detalhe_pedido">
-							<div class="modal_pedido_nome_pessoa">
-								<span>William </span>
-							</div>
-							<div class="modal_pedido_nome_produto">
-								<span>42 QUEIJO & BACON</span>
-
-							</div>
-
-							<div class="modal_pedido_preco_produto">
-								<span>R$ 13,95</span>
-
-							</div>
-
-						</li>
-
-						<li dojoType="dojox.mobile.ListItem" data-dojo-props='moveTo:"#"'
-							class="minhaLI li_detalhe_pedido">
-							<div class="modal_pedido_nome_pessoa">
-								<span>teste </span>
-							</div>
-							<div class="modal_pedido_nome_produto">
-								<span>22 SPEED DOG</span>
-
-							</div>
-
-							<div class="modal_pedido_preco_produto">
-								<span>R$ 9,95</span>
-
-							</div>
-
-						</li>
-						
-						</ul>
-					</div>
-					
 					
 
 				</ul>
@@ -391,6 +276,12 @@
 		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_pedido_confirmacao')">Não</button>
 	</div>
 	
+	<div id="modal_excluir_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao">Deseja realmente excluir esse pedido?</p>
+		<button  class="btn-sim-excluir-pessoa" onclick="excluirPedido(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_pedido_confirmacao')">Não</button>
+	</div>
+	
 	
 	<div id="modal_chamar_garcon" value="modal_chamar_garcon" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">Deseja realmente chamar o garçom?</p>
@@ -398,10 +289,10 @@
 		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_chamar_garcon')">Não</button>
 	</div>
 	
-	<div id="modal_fechar_conta" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+	<div id="modal_efetuar_pedido" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao"></p>
-		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_fechar_conta')">Não</button>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="efetuarPedido(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_efetuar_pedido')">Não</button>
 	</div>
 	
 	<div id="modal_chamar_garcom_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
