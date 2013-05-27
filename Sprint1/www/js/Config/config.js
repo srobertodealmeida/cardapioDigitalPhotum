@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.169.1.101/cardapio/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -21,6 +21,26 @@ var qtdProdutos = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
+
+
+function onLoad() {
+    document.addEventListener("deviceready", onDeviceReady, false);
+}
+
+function onDeviceReady() {
+	$("#preloader").fadeOut(1000);
+    document.addEventListener("pause", onPause, false);
+}
+
+function onResume() {
+	alert('resume');
+}
+
+function onPause() {
+	alert('pause');
+}
+
+
 
 function init(versao){
 	versaoAtual = versao;
@@ -298,9 +318,9 @@ function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
 	//quantidadeRegistros = 7;
-	Mock();
+	//Mock();
 	
-	//getDadosDrupal(tx);
+   getDadosDrupal(tx);
 }
 
 
@@ -405,7 +425,7 @@ function createTable(tx){
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT)');
 	
     ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Mesa
@@ -571,12 +591,12 @@ function getAjax(url){
 	
 }
 
-function postAjax(){
+function postAjax(url,data){
 	$.ajax({
 		dataType:'application/json',
-		url : "http://192.169.1.101/cardapio/?q=rest/node",
+		url : url,
 		type : "POST",
-		data : 'title=tutulopelocardapiodigital&type=article',
+		data : data,
 		
 		// as specied in web service doc
 		success : function(data) {

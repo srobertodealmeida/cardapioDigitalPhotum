@@ -91,6 +91,28 @@ require([
 		  
 		  registry.byId('modal_excluir_pedido').show();
 	  }
+      
+     showConfirmacaoFechamentoConta = function(dlg){
+		  
+		  $('#modal_fechar_conta p').text('Deseja realmente fechar a conta do/da ' + dlg.value ) ;
+		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',dlg.id) ;
+		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
+		  registry.byId('modal_fechar_conta').show();
+	  }
+     
+     showConfirmacaoPedidoIndividualGarcom = function(dlg){
+		  if(dlg.value != 'mesa'){
+		  $('#'+dlg.value).addClass('aguardandoPagamento');
+		    
+		  $('#'+dlg.value).text('Aguardando Pagamento');
+		  $('#'+dlg.value).attr("disabled", "disabled");
+		  }
+		    registry.byId('modal_fechar_conta').hide();
+		    if(dlg.value == 'mesa'){
+		    registry.byId('modal_previa_pedido').hide();
+		    }
+		    registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
+	  }
 	  
 });
 
@@ -206,14 +228,27 @@ function montaAdicionarPessoa(tx,result){
 					+ '" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
 		}
 		
+		
+		
+		
 	}else if(result.rows.length == 1){// Caso tiver apenas uma pessoa no banco de dados gera mais 2 li de adicionar pessoa
-		 $("#id_ul_modal_nome_pessoa").append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
-					+ 1
-					+ '" name="'
-					+ 1
-					+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><button title="'+result.rows.item(0).id+'" value="add1" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button  value="add1" title="'+result.rows.item(0).id+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button><span  class="editavel">'+result.rows.item(0).nome+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
-					+ 1
-					+ '" title="'+result.rows.item(0).id+'" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
+		 $("#id_ul_modal_nome_pessoa")
+				.append(
+						'<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
+								+ 1
+								+ '" name="'
+								+ 1
+								+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><span  class="editavel">'
+								+ result.rows.item(0).nome
+								+ '</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
+								+ 1
+								+ '" title="'
+								+ result.rows.item(0).id
+								+ '" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
+		 
+		 if(result.rows.item(0).associado_pedido != "true"){
+			 $('#add'+ 1+' .mblListItemRightIcon').after('<button  value="add1" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+result.rows.item(0).id+'" value="add1" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>')
+		 }
 		 
 		 for(i=2;i<4;i++){
 			  $("#id_ul_modal_nome_pessoa").append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
@@ -231,11 +266,14 @@ function montaAdicionarPessoa(tx,result){
 						+ value
 						+ '" name="'
 						+ value
-						+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><button  value="add'+value+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+result.rows.item(i).id+'" value="add'+value+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button><span  class="editavel">'+result.rows.item(i).nome+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
+						+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><span  class="editavel">'+result.rows.item(i).nome+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
 						+ value
 						+ '" title="'+result.rows.item(i).id+'" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
 			
 			
+			if(result.rows.item(i).associado_pedido != "true"){
+				 $('#add'+ value+' .mblListItemRightIcon').after('<button  value="add'+value+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+result.rows.item(i).id+'" value="add'+value+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>')
+			 }
 		}
 		
 		var valueUltimoLi = result.rows.length +1;
@@ -314,7 +352,7 @@ function salvarPessoa(input){
 		 }else{
 			 // Insert no banco de dados.
 			 db.transaction(function(tx) {
-	             tx.executeSql('INSERT INTO Pessoas(nome) VALUES ("' + input.value + '")');
+	             tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido) VALUES ("' + input.value + '","false")');
 	         },errorCB);
 			 
 			 $('<button  value="'+input.name+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+input.title+'" value="'+input.name+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>').insertAfter($("#" + input.name + " .mblListItemRightIcon"));
@@ -361,7 +399,8 @@ function adicionarPedido(tx,result){
 	 if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
 	        tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,nome_produto,preco_produto,quantidade,status) VALUES ("1","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
-	     },errorCB,selectPedidos);
+	        tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+		 },errorCB,selectPedidos);
 		 
 	 }else{
 		 alert("Favor selecionar uma pessoa");
@@ -424,7 +463,7 @@ function excluirPedido(){
 
 function efetuarPedido(){
 	db.transaction(function(tx) {
-		 tx.executeSql('SELECT * FROM Pedido',[],postPedidoDrupal,errorCB);
+		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],postPedidoDrupal,errorCB);
    },errorCB);
 }
 
@@ -432,14 +471,60 @@ function postPedidoDrupal(tx,result){
 		 db.transaction(function(tx) {
 			 for(var i=0;i<result.rows.length;i++){
 				 console.log(result.rows.item(i));
-             tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id='+result.rows.item(i).id+'');
+			 
+				 var mesa  = {
+	    			     "value":result.rows.item(i).mesa,
+				 }
+				 
+				 var pessoa  = {
+	    			     "value":""+result.rows.item(i).pessoa+"",
+				 }
+				 
+				 var observacao  = {
+	    			     "value":""+result.rows.item(i).observacao+"",
+				 }
+				 
+				 var nome_produto  = {
+	    			     "value":""+result.rows.item(i).nome_produto+"",
+				 }
+				 
+				 var preco_produto  = {
+	    			     "value":""+result.rows.item(i).preco_produto+"",
+				 }
+				 
+				 var quantidade_produto  = {
+	    			     "value":result.rows.item(i).quantidade,
+				 }
+				 
+				 var status  = {
+	    			     "value":""+result.rows.item(i).status+"",
+				 }
+	    			    
+	    		 var data  = {
+	    			     "type":"pedido",
+	    			     "field_mesa[und][0]":mesa,
+	    			     "field_pessoa[und][0]":pessoa,
+	    			     "field_observacao[und][0]":observacao,
+	    			     "field_nome_produto[und][0]":nome_produto,
+	    			     "field_preco_produto[und][0]":preco_produto,
+	    			     "field_quantidade[und][0]":quantidade_produto,
+	    			     "field_status[und][0]":status,
+	    			     "title":"Mesa: " + result.rows.item(i).mesa,
+	    			      
+	    			};
+	    		 postAjax(url,data);
+                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id='+result.rows.item(i).id+'');
+             
+             
+             
 			 }
 			 hide('modal_pedido');
 			 hide('modal_efetuar_pedido');
 			 show('modal_pedido_confirmacao_mensagem');
          },errorCB);
+		 var url="http://192.168.0.105/drupal-7.20/?q=rest/node";
 		 
-		 postAjax();
+		 
 	
 }
 
@@ -467,7 +552,7 @@ function montaModalPreviaPedido(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_1" value="Sergio" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
 								+ i
 								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
 	    }else{
@@ -490,18 +575,6 @@ function montaModalPreviaPedido(tx,result){
        });
      	$( "#pedido-fechamento-conta-"+numeroId+" .modal_previa_preco_produto span" ).text("Total: R$ " + total.toFixed(2));
     });
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-	
 	
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){
@@ -535,3 +608,7 @@ $(document).ready(function(){
 	db.transaction(montaCardapio,errorCB);
 	
 });
+
+
+
+

@@ -71,7 +71,7 @@
 </script>
 </head>
 
-<body id="bodyTeste" onload="hide_preloader();">
+<body id="bodyTeste" onload="onLoad();">
 <div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
@@ -294,6 +294,13 @@
 		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="efetuarPedido(this)">Sim</button>
 		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_efetuar_pedido')">Não</button>
 	</div>
+	
+	<div id="modal_fechar_conta" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao"></p>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_fechar_conta')">Não</button>
+	</div>
+	
 	
 	<div id="modal_chamar_garcom_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<div class="div-mensagem">

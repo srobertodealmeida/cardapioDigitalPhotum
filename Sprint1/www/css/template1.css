@@ -508,7 +508,7 @@ background-image: -webkit-linear-gradient(top, #00a200 0%, #00ba00 20%, #00ba00 
 
 .modal_pedido_nome_produto{
 	float: left;
-	width: 23%;
+	width: 43%;
 }
 .div-quantidade-somar-diminuir{
 	width: 30%;
@@ -1107,7 +1107,7 @@ body {
 
 .modal_pedido{
 	height: 86% !important;
-	width: 76%;
+	width: 86%;
 	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
@@ -1122,7 +1122,7 @@ body {
 
 .modal_fechar_conta{
 	height: auto !important;
-	width: 86%;
+	width: 83% !important;
 	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
@@ -1565,12 +1565,11 @@ background-image: #4d4d4d !important;
 	position: relative;
 }
 
-.modal_pedido_preco_produto{
+.modal_pedido_preco_produto {
 	height: 1%;
 	position: absolute;
-right: 33%;
+	right: 30%;
 }
-
 
 .btn-incremento{
 	height: 35;
@@ -1642,4 +1641,32 @@ margin-left: 50;
 .modal_pedido_preco_produto_detalhado{
 float: right;
 width: 47%;
+}
+
+#preloader {
+	background: #000;
+	position:fixed;
+	left:0px; 
+	top:0px; 
+	width:100%; 
+	height:100%; 
+	text-align:center;
+	color:#fff;
+	z-index: 200;
+}
+#preloader div {
+	width:400px;
+	height:100% !important;
+	margin:auto;
+	height: 3px;
+	text-align:center;
+	position: relative;
+    top: 50%;
+	overflow:hidden;
+	z-index: 400;
+}
+#preloader_image {
+	position: relative;
+	left:0px;
+	z-index: 500;
 }

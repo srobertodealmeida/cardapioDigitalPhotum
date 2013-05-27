@@ -110,27 +110,9 @@ require([
 	  
 	  
 	  
-	  showConfirmacaoPedidoIndividualGarcom = function(dlg){
-		  if(dlg.value != 'mesa'){
-		  $('#'+dlg.value).addClass('aguardandoPagamento');
-		    
-		  $('#'+dlg.value).text('Aguardando Pagamento');
-		  $('#'+dlg.value).attr("disabled", "disabled");
-		  }
-		    registry.byId('modal_fechar_conta').hide();
-		    if(dlg.value == 'mesa'){
-		    registry.byId('modal_previa_pedido').hide();
-		    }
-		    registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
-	  }
 	 
-	  showConfirmacaoFechamentoConta = function(dlg){
-		  
-		  $('#modal_fechar_conta p').text('Deseja realmente fechar a conta do/da ' + dlg.value ) ;
-		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',dlg.id) ;
-		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
-		  registry.byId('modal_fechar_conta').show();
-	  }
+	 
+	  
 	  
      
 	  
