@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.169.1.101/cardapio/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -572,22 +572,28 @@ function getAjax(url){
 }
 
 function postAjax(){
-$.ajax({
-	dataType:'application/json',
-	url : "http://192.168.0.105/drupal-7.20/?q=rest/node.json",
-	type : "POST",
-	data : 'title=meutitulopelocodigoissosimfoieim&type=article',
-	// as specied in web service doc
-	success : function(data) {
+	$.ajax({
+		dataType:'application/json',
+		url : "http://192.169.1.101/cardapio/?q=rest/node",
+		type : "POST",
+		data : 'title=tutulopelocardapiodigital&type=article',
+		
+		// as specied in web service doc
+		success : function(data) {
 
-		alert('sucess');
+			alert('sucess');
 
-	},
-	error : function(data) {
-		console.log(data);
-		alert('error');
-	}
-});
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	});
+
+
+
+
+
+
 }
 
 function Mock(){
@@ -621,7 +627,7 @@ function Mock(){
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Produtos(categoria,title) VALUES ("OUTROS","teste")');
+        tx.executeSql('INSERT INTO Produtos(categoria,title,preco) VALUES ("OUTROS","teste","4.50")');
         
         },errorCB, successInsert);
 	

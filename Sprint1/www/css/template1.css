@@ -1593,6 +1593,7 @@ right: 33%;
 .btn-decremento{
 	height: 35;
 	width: 40;
+	font-size:80%;
 	margin-right: 10 !important;
 	background-color: #000000;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401);
@@ -1605,8 +1606,9 @@ right: 33%;
 .btn-excluir-pedido{
 	height: 35;
 	width: 60;
-	
+	border-radius:25 25 25 25;
 	background-color: #000000;
+	font-size:90%;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401);
 	background-image: -webkit-linear-gradient(top, #ff2136, #100401);
 	background-image: linear-gradient(top, #ff2136, #100401);
@@ -1625,10 +1627,19 @@ margin-right: 80;
 
 .modal_pedido_nome_pessoa_detalhado{
 	float: left;
-	width: 45%;
+	width: 20%;
 }
 
-.modal_pedido_nome_produto_detalhados{
+.modal_pedido_nome_produto_detalhado{
 	float: left;
-	width: 33%;
+width: 53%;
+}
+
+.modal_pedido_nome_produto_detalhado span{
+float: left;
+margin-left: 50;
+}
+.modal_pedido_preco_produto_detalhado{
+float: right;
+width: 47%;
 }

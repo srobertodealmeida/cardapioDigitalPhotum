@@ -211,7 +211,7 @@ function montaAdicionarPessoa(tx,result){
 					+ 1
 					+ '" name="'
 					+ 1
-					+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><button title="'+result.rows.item(0).id+'" value="add1" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button  value="add1" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button><span  class="editavel">'+result.rows.item(0).nome+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
+					+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel naoEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><button title="'+result.rows.item(0).id+'" value="add1" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button  value="add1" title="'+result.rows.item(0).id+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button><span  class="editavel">'+result.rows.item(0).nome+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
 					+ 1
 					+ '" title="'+result.rows.item(0).id+'" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
 		 
@@ -271,7 +271,6 @@ function mostrarImput(li){
 	 
 	 $("#"+ li.id + ' .editavel').hide();
 	 if($("#"+ li.id + ' .editavel').text() != "Adicionar pessoa..."){
-		 alert('aki');
 	 $("#"+ li.id).next(".inputNome").attr("value",$("#"+ li.id + ' .editavel').text());
 	 }
 	 $("#"+ li.id).next(".inputNome").show();
@@ -320,22 +319,7 @@ function salvarPessoa(input){
 			 
 			 $('<button  value="'+input.name+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+input.title+'" value="'+input.name+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>').insertAfter($("#" + input.name + " .mblListItemRightIcon"));
 		 }
-		 /**
-		    if ($("#" + input.name).attr('name') == $('#id_ul_modal_nome_pessoa .liEditavel').size()) {
-			var valorName = parseInt($('#id_ul_modal_nome_pessoa .liEditavel').size()) + 1;
-			var valorID = parseInt($('#id_ul_modal_nome_pessoa .liEditavel').size()) + 1;
-			$(
-					'<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
-							+ valorID
-							+ '" name="'
-							+ valorName
-							+ '" onclick="selecionarPessoa(this)" class="mblListItem liEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><span  class="editavel">Adicionar pessoa...</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
-							+ valorID
-							+ '" style="display:none" onkeypress="salvarInput(this)" class="inputNome" type="text" />')
-					.insertAfter(input);
-		}
-		 */
-		
+	
 		  $(input).trigger('blur');
 		  $(input).hide();
 		  $("#" + input.name).addClass('naoEditavel');
@@ -394,7 +378,7 @@ function selectPedidos(){
 function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
 	for(var i=0;i<result.rows.length;i++){
-		$("#id-ul-modal-pedidos").append('<li dojoType="dojox.mobile.ListItem" class="mblListItem li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >Excluir</button></div><div class="mblListItemLabel " style="display: inline;"></div></li>');
+		$("#id-ul-modal-pedidos").append('<li dojoType="dojox.mobile.ListItem" class="mblListItem li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button></div><div class="mblListItemLabel " style="display: inline;"></div></li>');
 	}
 	
 	$(".btn-decremento").click(function(e){
@@ -461,7 +445,7 @@ function postPedidoDrupal(tx,result){
 
 function montaPreviaPedido(){
 	db.transaction(function(tx) {
-		 tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido"',[],montaModalPreviaPedido,errorCB);
+		 tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido" order by pessoa',[],montaModalPreviaPedido,errorCB);
   },errorCB);
 }
 
@@ -470,10 +454,54 @@ function montaModalPreviaPedido(tx,result){
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
 	show('modal_previa_pedido');
+	var ultimaPessoa = "";
+	var ultimoI;
+	var numeroDivPai = 0;
 	for(var i=0;i<result.rows.length;i++){
-		$("#id-ul-fechamento-conta").append('<li id="pedido-fechamento-conta-'+i+'" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'+i+'" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+' </span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta">'+result.rows.item(i).preco_produto+'</span> <button id="btn_pedido_1" value="Sergio" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'+i+'" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" > <li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa_detalhado"> <span>Sergio </span> </div> <div class="modal_pedido_nome_produto_detalhado"> <span>30 PODEROSO PICANHA</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ 29,95</span> </div>  </li> 	<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa"> <span >Sergio </span> </div> 	<div class="modal_pedido_nome_produto"> <span>31 PODEROSO BACON</span> </div> <div class="modal_pedido_preco_produto"> <span>R$ 22,45</span>  </div>  </li></ul> </div>');
-
+		if(i==0 || ultimaPessoa != result.rows.item(i).pessoa)	{
+	    ultimoI = i;
+	    numeroDivPai += 1;
+		$("#id-ul-fechamento-conta")
+		    .append(
+						'<li id="pedido-fechamento-conta-'
+								+ i
+								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
+								+ i
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_1" value="Sergio" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ i
+								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
+	    }else{
+	    	$("#pedido_detalhado-"+ultimoI+" .minhaUL-modal-nome-pessoa")
+		    .append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> ');
+	    }
+		
+		
+		
+		ultimaPessoa = result.rows.item(i).pessoa;
 	}
+	
+	$( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
+   	 var total = 0.00;
+   	 var numeroId = this.id.replace('pedido-fechamento-conta-','');
+     	$( "#pedido_detalhado-"+numeroId+" .modal_pedido_preco_produto_detalhado span" ).each(function( index ) {
+     		
+   	   var valor = $(this).text().replace('R$ ', '');
+   	   total += parseFloat(valor);
+       });
+     	$( "#pedido-fechamento-conta-"+numeroId+" .modal_previa_preco_produto span" ).text("Total: R$ " + total.toFixed(2));
+    });
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
 	
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){
