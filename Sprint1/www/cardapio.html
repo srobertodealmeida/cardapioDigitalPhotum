@@ -71,7 +71,7 @@
 </script>
 </head>
 
-<body id="bodyTeste" onload="onLoad();">
+<body id="bodyTeste" onload="onDeviceReady();">
 <div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
@@ -132,6 +132,8 @@
 				</a>
 				<button  id="btn_fecharConta" class="button" onclick="montaPreviaPedido()">Fechar
 					Conta</button>
+					
+			    <button  id="btn_fecharConta" class="button" onclick="selectProdutoMeuPedido()">Meu Pedido</button>
 				
 				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button">Chamar
 					Garçom</button>
@@ -279,7 +281,7 @@
 	<div id="modal_excluir_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">Deseja realmente excluir esse pedido?</p>
 		<button  class="btn-sim-excluir-pessoa" onclick="excluirPedido(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_pedido_confirmacao')">Não</button>
+		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_excluir_pedido')">Não</button>
 	</div>
 	
 	
@@ -314,6 +316,20 @@
 		<span>Aguarde, logo seu pedido será atendido</span>
 		</div>
 		<button class="btn_ok_mensagem" onclick="hide('modal_pedido_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<div id="modal_sem_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span>Sem pedidos no momento</span>
+		</div>
+		<button class="btn_ok_mensagem" onclick="hide('modal_sem_pedido')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<div id="modal_favor_selecionar_pessoa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span>Favor selecionar uma pessoa</span>
+		</div>
+		<button class="btn_ok_mensagem" onclick="hide('modal_favor_selecionar_pessoa')" id="btn_ok_final">OK</button>
 	</div>
 	
 		

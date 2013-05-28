@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -29,9 +29,10 @@ function onLoad() {
 
 function onDeviceReady() {
 	$("#preloader").fadeOut(1000);
-    document.addEventListener("pause", onPause, false);
+    //document.addEventListener("pause", onPause, false);
 }
 
+/**
 function onResume() {
 	alert('resume');
 }
@@ -39,7 +40,7 @@ function onResume() {
 function onPause() {
 	alert('pause');
 }
-
+*/
 
 
 function init(versao){
@@ -608,11 +609,27 @@ function postAjax(url,data){
 			console.log(data);
 		}
 	});
+}
 
+function putAjax(url,data){
+	$.ajax({
+		contentType:"application/x-www-form-urlencoded; charset=utf-8",
+		url : url,
+		type : "put",
+		data : data,
+		
+		// as specied in web service doc
+		success : function(data) {
 
+			alert('sucess');
 
-
-
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+	        console.log(JSON.stringify(XMLHttpRequest));
+	        console.log(JSON.stringify(textStatus));
+	        console.log(JSON.stringify(errorThrown));
+	      },
+	});
 
 }
 

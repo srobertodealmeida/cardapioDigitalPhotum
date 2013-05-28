@@ -214,7 +214,7 @@ function montaAdicionarPessoa(tx,result){
 	//Limpa li.
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
 	$("#id_ul_modal_nome_pessoa .inputNome").remove();
-	
+	$(".textarea-observacao-produto").val('');
 	
 	if(result.rows.length == 0){//Caso não tiver nenhuma pessoa no banco de dadosmonta 2 li com adicionar pessoa
 		console.log("entrou no if montaPessoa")
@@ -392,6 +392,12 @@ function selectProdutoPedido(){
      },errorCB);
 }
 
+function selectProdutoMeuPedido(){
+	 db.transaction(function(tx) {
+		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
+    },errorCB);
+}
+
 function adicionarPedido(tx,result){
 	
     var observacao =  $(".textarea-observacao-produto").val();
@@ -403,7 +409,7 @@ function adicionarPedido(tx,result){
 		 },errorCB,selectPedidos);
 		 
 	 }else{
-		 alert("Favor selecionar uma pessoa");
+		 show("modal_favor_selecionar_pessoa");
      }
 	}
 }
@@ -416,10 +422,12 @@ function selectPedidos(){
 
 function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
+	if(result.rows.length == 0){
+		show('modal_sem_pedido');
+	}else{
 	for(var i=0;i<result.rows.length;i++){
 		$("#id-ul-modal-pedidos").append('<li dojoType="dojox.mobile.ListItem" class="mblListItem li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button></div><div class="mblListItemLabel " style="display: inline;"></div></li>');
 	}
-	
 	$(".btn-decremento").click(function(e){
 		 if(parseInt($(this).next('span').text()) > 1){
 		 var quantidade =  parseInt($(this).next('span').text()) - 1;
@@ -449,6 +457,7 @@ function montaModalPedido(tx,result){
 	
 	hide('id_modal_nome_pessoa');
 	show('modal_pedido');
+	}
 }
 
 function excluirPedido(){
@@ -510,19 +519,19 @@ function postPedidoDrupal(tx,result){
 	    			     "field_quantidade[und][0]":quantidade_produto,
 	    			     "field_status[und][0]":status,
 	    			     "title":"Mesa: " + result.rows.item(i).mesa,
-	    			      
 	    			};
-	    		 postAjax(url,data);
+				 //"+ decodeURIComponent("212")+".json"
+				 var url=""+ipServidorDrupal+"/node";
+                 postAjax(url,data);
+				 //putAjax(url,data);
                  tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id='+result.rows.item(i).id+'');
              
-             
-             
 			 }
+			
 			 hide('modal_pedido');
 			 hide('modal_efetuar_pedido');
 			 show('modal_pedido_confirmacao_mensagem');
          },errorCB);
-		 var url="http://192.168.0.105/drupal-7.20/?q=rest/node";
 		 
 		 
 	
