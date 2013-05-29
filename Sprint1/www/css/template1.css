@@ -36,13 +36,12 @@
 	font-size: 21px;
 	color: white !important;
 }
-.textarea-observacao-produto{
+
+.textarea-observacao-produto {
 	font-size: 30px;
 	height: 78%;
-   width: 100%;
+	width: 100%;
 }
-
-
 
 .previa_descricao_produto {
 	height: 50% !important;
@@ -252,15 +251,14 @@
 	top: 0;
 }
 
-.title_modal_nome_pessoa{
+.title_modal_nome_pessoa {
 	border-radius: 13px 13px 13px 13px;
 	font-size: 30 !important;
 }
-.title_modal_nome_pessoa span{
 
+.title_modal_nome_pessoa span {
 	margin-top: 130 !important;
 }
-
 
 .menu_content {
 	border-radius: 3px 3px 3px 3px;
@@ -303,15 +301,12 @@
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 	-webkit-appearance: none;
 	margin: 10;
-	
-	
-	
 	height: 17% !important;
 	font-size: 23;
 	width: 17%;
 }
 
-.btn_adicionar_mais_itens{
+.btn_adicionar_mais_itens {
 	float: left;
 	bottom: 0;
 	position: absolute;
@@ -337,19 +332,16 @@
 	vertical-align: middle;
 	size: 20px;
 	position: absolute;
-    left: 0;
+	left: 0;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 	-webkit-appearance: none;
 	margin: 10;
-	
-	
-	
 	height: 17% !important;
 	font-size: 23;
 	width: 17%;
 }
 
-.btn_editar_pessoa{
+.btn_editar_pessoa {
 	position: absolute;
 	right: 0;
 	z-index: 10;
@@ -385,8 +377,7 @@
 	padding: 10px 12 10 10;
 }
 
-
-.btn_ok_mensagem{
+.btn_ok_mensagem {
 	float: right;
 	bottom: 0;
 	position: relative;
@@ -418,13 +409,12 @@
 	height: 45;
 	margin: 10px 0 20 0
 }
-.btn-modal-confirmacao{
+
+.btn-modal-confirmacao {
 	height: auto !important;
-	
 }
 
-.btn_fechar_conta_individual{
-	
+.btn_fechar_conta_individual {
 	float: right;
 	bottom: 5;
 	position: absolute;
@@ -455,7 +445,7 @@
 	width: 30%;
 }
 
-.btn-adicionar-nome{
+.btn-adicionar-nome {
 	background: #1a1103;
 	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
 		to(#1a1103) );
@@ -483,66 +473,50 @@
 	margin: 5;
 }
 
-.meuCheckBox:checked{
-background-image: -webkit-linear-gradient(top, #00a200 0%, #00ba00 20%, #00ba00 20%, #00d300 100%) !important;
+.meuCheckBox:checked {
+	background-image: -webkit-linear-gradient(top, #00a200 0%, #00ba00 20%, #00ba00 20%,
+		#00d300 100%) !important;
 }
-.span-modal-confirmacao{
+
+.span-modal-confirmacao {
 	color: black !important;
 	font-size: 25;
 	float: right;
 }
 
-.modal_pedido_nome_pessoa{
+.modal_pedido_nome_pessoa {
 	float: left;
 	width: 20%;
+	margin-left: 50;
 }
-.modal_pedido_quantidade{
+
+.modal_pedido_quantidade {
 	left: 10;
 }
 
-.modal_previa_preco_produto{
+.modal_previa_preco_produto {
 	width: 80%;
 }
 
-
-
-.modal_pedido_nome_produto{
+.modal_pedido_nome_produto {
 	float: left;
 	width: 43%;
 }
-.div-quantidade-somar-diminuir{
+
+.div-quantidade-somar-diminuir {
 	width: 30%;
 	float: right;
 }
-.btn_adcionar_produto{
+
+.btn_adcionar_produto {
 	float: left;
 }
-
 
 .div-btn-adicionar-pessoa {
 	float: left;
 	margin-left: 10;
 }
 
-/*
-.btn_mais_detalhes{
-background: none repeat scroll 0 0 black;
-    border-radius: 15px 15px 15px 15px;
-    box-shadow: 0 1px 0 #000000;
-    color: white;
-    float: left;
-    font-family: Helvetica,Arial,Sans-Serif;
-    font-size: 96%;
-    opacity: 0.7;
-    padding: 12px 1px;
-    size: 10px;
-    text-decoration: none;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
-    vertical-align: middle;
-    z-index: 10;
-	
-}
-*/
 .btn_cancelar_pedido {
 	bottom: 0;
 	position: absolute;
@@ -607,6 +581,7 @@ background: none repeat scroll 0 0 black;
 	text-align: center;
 	padding: 10px 12 10 10;
 }
+
 .ui-dialog-titlebar {
 	border: 3px solid #fff0fc !important;
 	border-radius: 50px !important;
@@ -668,8 +643,6 @@ background: none repeat scroll 0 0 black;
 	position: relative;
 	background-color: #c2c2c2 !important;
 	color: #cccccc !important;
-	
-	
 	border-bottom: medium none !important;
 	color: white !important;
 	height: 50px !important;
@@ -678,17 +651,16 @@ background: none repeat scroll 0 0 black;
 	overflow: hidden;
 	padding: 4px !important;
 	position: relative;
-	
-	
 }
 
-.inputNome{
-position: relative;
-top: -54;
-width: 50%;
-font-size: 30px !important;
+.inputNome {
+	position: relative;
+	top: -54;
+	width: 50%;
+	font-size: 30px !important;
 }
-.div_conjunto{
+
+.div_conjunto {
 	overflow: hidden;
 	padding: 4px !important;
 	margin-top: -13px;
@@ -708,13 +680,13 @@ font-size: 30px !important;
 	position: relative;
 	width: 99.4% !important;
 	background-color: #c2c2c2 !important;
-	
-	background-image:none !important;
+	background-image: none !important;
 }
-.div_conjunto .meuCheckBox{
+
+.div_conjunto .meuCheckBox {
 	right: 30px !important;
-	
 }
+
 .minhaUL-modal-nome-pessoa {
 	background-color: transparent !important;
 }
@@ -739,50 +711,31 @@ font-size: 30px !important;
 
 .btn_adicionar_pedido_descricao_pedido {
 	clear: both;
-	
 	height: 50px;
 	height: 20%;
 }
 
-.btn_adicionar_pedido_modal_pessoa{
+.btn_adicionar_pedido_modal_pessoa {
 	clear: both;
 	height: 10%;
 	height: 50px;
 }
-.btn_adicionar_pedido_previa_pedido{
+
+.btn_adicionar_pedido_previa_pedido {
 	clear: both;
 	height: 10%;
 	height: 40px;
 	float: right;
 }
 
-
-.btn-previa-pedido{
+.btn-previa-pedido {
 	right: 19%;
 	bottom: -40;
 }
 
-
-
-.mensagem{
+.mensagem {
 	height: auto !important;
 	width: 50% !important;
-
-	
-	background-color: #000000 !important;
-	border: 3px solid #fff0fc !important;
-	border-radius: 29px !important;
-	background-image: -moz-linear-gradient(top, #fff7f2, #cfcdc4) !important;
-	background-image: -webkit-linear-gradient(top, #fff7f2, #cfcdc4)!important;
-	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
-	background-clip: padding-box !important;
-}
-
-.mensagem-garcon{
-	height: 25% !important;
-	width: 50% !important;
-
-	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
 	border-radius: 29px !important;
@@ -793,7 +746,20 @@ font-size: 30px !important;
 	background-clip: padding-box !important;
 }
 
-.btn-sim-excluir-pessoa{
+.mensagem-garcon {
+	height: 25% !important;
+	width: 50% !important;
+	background-color: #000000 !important;
+	border: 3px solid #fff0fc !important;
+	border-radius: 29px !important;
+	background-image: -moz-linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-image: -webkit-linear-gradient(top, #fff7f2, #cfcdc4)
+		!important;
+	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-clip: padding-box !important;
+}
+
+.btn-sim-excluir-pessoa {
 	position: relative;
 	right: 0;
 	z-index: 10;
@@ -827,39 +793,38 @@ font-size: 30px !important;
 	margin-bottom: 10;
 }
 
-.div-incremento{
-border-radius: 50px;
-background: #1a1103;
+.div-incremento {
+	border-radius: 50px;
+	background: #1a1103;
 	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
 		to(#1a1103) );
 	background: -webkit-linear-gradient(top, #59a382, #1a1103);
 	background: -moz-linear-gradient(top, #59a382, #1a1103);
 	background: -ms-linear-gradient(top, #59a382, #1a1103);
 	background: -o-linear-gradient(top, #59a382, #1a1103);
-size: 5px;
-float: left;
-width: 30;
-height: 30;
-position:absolute;
-left: 15;
-top: 10;
-}
-
-.incremento{
+	size: 5px;
+	float: left;
+	width: 30;
+	height: 30;
 	position: absolute;
-left: 9.43;
-top: -5;
+	left: 15;
+	top: 10;
 }
 
-.aguardandoPagamento{
-background-image: -moz-linear-gradient(top, #d3f00c, #25260a);
-background-image: -webkit-linear-gradient(top, #d3f00c, #25260a);
-background-image: linear-gradient(top, #d3f00c, #25260a);
-
+.incremento {
+	position: absolute;
+	left: 9.43;
+	top: -5;
 }
 
-.btn-fechar-conta-previa-pedido{
-position: absolute;
+.aguardandoPagamento {
+	background-image: -moz-linear-gradient(top, #d3f00c, #25260a);
+	background-image: -webkit-linear-gradient(top, #d3f00c, #25260a);
+	background-image: linear-gradient(top, #d3f00c, #25260a);
+}
+
+.btn-fechar-conta-previa-pedido {
+	position: absolute;
 	right: 0;
 	bottom: -40;
 	z-index: 10;
@@ -893,13 +858,15 @@ position: absolute;
 	size: 20px;
 	width: 17%;
 }
-.btn-nao-excluir-pessoa{
+
+.btn-nao-excluir-pessoa {
 	position: relative !important;
 	right: 0 !important;
 	z-index: 210 !important;
 	background-color: #000000 !important;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401) !important;
-	background-image: -webkit-linear-gradient(top, #ff2136, #100401) !important;
+	background-image: -webkit-linear-gradient(top, #ff2136, #100401)
+		!important;
 	background-image: linear-gradient(top, #ff2136, #100401) !important;
 	background-clip: padding-box !important;
 	-webkit-border-radius: 15px !important;
@@ -925,27 +892,25 @@ position: absolute;
 	margin-bottom: 10 !important;
 }
 
-
-.mensagem span{
+.mensagem span {
 	font-size: 25;
 	color: black;
 	margin-top: 10;
 }
 
-
-.mensagem-garcon span{
+.mensagem-garcon span {
 	font-size: 25;
 	color: black;
 	margin-top: 10;
 }
 
-.mensagem-confirmacao{
+.mensagem-confirmacao {
 	font-size: 25;
 	color: black;
 	margin-top: 10;
 }
 
-.div-mensagem{
+.div-mensagem {
 	margin-top: 10;
 }
 
@@ -962,11 +927,9 @@ body {
 	height: auto;
 	margin: 0;
 	min-height: 100%;
-	background: url("../img/hamburguer-background.jpg") no-repeat scroll center bottom
-		transparent;
+	background: url("../img/hamburguer-background.jpg") no-repeat scroll
+		center bottom transparent;
 }
-
-
 
 .label {
 	color: black;
@@ -978,7 +941,7 @@ body {
 	line-height: 44px;
 }
 
-.btn-conjunto{
+.btn-conjunto {
 	background: #1a1103;
 	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
 		to(#1a1103) );
@@ -1006,13 +969,10 @@ body {
 	margin: 5;
 	float: left;
 	margin-left: 50;
-	
 }
-
 
 .modal_nome_pedido {
 	height: 280px !important;
-	
 }
 
 .modal_nome_pedido .mblScrollBarWrapper div {
@@ -1043,13 +1003,11 @@ body {
 	float: left;
 }
 
-
 .img_modal {
 	height: 450px;
 	width: 98%;
 	border-radius: 9 9 9 9;
 	border: 4px solid #626262;
-	
 }
 
 .modal_descricao {
@@ -1067,7 +1025,8 @@ body {
 	color: black;
 	font-size: 20px;
 }
-.title_preco{
+
+.title_preco {
 	font-size: 28px !important;
 	margin: 100 0 0 0;
 }
@@ -1087,10 +1046,10 @@ body {
 	border-radius: inherit;
 	max-width: 100%;
 }
-.modal_nome_pessoa{
+
+.modal_nome_pessoa {
 	height: 90%;
 	width: 86%;
-	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
 	border-radius: 29px !important;
@@ -1105,10 +1064,9 @@ body {
 	
 }
 
-.modal_pedido{
+.modal_pedido {
 	height: 86% !important;
 	width: 86%;
-	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
 	border-radius: 29px !important;
@@ -1117,13 +1075,11 @@ body {
 		!important;
 	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
 	background-clip: padding-box !important;
-	
 }
 
-.modal_fechar_conta{
+.modal_fechar_conta {
 	height: auto !important;
 	width: 83% !important;
-	
 	background-color: #000000 !important;
 	border: 3px solid #fff0fc !important;
 	border-radius: 29px !important;
@@ -1132,8 +1088,8 @@ body {
 		!important;
 	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
 	background-clip: padding-box !important;
-	
 }
+
 .minhaLII {
 	width: 23%;
 	height: 10% !important;
@@ -1176,7 +1132,7 @@ body {
 	opacity: 95 !important;
 }
 
-.bottom_modal_nome_pessoa{
+.bottom_modal_nome_pessoa {
 	height: 70px;
 	border-radius: 13px 13px 13px 13px;
 }
@@ -1208,7 +1164,6 @@ background-image: #4d4d4d !important;
 	box-shadow: none !important;
 	-Moz-box-shadow: none !important;
 	-Webkit-box-shadow: none !important;
-	
 }
 
 .selecionado {
@@ -1223,9 +1178,6 @@ background-image: #4d4d4d !important;
 	background-image: linear-gradient(top, #0fff31, #000000) !important;
 	opacity: 0.42 !important;
 	border-radius: 24px;
-	
-	
-	
 }
 
 .pessoa_selecionado {
@@ -1239,18 +1191,17 @@ background-image: #4d4d4d !important;
 		!important;
 	background-image: linear-gradient(top, #0fff31, #000000) !important;
 	border-radius: 24px;
-	
-	
-	
 }
 
-.div-btn-adicionar-pessoa input{
+.div-btn-adicionar-pessoa input {
 	height: 50%;
 }
-.label-observacao{
+
+.label-observacao {
 	float: left;
 }
-.menu_categoria .divClicavel:active{
+
+.menu_categoria .divClicavel:active {
 	background-attachment: #052304 !important;
 	background: #052304 !important;
 	border: 2px solid #282828 !important;
@@ -1259,10 +1210,8 @@ background-image: #4d4d4d !important;
 		!important;
 	background-image: linear-gradient(top, #0fff31, #000000) !important;
 	opacity: 0.42 !important;
-	
 	border-radius: 24px;
 	margin: 5px;
-	
 }
 
 .menu_produto .divClicavel:ACTIVE {
@@ -1274,12 +1223,9 @@ background-image: #4d4d4d !important;
 		!important;
 	background-image: linear-gradient(top, #0fff31, #000000) !important;
 	opacity: 0.42 !important;
-	
 	border-radius: 24px;
 	height: 20%;
-	
 }
-
 
 /*
 .mblListItemSelected{
@@ -1296,23 +1242,25 @@ background-image: #4d4d4d !important;
 	height: 20%;
 }
 */
-
 .div_conjunto:active {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#306ea1), to(#266093), color-stop(0.06, #4090d3), color-stop(0.5, #306ea1));
-  background-image: -webkit-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
-  background-image: -moz-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
-  background-image: -ms-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
-  background-image: -o-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
-  background-image: linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#306ea1),
+		to(#266093), color-stop(0.06, #4090d3), color-stop(0.5, #306ea1) );
+	background-image: -webkit-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%,
+		#266093 100%);
+	background-image: -moz-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093
+		100%);
+	background-image: -ms-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093
+		100%);
+	background-image: -o-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093
+		100%);
+	background-image: linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
 }
 
-.title_modal{
+.title_modal {
 	border-bottom: 1px solid #accfc1;
 	color: #132527;
 	font-size: 32px;
 }
-
-
 
 .menu_categoria .divClicavel:active:before {
 	border: none;
@@ -1350,7 +1298,7 @@ background-image: #4d4d4d !important;
 	height: 400px !important;
 }
 
-.menu_pedido_confirmacao{
+.menu_pedido_confirmacao {
 	height: 70% !important;
 }
 
@@ -1358,11 +1306,12 @@ background-image: #4d4d4d !important;
 	height: 80% !important;
 }
 
-.parte_transparente{
+.parte_transparente {
 	float: right;
 	width: 50%;
 	height: 100%;
 }
+
 .meuH2 {
 	bottom: 20%;
 	padding: 10px;
@@ -1428,11 +1377,11 @@ background-image: #4d4d4d !important;
 	position: relative;
 }
 
-.pedido_detalhado{
+.pedido_detalhado {
 	float: none !important;
 }
 
-.li_detalhe_pedido{
+.li_detalhe_pedido {
 	overflow: hidden;
 	padding: 4px !important;
 	margin-top: -13px;
@@ -1444,7 +1393,6 @@ background-image: #4d4d4d !important;
 	position: relative;
 	color: #4d4d4d !important;
 	background-color: #c2c2c2 !important;
-	
 }
 
 .div2 {
@@ -1470,12 +1418,12 @@ background-image: #4d4d4d !important;
 	width: 405px; /* Whatever width you want the box to be */
 	position: relative;
 	margin: 0 auto; /* Everything below is just visual styling */
-	background-color : white;
+	background-color: white;
 	padding: 10px;
 	border: 1px solid black;
 }
 
-.btn-tamanho{
+.btn-tamanho {
 	font-size: 20px !important;
 	font-family: Helvetica, Arial, Sans-Serif !important;
 	text-decoration: none !important;
@@ -1488,7 +1436,7 @@ background-image: #4d4d4d !important;
 	width: 17% !important;
 }
 
-.btn-tamanho-confirmacao-pedido{
+.btn-tamanho-confirmacao-pedido {
 	font-size: 20px !important;
 	font-family: Helvetica, Arial, Sans-Serif !important;
 	text-decoration: none !important;
@@ -1501,7 +1449,7 @@ background-image: #4d4d4d !important;
 	width: 25% !important;
 }
 
-.btn-tamanho-adicionar-pessoa{
+.btn-tamanho-adicionar-pessoa {
 	font-size: 20px !important;
 	font-family: Helvetica, Arial, Sans-Serif !important;
 	text-decoration: none !important;
@@ -1515,28 +1463,29 @@ background-image: #4d4d4d !important;
 	bottom: 7 !important;
 }
 
-.btn_adicionar_pedido_modal_pessoa .btn_cancelar_pedido{
+.btn_adicionar_pedido_modal_pessoa .btn_cancelar_pedido {
 	right: 19% !important;
 }
 
-.label-efetuar-pedido{
+.label-efetuar-pedido {
 	width: 60%;
 }
 
-.buttons-wfwtuar-pedido{
+.buttons-wfwtuar-pedido {
 	
 }
 
-.observacao_pedido{
+.observacao_pedido {
 	margin-bottom: 10;
 	position: absolute;
-    bottom: 7;
-    margin-bottom: 10 !important;
-    left: 0;
-    height: 30%;
-    width: 50%;
+	bottom: 7;
+	margin-bottom: 10 !important;
+	left: 0;
+	height: 30%;
+	width: 50%;
 }
-.minhaUL-modal-carrinho-pedido{
+
+.minhaUL-modal-carrinho-pedido {
 	background-color: transparent !important;
 }
 
@@ -1552,8 +1501,6 @@ background-image: #4d4d4d !important;
 	position: relative;
 	background-color: #8f8e84 !important;
 	color: #cccccc !important;
-	
-	
 	background-color: #8f8e84 !important;
 	border-bottom: medium none !important;
 	color: white !important;
@@ -1571,10 +1518,9 @@ background-image: #4d4d4d !important;
 	right: 30%;
 }
 
-.btn-incremento{
+.btn-incremento {
 	height: 35;
 	width: 40;
-	
 	background: #1a1103;
 	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
 		to(#1a1103) );
@@ -1589,10 +1535,10 @@ background-image: #4d4d4d !important;
 	margin-right: 10 !important;
 }
 
-.btn-decremento{
+.btn-decremento {
 	height: 35;
 	width: 40;
-	font-size:80%;
+	font-size: 80%;
 	margin-right: 10 !important;
 	background-color: #000000;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401);
@@ -1602,71 +1548,142 @@ background-image: #4d4d4d !important;
 	color: white;
 }
 
-.btn-excluir-pedido{
+.btn-excluir-pedido {
 	height: 35;
 	width: 60;
-	border-radius:25 25 25 25;
+	border-radius: 25 25 25 25;
 	background-color: #000000;
-	font-size:90%;
+	font-size: 90%;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401);
 	background-image: -webkit-linear-gradient(top, #ff2136, #100401);
 	background-image: linear-gradient(top, #ff2136, #100401);
 	background-clip: padding-box;
 	color: white;
+	margin-right: 10;
 }
 
-.span-nome-pessoa-fechamento-conta{
-float: left;
-margin-left: 50;
+.btn-editar-pedido {
+	height: 35;
+	width: 60;
+	border-radius: 25 25 25 25;
+	font-size: 90%;
+	border-radius: 25 25 25 25;
+	background: #1a1103; background : -webkit-gradient( linear, left top,
+	left bottom, from( #59a382), to( #1a1103)); background :
+	-webkit-linear-gradient( top, #59a382, #1a1103); background :
+	-moz-linear-gradient( top, #59a382, #1a1103); background :
+	-ms-linear-gradient( top, #59a382, #1a1103); background :
+	-o-linear-gradient( top, #59a382, #1a1103); color : white;
+	-webkit-tap-highlight-color : rgba( 255, 255, 255, 0);
+	-webkit-appearance : none;
+	color: white;
+	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
+		to(#1a1103) );
+	background: -webkit-linear-gradient(top, #59a382, #1a1103);
+	background: -moz-linear-gradient(top, #59a382, #1a1103);
+	background: -ms-linear-gradient(top, #59a382, #1a1103);
+	background: -o-linear-gradient(top, #59a382, #1a1103);
+	color: white;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-appearance: none;
 }
 
-.preco-fechamento-conta{
-margin-right: 80;
+}
+.span-nome-pessoa-fechamento-conta {
+	float: left;
+	margin-left: 50;
 }
 
-.modal_pedido_nome_pessoa_detalhado{
+.preco-fechamento-conta {
+	margin-right: 80;
+}
+
+.modal_pedido_nome_pessoa_detalhado {
 	float: left;
 	width: 20%;
 }
 
-.modal_pedido_nome_produto_detalhado{
+.modal_pedido_nome_produto_detalhado {
 	float: left;
-width: 53%;
+	width: 53%;
 }
 
-.modal_pedido_nome_produto_detalhado span{
-float: left;
-margin-left: 50;
+.modal_pedido_nome_produto_detalhado span {
+	float: left;
+	margin-left: 50;
 }
-.modal_pedido_preco_produto_detalhado{
-float: right;
-width: 47%;
+
+.modal_pedido_preco_produto_detalhado {
+	float: right;
+	width: 47%;
 }
 
 #preloader {
 	background: #000;
-	position:fixed;
-	left:0px; 
-	top:0px; 
-	width:100%; 
-	height:100%; 
-	text-align:center;
-	color:#fff;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	color: #fff;
 	z-index: 200;
 }
+
 #preloader div {
-	width:400px;
-	height:100% !important;
-	margin:auto;
+	width: 400px;
+	height: 100% !important;
+	margin: auto;
 	height: 3px;
-	text-align:center;
+	text-align: center;
 	position: relative;
-    top: 50%;
-	overflow:hidden;
+	top: 50%;
+	overflow: hidden;
 	z-index: 400;
 }
+
 #preloader_image {
 	position: relative;
-	left:0px;
+	left: 0px;
 	z-index: 500;
+}
+
+.detalhe-pedido-observacao {
+	border: 2px solid #999999;
+	border-radius: 6px;
+	color: black;
+	width: 100%;
+	height: 78%;
+	width: 50%;
+	margin-left: 15;
+	word-wrap: break-word;
+	margin-bottom: 15;
+}
+
+.detalhe-pedido-observacao p {
+	width: 94%;
+	margin-top: 2;
+	white-space: normal;
+	margin-left: 5;
+	font-size: 22;
+}
+
+.div-detalhe-pedido-p {
+	color: black; 
+	margin-left: 15;
+	margin-bottom: 1;
+	font-size: 22;
+}
+
+.nome-produto-adicionar-pessoa{
+	float: left;
+	
+	white-space: nowrap;
+	font-family: Helvetica;
+	font-size: 19px;
+	color:#362f2d;
+	font-weight: bold;
+	margin-left:10;
+	text-align: center;
+	line-height: 44px;
 }

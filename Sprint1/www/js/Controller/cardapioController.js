@@ -1,6 +1,9 @@
 var idProdutoAtual;
 var pessoaSelecionado;
 var idPedidoExcluir;
+var idPedidoEditando;
+var editandoPedido;
+var nomePessoaEditando;
 
 require([
 "dojo/dom",
@@ -190,7 +193,7 @@ function montaDescricao(tx,result){
 		$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="selectPessoa('+result.rows.item(0).id+')">Adicionar</button>');
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido" onclick="hide(\'id-modal-descricao\')">Cancelar</button>');
-		
+		editandoPedido = false;
 		show('id-modal-descricao');
 	}
 	
@@ -214,7 +217,10 @@ function montaAdicionarPessoa(tx,result){
 	//Limpa li.
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
 	$("#id_ul_modal_nome_pessoa .inputNome").remove();
-	$(".textarea-observacao-produto").val('');
+	
+	if(!editandoPedido){
+		$(".textarea-observacao-produto").val('');
+	}
 	
 	if(result.rows.length == 0){//Caso não tiver nenhuma pessoa no banco de dadosmonta 2 li com adicionar pessoa
 		console.log("entrou no if montaPessoa")
@@ -295,6 +301,29 @@ function montaAdicionarPessoa(tx,result){
 	  });
 	
 	$(" .meuCheckBox").hide();
+	
+	// Editando pedido
+	if(editandoPedido){
+	$("#id_modal_nome_pessoa .naoEditavel").each(function( index ) {
+		pessoaSelecionado = nomePessoaEditando;
+		$("#id_modal_nome_pessoa .btn_adicionar_pedido").attr('onclick','salvarEdicaoPedido()');
+		$("#id_modal_nome_pessoa .btn_adicionar_pedido").text('OK');
+		 if($("#"+this.id+" .editavel").text() == nomePessoaEditando){
+			 
+			 $(".pessoa_selecionado").removeClass("pessoa_selecionado");
+		     $("#"+ this.id).addClass("pessoa_selecionado");
+	     }
+	 });
+	}else{
+		$("#id_modal_nome_pessoa .btn_adicionar_pedido").text('Adicionar');
+		$("#id_modal_nome_pessoa .btn_adicionar_pedido").attr('onclick','selectProdutoPedido()');
+	}
+	
+	tx.executeSql('SELECT * FROM Produtos where id='+idProdutoAtual+'',[],function(tx,result){
+		$('#id_modal_nome_pessoa .nome-produto-adicionar-pessoa').text(result.rows.item(0).title);
+	},errorCB);
+		
+	
 	show('id_modal_nome_pessoa');
 
 }
@@ -392,6 +421,14 @@ function selectProdutoPedido(){
      },errorCB);
 }
 
+function salvarEdicaoPedido(){
+	 var observacao =  $(".textarea-observacao-produto").val();
+	 db.transaction(function(tx) {
+	  tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'" WHERE id="'+idPedidoEditando+'"');
+      tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+    },errorCB,selectPedidos);
+}
+
 function selectProdutoMeuPedido(){
 	 db.transaction(function(tx) {
 		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
@@ -404,7 +441,8 @@ function adicionarPedido(tx,result){
 	if(result.rows.length > 0){
 	 if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
-	        tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,nome_produto,preco_produto,quantidade,status) VALUES ("1","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
+			
+		        tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,nome_produto,preco_produto,quantidade,status) VALUES ("1","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
 	        tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		 },errorCB,selectPedidos);
 		 
@@ -422,11 +460,12 @@ function selectPedidos(){
 
 function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
+	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
 	if(result.rows.length == 0){
 		show('modal_sem_pedido');
 	}else{
 	for(var i=0;i<result.rows.length;i++){
-		$("#id-ul-modal-pedidos").append('<li dojoType="dojox.mobile.ListItem" class="mblListItem li_detalhe_pedido"> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button></div><div class="mblListItemLabel " style="display: inline;"></div></li>');
+		$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >Editar</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 	}
 	$(".btn-decremento").click(function(e){
 		 if(parseInt($(this).next('span').text()) > 1){
@@ -455,9 +494,46 @@ function montaModalPedido(tx,result){
 		 showExcluirPedido();
 	  });
 	
+	$(".li_detalhe_pedido").click(function(e){
+		if(!(e.target.tagName == "BUTTON")){
+			if($("#"+this.id+" .incremento").hasClass('mais')){
+				$("#"+this.id+" .incremento").css('left','11.5');
+				$("#"+this.id+" .incremento").css('top','-6');
+				$("#"+this.id+" .incremento").text('-');
+				$("#"+this.id+" .incremento").removeClass('mais');
+			}else {
+				$("#"+this.id+" .incremento").css('left','9.43')
+				$("#"+this.id+" .incremento").css('top','-5');
+				$("#"+this.id+" .incremento").text('+');
+				$("#"+this.id+" .incremento").addClass('mais');
+			}
+			$("#"+$(this).attr('value')).toggle(); 
+		}
+		
+	  });
+	
+	
+	
+	
 	hide('id_modal_nome_pessoa');
 	show('modal_pedido');
 	}
+}
+
+function editarPedido(li){
+	db.transaction(function(tx) {
+		 tx.executeSql('SELECT * FROM Pedido where id = '+li.value+'',[],function(tx,result){
+			 hide('modal_pedido');
+			 idPedidoEditando = result.rows.item(0).id;
+			 idProdutoAtual = idPedidoEditando;
+			 $(".textarea-observacao-produto").val(result.rows.item(0).observacao);
+			 console.log('editando');
+			 editandoPedido = true;
+			 nomePessoaEditando =  result.rows.item(0).pessoa;
+			 selectPessoa(result.rows.item(0).id);
+			 
+		 },errorCB);
+   },errorCB);
 }
 
 function excluirPedido(){
@@ -568,8 +644,6 @@ function montaModalPreviaPedido(tx,result){
 	    	$("#pedido_detalhado-"+ultimoI+" .minhaUL-modal-nome-pessoa")
 		    .append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> ');
 	    }
-		
-		
 		
 		ultimaPessoa = result.rows.item(i).pessoa;
 	}
