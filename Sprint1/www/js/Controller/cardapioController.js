@@ -525,7 +525,7 @@ function editarPedido(li){
 		 tx.executeSql('SELECT * FROM Pedido where id = '+li.value+'',[],function(tx,result){
 			 hide('modal_pedido');
 			 idPedidoEditando = result.rows.item(0).id;
-			 idProdutoAtual = idPedidoEditando;
+			
 			 $(".textarea-observacao-produto").val(result.rows.item(0).observacao);
 			 console.log('editando');
 			 editandoPedido = true;
