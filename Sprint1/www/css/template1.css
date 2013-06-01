@@ -1687,3 +1687,10 @@ background-image: #4d4d4d !important;
 	text-align: center;
 	line-height: 44px;
 }
+
+.total_mesa{
+	margin-top:20;
+	color: black;
+	font-size: 20;
+	float: left;
+}

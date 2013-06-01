@@ -15,8 +15,8 @@ function  atualizar(){
 	    			 init(val.versao);
 	    		 } else {
 	    			 versao = val.versao;
-	    			// init(5);
-	    			 db.transaction(pegarUltimaVersao,errorCB); 
+	    			init(5);
+	    			//db.transaction(pegarUltimaVersao,errorCB); 
 	    		 }
 		    	 
 		     }

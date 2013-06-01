@@ -4,6 +4,7 @@ var idPedidoExcluir;
 var idPedidoEditando;
 var editandoPedido;
 var nomePessoaEditando;
+var mesa;
 
 require([
 "dojo/dom",
@@ -99,27 +100,111 @@ require([
 		  
 		  $('#modal_fechar_conta p').text('Deseja realmente fechar a conta do/da ' + dlg.value ) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',dlg.id) ;
+		  $('#modal_fechar_conta .fechamentoIndividual').attr('title',dlg.value) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
 		  registry.byId('modal_fechar_conta').show();
 	  }
      
      showConfirmacaoPedidoIndividualGarcom = function(dlg){
-		  if(dlg.value != 'mesa'){
-		  $('#'+dlg.value).addClass('aguardandoPagamento');
-		    
-		  $('#'+dlg.value).text('Aguardando Pagamento');
-		  $('#'+dlg.value).attr("disabled", "disabled");
-		  }
-		    registry.byId('modal_fechar_conta').hide();
-		    if(dlg.value == 'mesa'){
-		    registry.byId('modal_previa_pedido').hide();
+		  
+    	 var tipo;
+    	 var totalPagamento;
+		 
+    	 if(dlg.value != 'mesa'){
+			  
+    		  tipo = "Individual";
+    		  
+    		  totalPagamento = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
+			 
+    			    
+    		
+			 
+			  db.transaction(function(tx){
+					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ dlg.title +'" and status="aguardando-pedido" ',[],function(tx,result){
+						
+						for(i=0;i<result.rows.length;i++){
+						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
+						}
+					},errorCB);
+					
+				},errorCB);  
+			
+		  }else if(dlg.value == 'mesa'){
+		    	
+			   tipo = "Mesa";
+			   totalPagamento = $("#total-mesa").text();
+			   
+			    
+		    	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
+		   		 
+		    		if(this.title == 'aguardando-pedido'){
+		    			var nome = this.value;
+		    			 db.transaction(function(tx){
+		 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ nome +'" and status="aguardando-pedido"  ',[],function(tx,result){
+		 						for(i=0;i<result.rows.length;i++){
+		 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
+		 						
+		 						}
+		 					},errorCB);
+		 					
+		 				},errorCB);
+		    		}
+		    	 }); 	
+		   
 		    }
+		    
+    	 
+    	 
+         var idString = dlg.value;
+		 
+		 var ultimoCaracterId = idString.substring(idString.length-1);
+		  
+		 var nomePessoa = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .span-nome-pessoa-fechamento-conta').text();
+		 
+		 
+		
+		 
+		 var nomePessoa_field  = {
+			     "value":""+nomePessoa+"",
+		 }
+		 
+		 var mesa_field = {
+			     "value":""+mesa+"",
+		 }
+		 
+		 var totalPagamento_field  = {
+			     "value":""+totalPagamento+"",
+		 }
+		 
+		 var tipo_field  = {
+			     "value":""+tipo+"",
+		 }
+    	 
+		 var data  = {
+			     "type":"fechamento_conta",
+			     "field_numero_mesa[und][0]":mesa_field,
+			     "field_nome_pessoa[und][0]":nomePessoa_field,
+			     "field_total[und][0]":totalPagamento_field,
+			     "field_tipo[und][0]":tipo_field,
+			     "title":"Fechamento: " + mesa,
+			};
+		
+		 //"+ decodeURIComponent("212")+".json"
+		 var url=""+ipServidorDrupal+"/node";
+         postAjax(url,data);
+		 console.log(data);
+         alert('postou');
+		    registry.byId('modal_fechar_conta').hide();
 		    registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
+		    montaPreviaPedido();
 	  }
 	  
 });
 
 function montaCardapio(tx){
+	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
+		 mesa = result.rows.item(0).numero;
+	 },errorCB)
 	tx.executeSql('SELECT * FROM Categorias',[],montaCategoria,errorCB);
 }
 
@@ -441,9 +526,9 @@ function adicionarPedido(tx,result){
 	if(result.rows.length > 0){
 	 if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
-			
-		        tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,nome_produto,preco_produto,quantidade,status) VALUES ("1","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
-	        tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
+			     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+		   
 		 },errorCB,selectPedidos);
 		 
 	 }else{
@@ -525,12 +610,11 @@ function editarPedido(li){
 		 tx.executeSql('SELECT * FROM Pedido where id = '+li.value+'',[],function(tx,result){
 			 hide('modal_pedido');
 			 idPedidoEditando = result.rows.item(0).id;
-			
 			 $(".textarea-observacao-produto").val(result.rows.item(0).observacao);
 			 console.log('editando');
 			 editandoPedido = true;
 			 nomePessoaEditando =  result.rows.item(0).pessoa;
-			 selectPessoa(result.rows.item(0).id);
+			 selectPessoa(result.rows.item(0).id_produto);
 			 
 		 },errorCB);
    },errorCB);
@@ -615,7 +699,7 @@ function postPedidoDrupal(tx,result){
 
 function montaPreviaPedido(){
 	db.transaction(function(tx) {
-		 tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido" order by pessoa',[],montaModalPreviaPedido,errorCB);
+		 tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido" or status="aguardando-pagamento" order by pessoa',[],montaModalPreviaPedido,errorCB);
   },errorCB);
 }
 
@@ -637,7 +721,7 @@ function montaModalPreviaPedido(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
 								+ i
 								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
 	    }else{
@@ -647,9 +731,10 @@ function montaModalPreviaPedido(tx,result){
 		
 		ultimaPessoa = result.rows.item(i).pessoa;
 	}
-	
+	var totalMesa = 0.00;
 	$( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
    	 var total = 0.00;
+   	 
    	 var numeroId = this.id.replace('pedido-fechamento-conta-','');
      	$( "#pedido_detalhado-"+numeroId+" .modal_pedido_preco_produto_detalhado span" ).each(function( index ) {
      		
@@ -657,7 +742,10 @@ function montaModalPreviaPedido(tx,result){
    	   total += parseFloat(valor);
        });
      	$( "#pedido-fechamento-conta-"+numeroId+" .modal_previa_preco_produto span" ).text("Total: R$ " + total.toFixed(2));
+     	totalMesa += total;
+     	
     });
+	$("#total-mesa").text('Todal Mesa: '+ totalMesa.toFixed(2));
 	
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){
@@ -678,6 +766,18 @@ function montaModalPreviaPedido(tx,result){
 		  mostrarPedidoDetalhado(divDetalhado);
 		}
 	  });
+	
+	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
+		 
+		if(this.title == 'aguardando-pagamento'){
+		  $('#'+this.id).addClass('aguardandoPagamento');
+		    
+		  $('#'+this.id).text('Aguardando Pagamento');
+		  $('#'+this.id).attr("disabled", "disabled");
+		}
+	 });
+	
+	
 }
 
 function mostrarPedidoDetalhado(divDetalhado){

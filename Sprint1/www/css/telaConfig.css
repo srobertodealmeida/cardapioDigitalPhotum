@@ -1,0 +1,63 @@
+
+.panel-numero-mesa{
+background-color: #404040;
+border: 2px solid #999999;
+border-radius: 14px;
+box-shadow: 0px 0px 4px #000000;
+background-image: -moz-linear-gradient(top, #453f43, #161415);
+background-image: -webkit-linear-gradient(top, #453f43, #161415);
+background-image: linear-gradient(top, #453f43, #161415);
+background-clip: padding-box;
+width: 330;
+height: 340;
+position: absolute;
+bottom: 3;
+left: 30%;
+}
+
+.primeira-linha{
+	float: left;
+}
+
+.button-numerico{
+	width: 70;
+	height: 60;
+	margin-left: 10;
+	margin-right: 10;
+	margin-top: 10;
+	margin-bottom: 10;
+	font-size: 20;
+}
+
+.margem-panel-numero-mesa{
+	
+	position: relative;
+	left: 5.5%;
+}
+
+.titulo-mesa{
+	
+	color: white;
+	font-size: 20;
+	position: relative;
+	left: 42%;
+}
+
+.linha{
+	border-bottom: 1px solid #f8f7ff;
+	margin-left: 30;
+	margin-right: 30;
+	position: relative;
+}
+
+.li-configuracao{
+list-style-type: none;
+margin-bottom: 10;
+margin-top: 10;
+}
+
+.ul-configuracao button{
+	width: 200;
+	height: 80;
+	font-size: 14;
+}

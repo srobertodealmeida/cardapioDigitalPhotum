@@ -1,0 +1,135 @@
+<head>
+<meta charset="utf-8"/>
+<title>Untitled</title>
+<link rel="stylesheet" href="css/telaConfig.css"/>
+<script type="text/javascript" src="./lib/dojo/dojox/mobile/deviceTheme.js"
+        data-dojo-config="mblThemeFiles: ['base','Carousel','PageIndicator']"></script>
+
+<script type="text/javascript" src="cordova-2.5.0.js"></script>
+
+
+
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="./lib/dojo/dojo/dojo.js"
+	data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], mblLoadCompatPattern: /\/project1\/themes\/.*\.css$/"></script>
+
+
+
+<script type="text/javascript" src="js/jquery-1.9.min.js"></script>
+<script type="text/javascript" src="js/Form/homeForm.js"></script>
+<script type="text/javascript" src="js/Form/cardapioForm.js"></script>
+<script type="text/javascript" src="js/Config/config.js"></script>
+<script type="text/javascript" src="js/Controller/telaConfigController.js"></script>
+
+<script type="text/javascript" src="js/jquery.carouFredSel-6.2.1.js"></script>
+
+
+<script type="text/javascript" src="dojox/mobile/deviceTheme.js"
+	data-dojo-config="mblThemeFiles: ['base','Button']"></script>
+
+
+<style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
+</style>
+
+<script type="text/javascript" src="js/meuJSIos.js"></script>
+
+
+<script type="text/javascript">
+
+require([
+         "dojox/mobile/Carousel",
+         "dojox/mobile/CarouselItem",
+     ]);
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
+</head>
+
+<body class="claro"  onload="onDeviceReady();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+	<div id="preloader">Page loading...
+<div><img src="img/loading.gif" id="preloader_image" ></div>
+</div>
+	<div id="geral" class="geral" >
+	<img id="background-config" alt="" src="" class="img-bacground"/>
+		<div class="topo">
+		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
+		<img id="logo-home" alt="" src="" class="img-logo">
+		   <div>
+		   <ul class="ul-configuracao">
+		   <li class="li-configuracao"><button id="btn-mudar-mesa" value="1" >Mudar Numero Mesa</button></li>
+		   <li class="li-configuracao"><a href="home.html"><button value="1" >Voltar Home</button></a></li>
+		   
+		   </ul>
+		   </div>
+		   
+		</div>
+		
+
+
+		<div class="space"></div>
+
+		<!-- Aperitivos -->
+		<div class="content" >
+				<div class="panel-numero-mesa" style="display: none;">
+				<span class="titulo-mesa">Mesa: <span class="numero-mesa"></span></span>
+				<div class="linha"></div>
+				
+				
+				<div class="margem-panel-numero-mesa">
+				<div class="primeira-linha">
+				<div class="button-numerico"><button value="1" class="button-numerico">1</button></div>
+				
+				<div class="button-numerico"><button value="4" class="button-numerico">4</button></div>
+				
+				<div class="button-numerico"><button value="7" class="button-numerico">7</button></div>
+				
+				
+				
+				<div class="button-numerico"><button value="x" class="button-numerico">X</button></div>
+				
+				
+				</div>
+				<div class="primeira-linha">
+				<div class="button-numerico"><button value="2" class="button-numerico">2</button></div>
+				
+				
+				<div class="button-numerico"><button value="5" class="button-numerico">5</button></div>
+				
+				
+				<div class="button-numerico"><button value="8" class="button-numerico">8</button></div>
+				
+				
+				
+				<div class="button-numerico"><button value="0" class="button-numerico">0</button></div>
+				
+				
+				</div>
+				<div class="primeira-linha">
+				<div class="button-numerico"><button value="3" class="button-numerico">3</button></div>
+				
+				
+				<div class="button-numerico"><button value="6" class="button-numerico">6</button></div>
+				
+				
+				<div class="button-numerico"><button value="9" class="button-numerico">9</button></div>
+				
+				
+				<div class="button-numerico"><button value="OK" class="button-numerico">OK</button></div>
+				
+				
+				</div>
+				<div>
+				
+	    </div>
+ 
+	    </div>
+
+	</div>
+				
+	
+</body>
+</html>
+
+
+
+
