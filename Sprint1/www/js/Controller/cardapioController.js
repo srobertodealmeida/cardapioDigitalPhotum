@@ -678,11 +678,12 @@ function postPedidoDrupal(tx,result){
 	    			     "field_preco_produto[und][0]":preco_produto,
 	    			     "field_quantidade[und][0]":quantidade_produto,
 	    			     "field_status[und][0]":status,
-	    			     "title":"Mesa: " + result.rows.item(i).mesa,
+	    			     "title":result.rows.item(i).nome_produto ,
 	    			};
 				 //"+ decodeURIComponent("212")+".json"
 				 var url=""+ipServidorDrupal+"/node";
                  postAjax(url,data);
+                 
 				 //putAjax(url,data);
                  tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id='+result.rows.item(i).id+'');
              

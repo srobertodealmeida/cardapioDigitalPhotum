@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -585,6 +585,7 @@ function getAjax(url){
 
 function postAjax(url,data){
 	$.ajax({
+		
 		dataType:'application/json',
 		url : url,
 		type : "POST",
