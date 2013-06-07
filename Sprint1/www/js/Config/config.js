@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -319,7 +319,7 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
-	//quantidadeRegistros = 7;
+	quantidadeRegistros = 7;
 	Mock();
 	
    //getDadosDrupal(tx);
@@ -413,7 +413,6 @@ function createTable(tx){
 	tx.executeSql('DROP TABLE IF EXISTS Produtos');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT )');
 	
-	
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
@@ -436,6 +435,7 @@ function createTable(tx){
 /*
  * Faz os inserts
  */
+var testeProdutoErro;
 function insertTable(nomeTable){
 	
 	
@@ -445,6 +445,7 @@ function insertTable(nomeTable){
 		 db.transaction(function(tx) {
 			 quantidadeRegistros = quantidadeRegistros - 1;
              tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
+             testeProdutoErro = "background" + homeForm.logo;
              },errorCB,successInsert);
 		
 		console.log('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
@@ -462,6 +463,7 @@ function insertTable(nomeTable){
 			    console.log('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
 			    quantidadeRegistros = quantidadeRegistros - 1;
 	            tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
+	            testeProdutoErro = "icones" + arrayIconesForm[i].title;
 				}
 	            },errorCB,successInsert);
 		
@@ -475,6 +477,7 @@ function insertTable(nomeTable){
 			console.log('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
 			quantidadeRegistros = quantidadeRegistros - 1;
             tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
+            testeProdutoErro = "propagandas" + arrayPropagandasForm[i].image;
 			}
             },errorCB,successInsert);
 	}else if (nomeTable == "categorias") {
@@ -487,6 +490,7 @@ function insertTable(nomeTable){
 				console.log('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
 				quantidadeRegistros = quantidadeRegistros - 1;
 				tx.executeSql('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+				testeProdutoErro = "categorias" + arrayPropagandasForm[i];
 			}
             },errorCB,successInsert);
 		
@@ -527,6 +531,7 @@ function insertTable(nomeTable){
 												+ '","'
 												+ arrayProdutos[i].image +
 												'" )');
+								testeProdutoErro = "produtos" + arrayProdutos[i].title;
 			}
             },errorCB,successInsert);
 		
@@ -540,6 +545,7 @@ function insertTable(nomeTable){
 
 //Método de erro sqLite
 function errorCB(err) {
+	console.log('testeErroInsertErrorCB '+ testeProdutoErro);
     alert("Error processing SQL: "+err.code);
     alert("Error processing SQL: "+err);
     console.log(err);
@@ -557,7 +563,8 @@ function successCB(tx,result) {
 }
 
 function successInsert(){
-	//quantidadeRegistros = quantidadeRegistros - 1;
+	quantidadeRegistros = quantidadeRegistros - 1;
+	console.log('testeErroInsert '+ testeProdutoErro);
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
 		db.transaction(montaHome,errorCB);

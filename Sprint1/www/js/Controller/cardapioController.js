@@ -97,44 +97,60 @@ require([
 	  }
       
      showConfirmacaoFechamentoConta = function(dlg){
-		  
+    	 if($( "#id-ul-fechamento-conta .mostrarDetalhado").length != 0){
 		  $('#modal_fechar_conta p').text('Deseja realmente fechar a conta do/da ' + dlg.value ) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',dlg.id) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('title',dlg.value) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
 		  registry.byId('modal_fechar_conta').show();
+    	 }
+		  else{
+		    	 show("modal_sem_pedido");
+		     }
 	  }
      
      showConfirmacaoPedidoIndividualGarcom = function(dlg){
-		  
+		 var post = false;
     	 var tipo;
+    	 var fechamentoMesa = false;
     	 var totalPagamento;
-		 
+    	 var nomePessoa = "";
+		 console.log(dlg);
     	 if(dlg.value != 'mesa'){
-			  
     		  tipo = "Individual";
     		  
+    		  ultimoCaracterId = dlg.value.charAt(dlg.value.length-1);
+    		  var preco = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
+	   			preco = preco.replace('Total:','');
+    		  nomePessoa = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .span-nome-pessoa-fechamento-conta').text() +': ' + preco;
     		  totalPagamento = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
-			 
-    			    
-    		
-			 
+    		  
 			  db.transaction(function(tx){
 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ dlg.title +'" and status="aguardando-pedido" ',[],function(tx,result){
-						
 						for(i=0;i<result.rows.length;i++){
 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
 						}
 					},errorCB);
 					
-				},errorCB);  
+				},errorCB); 
+			  
 			
 		  }else if(dlg.value == 'mesa'){
-		    	
 			   tipo = "Mesa";
+			   fechamentoMesa = true;
 			   totalPagamento = $("#total-mesa").text();
 			   
-			    
+			   // Monta nome de pessoas para fechamento de conta
+			   
+			   $( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
+			   		if($('#'+this.id+' .btn_fechar_conta_individual').text() == "Fechar Conta Individual"){
+			   			var preco = $('#'+this.id+' .preco-fechamento-conta').text();
+			   			preco = preco.replace('Total:','');
+			   			nomePessoa +=$('#'+this.id+' .btn_fechar_conta_individual').val() + ": "+ preco + " tag-pular ";
+			   		}
+		    		
+		    	 }); 
+			  
 		    	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
 		   		 
 		    		if(this.title == 'aguardando-pedido'){
@@ -143,27 +159,23 @@ require([
 		 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ nome +'" and status="aguardando-pedido"  ',[],function(tx,result){
 		 						for(i=0;i<result.rows.length;i++){
 		 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
+		 						limparDados(tx);
 		 						
 		 						}
 		 					},errorCB);
 		 					
 		 				},errorCB);
 		    		}
-		    	 }); 	
-		   
+		    	 }); 
+		    	db.transaction(function(tx){
+		    		limparDados(tx);
+ 					
+ 				},errorCB);
 		    }
-		    
+    	 var qtdTotal = $( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).length;
+    	 var qtdAguardandoPagamento = $( "#id-ul-fechamento-conta .mostrarDetalhado .aguardandoPagamento" ).length;
     	 
-    	 
-         var idString = dlg.value;
-		 
-		 var ultimoCaracterId = idString.substring(idString.length-1);
-		  
-		 var nomePessoa = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .span-nome-pessoa-fechamento-conta').text();
-		 
-		 
-		
-		 
+    	 if(qtdTotal != qtdAguardandoPagamento){
 		 var nomePessoa_field  = {
 			     "value":""+nomePessoa+"",
 		 }
@@ -179,6 +191,10 @@ require([
 		 var tipo_field  = {
 			     "value":""+tipo+"",
 		 }
+		 
+		 var status_fechamento  = {
+			     "value":"pedido-fechamento",
+		 }
     	 
 		 var data  = {
 			     "type":"fechamento_conta",
@@ -186,6 +202,7 @@ require([
 			     "field_nome_pessoa[und][0]":nomePessoa_field,
 			     "field_total[und][0]":totalPagamento_field,
 			     "field_tipo[und][0]":tipo_field,
+			     "field_status_fechamento[und][0]":status_fechamento,
 			     "title":"Fechamento: " + mesa,
 			};
 		
@@ -193,13 +210,39 @@ require([
 		 var url=""+ipServidorDrupal+"/node";
          postAjax(url,data);
 		 console.log(data);
-         alert('postou');
-		    registry.byId('modal_fechar_conta').hide();
-		    registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
-		    montaPreviaPedido();
+		   
+		    
+    	 }
+    	    registry.byId('modal_fechar_conta').hide();
+		    
+		    
+		    if(fechamentoMesa){
+		    	montaPreviaPedido();
+		    	registry.byId('modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa').show();
+		    }else{
+		    	montaPreviaPedido();
+		    	registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
+		    }
 	  }
 	  
 });
+
+function confirmacaoFechamentoMesa(){
+	window.location = 'home.html';
+}
+
+
+function limparDados(tx){
+     ////////////////////////////////////////////Pessoas//////////////////////////////////////
+	// Table Mesa
+	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT)');
+	
+    ////////////////////////////////////////////Pedido///////////////////////////////////////
+	// Table Mesa
+	tx.executeSql('DROP TABLE IF EXISTS Pedido');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT )');
+}
 
 function montaCardapio(tx){
 	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
@@ -214,7 +257,6 @@ function montaCategoria(tx,result){
     	
     	$("#ul-categorias").append('<div class="divClicavel" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <span class="nome_categoria">'+result.rows.item(i).title+'</span></div>')
 		console.log(result.rows.item(i));
-    	
     	
     	console.log(result.rows.item(i));
     }
@@ -454,8 +496,6 @@ function salvarPessoa(input){
 		 
 		 $("#" + input.name + " .editavel").show();
 		 
-		
-		 
 		 if( $("#" + input.name).hasClass('editando')){
 			// Update no banco de dados.
 			 db.transaction(function(tx) {
@@ -475,6 +515,7 @@ function salvarPessoa(input){
 		  $(input).trigger('blur');
 		  $(input).hide();
 		  $("#" + input.name).addClass('naoEditavel');
+		  editandoPedido = true;
 		  selectPessoa(idProdutoAtual);
 		  window.event.preventDefault();
 		  return false;
@@ -722,7 +763,7 @@ function montaModalPreviaPedido(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div id="div-modal_previa_preco_produto'+i+'" class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
 								+ i
 								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
 	    }else{
@@ -746,7 +787,7 @@ function montaModalPreviaPedido(tx,result){
      	totalMesa += total;
      	
     });
-	$("#total-mesa").text('Todal Mesa: '+ totalMesa.toFixed(2));
+	$("#total-mesa").text('Total Mesa: '+ totalMesa.toFixed(2));
 	
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){

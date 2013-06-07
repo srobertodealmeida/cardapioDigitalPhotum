@@ -70,7 +70,7 @@
 		
 </script>
 </head>
-
+<a id ="link-home" hidden="true" href="home.html"></a>
 <body id="bodyTeste" onload="onDeviceReady();">
 <div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
@@ -314,6 +314,13 @@
 		<span>Aguarde, logo um de nossos garçons irá atendê-lo</span>
 		</div>
 		<button class="btn_ok_mensagem" onclick="hide('modal_chamar_garcom_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<div id="modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span>Aguarde, logo um de nossos garçons irá atendê-lo</span>
+		</div>
+		<button class="btn_ok_mensagem" onclick="confirmacaoFechamentoMesa()" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_pedido_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
