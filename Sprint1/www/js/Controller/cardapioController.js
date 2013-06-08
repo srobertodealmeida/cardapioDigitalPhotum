@@ -3,8 +3,10 @@ var pessoaSelecionado;
 var idPedidoExcluir;
 var idPedidoEditando;
 var editandoPedido;
+var editandoPessoa = false;
 var nomePessoaEditando;
 var mesa;
+var meuPedido = false;
 
 require([
 "dojo/dom",
@@ -138,19 +140,20 @@ require([
 		  }else if(dlg.value == 'mesa'){
 			   tipo = "Mesa";
 			   fechamentoMesa = true;
-			   totalPagamento = $("#total-mesa").text();
 			   
 			   // Monta nome de pessoas para fechamento de conta
-			   
+			   totalPagamento = 0.00;
 			   $( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
 			   		if($('#'+this.id+' .btn_fechar_conta_individual').text() == "Fechar Conta Individual"){
 			   			var preco = $('#'+this.id+' .preco-fechamento-conta').text();
 			   			preco = preco.replace('Total:','');
+			   			var precoParser = preco.replace('R$ ','');
+			   			totalPagamento += parseFloat(precoParser);
 			   			nomePessoa +=$('#'+this.id+' .btn_fechar_conta_individual').val() + ": "+ preco + " tag-pular ";
 			   		}
 		    		
 		    	 }); 
-			  
+			   totalPagamento = "Total: R$ " + totalPagamento.toFixed(2);
 		    	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
 		   		 
 		    		if(this.title == 'aguardando-pedido'){
@@ -321,6 +324,7 @@ function montaDescricao(tx,result){
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="selectPessoa('+result.rows.item(0).id+')">Adicionar</button>');
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido" onclick="hide(\'id-modal-descricao\')">Cancelar</button>');
 		editandoPedido = false;
+		editandoPessoa = false;
 		show('id-modal-descricao');
 	}
 	
@@ -345,7 +349,7 @@ function montaAdicionarPessoa(tx,result){
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
 	$("#id_ul_modal_nome_pessoa .inputNome").remove();
 	
-	if(!editandoPedido){
+	if(!editandoPessoa){
 		$(".textarea-observacao-produto").val('');
 	}
 	
@@ -515,7 +519,7 @@ function salvarPessoa(input){
 		  $(input).trigger('blur');
 		  $(input).hide();
 		  $("#" + input.name).addClass('naoEditavel');
-		  editandoPedido = true;
+		  editandoPessoa = true;
 		  selectPessoa(idProdutoAtual);
 		  window.event.preventDefault();
 		  return false;
@@ -556,13 +560,14 @@ function salvarEdicaoPedido(){
 }
 
 function selectProdutoMeuPedido(){
+	meuPedido = true;
 	 db.transaction(function(tx) {
 		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
     },errorCB);
 }
 
 function adicionarPedido(tx,result){
-	
+	meuPedido = false;
     var observacao =  $(".textarea-observacao-produto").val();
 	if(result.rows.length > 0){
 	 if($(".pessoa_selecionado").size() > 0 ){
@@ -587,7 +592,7 @@ function selectPedidos(){
 function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
 	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
-	if(result.rows.length == 0){
+	if(meuPedido == true && result.rows.length == 0){
 		show('modal_sem_pedido');
 	}else{
 	for(var i=0;i<result.rows.length;i++){
@@ -681,6 +686,8 @@ function postPedidoDrupal(tx,result){
 		 db.transaction(function(tx) {
 			 for(var i=0;i<result.rows.length;i++){
 				 console.log(result.rows.item(i));
+				 
+				 preco = result.rows.item(i).preco_produto * result.rows.item(i).quantidade;
 			 
 				 var mesa  = {
 	    			     "value":result.rows.item(i).mesa,
@@ -699,7 +706,7 @@ function postPedidoDrupal(tx,result){
 				 }
 				 
 				 var preco_produto  = {
-	    			     "value":""+result.rows.item(i).preco_produto+"",
+	    			     "value":""+preco.toFixed(2)+"",
 				 }
 				 
 				 var quantidade_produto  = {
@@ -726,7 +733,7 @@ function postPedidoDrupal(tx,result){
                  postAjax(url,data);
                  
 				 //putAjax(url,data);
-                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id='+result.rows.item(i).id+'');
+                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'+preco.toFixed(2)+'" WHERE id='+result.rows.item(i).id+'');
              
 			 }
 			

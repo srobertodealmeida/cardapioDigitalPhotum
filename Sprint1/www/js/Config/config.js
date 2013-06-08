@@ -319,10 +319,10 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
-	//quantidadeRegistros = 7;
-	//Mock();
+	quantidadeRegistros = 7;
+	Mock();
 	
-   getDadosDrupal(tx);
+   //getDadosDrupal(tx);
 }
 
 function montaHome(tx){
@@ -563,7 +563,7 @@ function successCB(tx,result) {
 }
 
 function successInsert(){
-	quantidadeRegistros = quantidadeRegistros - 1;
+	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('testeErroInsert '+ testeProdutoErro);
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
