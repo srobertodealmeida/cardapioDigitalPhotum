@@ -80,7 +80,7 @@ require([
 	  }
 	  
 	  showConfirmacaoPedido = function(dlg){
-		  $('#modal_efetuar_pedido p').text('Deseja efetuar seu pedido? Você pode voltar e adicionar mais itens antes') ;
+		  $('#modal_efetuar_pedido p').text('Deseja realmente efetuar seu pedido?') ;
 		  $('#modal_efetuar_pedido .fechamentoIndividual').attr('value',dlg.value) ;
 		  registry.byId('modal_efetuar_pedido').show();
 	  }
