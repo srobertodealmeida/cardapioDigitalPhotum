@@ -31,7 +31,6 @@
 <style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
 </style>
 
-<script type="text/javascript" src="js/meuJSIos.js"></script>
 
 
 <script type="text/javascript">
@@ -45,11 +44,23 @@ require([
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 </head>
 
-<body class="claro"  onload="onDeviceReady();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+<body class="claro"  onload="showTelaSenha();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
 	<div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
-	<div id="geral" class="geral" >
+	<div id="geral" class="geral"  style="display: none">
+	
+	<div id="senha_configaracao" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<form onsubmit=" return false;">
+		<div class="div-mensagem">
+		<label class="labelSenha">Senha: </label>
+		<input onkeypress="focusOutInput(this)" class="inputSenha" type="password"></input>
+		</div>
+		<button class="btn_ok_mensagem" onclick="validarSenha()" id="btn_ok_final">OK</button>
+		<button  class="btn-cancelar-senha" onclick="voltarHome()">Cancelar</button>
+		</form>
+	</div>
+	
 	<img id="background-config" alt="" src="" class="img-bacground"/>
 		<div class="topo">
 		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
@@ -124,8 +135,8 @@ require([
  
 	    </div>
 
-	</div>
-				
+	</div></div>
+			</div>	
 	
 </body>
 </html>

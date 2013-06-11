@@ -663,7 +663,7 @@ function Mock(){
         },errorCB, successInsert);
 	
 	db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO Produtos(categoria,title,preco) VALUES ("OUTROS","teste","4.50")');
+        tx.executeSql('INSERT INTO Produtos(categoria,title,preco,descricao) VALUES ("OUTROS","teste","15.95","testeteteetettetetetdfffffffffffffffffffffffff fffffffffffffffffffffffffffffffffffffff fffffffffffffffffffffffffffffffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffffffffffffff ffffffffffffffffffffffffffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet fffffffffffffffet")');
         
         },errorCB, successInsert);
 	

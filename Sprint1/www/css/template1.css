@@ -1028,7 +1028,6 @@ body {
 
 .title_preco {
 	font-size: 28px !important;
-	margin: 100 0 0 0;
 }
 
 #mobileTransitionView10 p {
@@ -1693,4 +1692,33 @@ background-image: #4d4d4d !important;
 	color: black;
 	font-size: 20;
 	float: left;
+}
+
+.pedidoEfetuado {
+	float: right;
+	bottom: 5;
+	position: absolute;
+	right: 5;
+	z-index: 330;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+	color: white;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none;
+	vertical-align: middle;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-appearance: none;
+	height: 70%;
+	font-size: 15;
+	width: 15%;
+}
+
+.modal_pedido_quantidade_pedido_efetuado {
+	left: -33px;
+    position: relative;
 }

@@ -6,6 +6,7 @@ var editandoPedido;
 var editandoPessoa = false;
 var nomePessoaEditando;
 var mesa;
+var idConta;
 var meuPedido = false;
 
 require([
@@ -172,6 +173,7 @@ require([
 		    	 }); 
 		    	db.transaction(function(tx){
 		    		limparDados(tx);
+		    		createIdConta();
  					
  				},errorCB);
 		    }
@@ -198,7 +200,10 @@ require([
 		 var status_fechamento  = {
 			     "value":"pedido-fechamento",
 		 }
-    	 
+		 
+		 var fechamento_idConta  = {
+			     "value":idConta,
+		 }
 		 var data  = {
 			     "type":"fechamento_conta",
 			     "field_numero_mesa[und][0]":mesa_field,
@@ -206,6 +211,7 @@ require([
 			     "field_total[und][0]":totalPagamento_field,
 			     "field_tipo[und][0]":tipo_field,
 			     "field_status_fechamento[und][0]":status_fechamento,
+			     "field_fechamento_id_conta[und][0]":fechamento_idConta,
 			     "title":"Fechamento: " + mesa,
 			};
 		
@@ -230,6 +236,26 @@ require([
 	  
 });
 
+
+
+function createIdConta(){
+	db.transaction(function(tx) {
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
+		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
+			 if(result.rows.length == 0){
+				 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
+			 }else{
+			   idAtual = result.rows.item(0).idConta;
+			   idAtual = parseInt(idAtual);
+			   idAtual += 1;
+			   tx.executeSql('UPDATE IdConta SET idConta="'+idAtual+'" WHERE Id='+result.rows.item(0).id+'');
+			 }
+		 },errorCB);
+   },errorCB);
+	
+}
+
 function confirmacaoFechamentoMesa(){
 	window.location = 'home.html';
 }
@@ -251,6 +277,11 @@ function montaCardapio(tx){
 	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
 		 mesa = result.rows.item(0).numero;
 	 },errorCB)
+	 
+	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
+		 idConta = result.rows.item(0).idConta;
+	 }, errorCB);
+	 
 	tx.executeSql('SELECT * FROM Categorias',[],montaCategoria,errorCB);
 }
 
@@ -491,6 +522,11 @@ function selecionarPessoa(li){
 	$("#"+ li.id).addClass("pessoa_selecionado");
 	
 }
+function sairObservacaoPedido(){
+	if(window.event.keyCode == 13) {
+		$('.textarea-observacao-produto').trigger('blur');
+	}
+}
 
 function salvarPessoa(input){
 	if(window.event.keyCode == 13) {
@@ -562,7 +598,7 @@ function salvarEdicaoPedido(){
 function selectProdutoMeuPedido(){
 	meuPedido = true;
 	 db.transaction(function(tx) {
-		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
+		 tx.executeSql('SELECT * FROM Pedido',[],montaModalPedido,errorCB);
     },errorCB);
 }
 
@@ -596,7 +632,11 @@ function montaModalPedido(tx,result){
 		show('modal_sem_pedido');
 	}else{
 	for(var i=0;i<result.rows.length;i++){
-		$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >Editar</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
+		if(result.rows.item(i).status == 'confirmacao'){
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >Editar</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
+		}else{
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">Pedido Efetuado</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
+		}
 	}
 	$(".btn-decremento").click(function(e){
 		 if(parseInt($(this).next('span').text()) > 1){
@@ -641,10 +681,7 @@ function montaModalPedido(tx,result){
 			$("#"+$(this).attr('value')).toggle(); 
 		}
 		
-	  });
-	
-	
-	
+	 });
 	
 	hide('id_modal_nome_pessoa');
 	show('modal_pedido');
@@ -665,7 +702,7 @@ function editarPedido(li){
 		 },errorCB);
    },errorCB);
 }
-
+	
 function excluirPedido(){
 	 db.transaction(function(tx) {
 		 tx.executeSql('DELETE from Pedido WHERE id='+idPedidoExcluir+'');
@@ -691,6 +728,12 @@ function postPedidoDrupal(tx,result){
 			 
 				 var mesa  = {
 	    			     "value":result.rows.item(i).mesa,
+				 }
+				 
+				 var idContaDrupal = {
+						 
+				    "value":idConta,
+						 
 				 }
 				 
 				 var pessoa  = {
@@ -726,8 +769,10 @@ function postPedidoDrupal(tx,result){
 	    			     "field_preco_produto[und][0]":preco_produto,
 	    			     "field_quantidade[und][0]":quantidade_produto,
 	    			     "field_status[und][0]":status,
+	    			     "field_id_conta[und][0]":idContaDrupal,
 	    			     "title":result.rows.item(i).nome_produto ,
 	    			};
+				 console.log(data);
 				 //"+ decodeURIComponent("212")+".json"
 				 var url=""+ipServidorDrupal+"/node";
                  postAjax(url,data);

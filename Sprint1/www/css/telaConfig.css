@@ -61,3 +61,79 @@ margin-top: 10;
 	height: 80;
 	font-size: 14;
 }
+.inputSenha{
+	width: 90%;
+}
+.labelSenha{
+	color: black;
+}
+.mensagem {
+	height: auto !important;
+	width: 40% !important;
+	background-color: #000000 !important;
+	border: 3px solid #fff0fc !important;
+	border-radius: 29px !important;
+	background-image: -moz-linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-image: -webkit-linear-gradient(top, #fff7f2, #cfcdc4)
+		!important;
+	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-clip: padding-box !important;
+}
+
+.btn_ok_mensagem {
+	float: right;
+	right: 18.5%;
+	z-index: 10;
+	background: #1a1103;
+	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
+		to(#1a1103) );
+	background: -webkit-linear-gradient(top, #59a382, #1a1103);
+	background: -moz-linear-gradient(top, #59a382, #1a1103);
+	background: -ms-linear-gradient(top, #59a382, #1a1103);
+	background: -o-linear-gradient(top, #59a382, #1a1103);
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+	color: white;
+	font-size: 96%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none;
+	vertical-align: middle;
+	size: 20px;
+	width: 20%;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-appearance: none;
+	height: 50px;
+	margin: 10px 80 20 0
+}
+
+.btn-cancelar-senha {
+	z-index: 210 !important;
+	background-color: #000000 !important;
+	background-image: -moz-linear-gradient(top, #ff2136, #100401) !important;
+	background-image: -webkit-linear-gradient(top, #ff2136, #100401)
+		!important;
+	background-image: linear-gradient(top, #ff2136, #100401) !important;
+	background-clip: padding-box !important;
+	-webkit-border-radius: 15px !important;
+	-moz-border-radius: 15px !important;
+	border-radius: 15px !important;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0 !important;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0 !important;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0 !important;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0 !important;
+	color: white !important;
+	font-size: 20px !important;
+	font-family: Helvetica, Arial, Sans-Serif !important;
+	text-decoration: none !important;
+	vertical-align: middle !important;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+	-webkit-appearance: none !important;
+	height: 50px !important;
+	float: left !important;
+	margin: 10px 0 20 80
+}
