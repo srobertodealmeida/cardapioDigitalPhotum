@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -421,7 +421,7 @@ function createTable(tx){
     ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT )');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT)');
 	
 	
 	////////////////////////////////////////////CONFIG//////////////////////////////////////
@@ -563,7 +563,7 @@ function successCB(tx,result) {
 }
 
 function successInsert(){
-	//quantidadeRegistros = quantidadeRegistros - 1;
+	quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('testeErroInsert '+ testeProdutoErro);
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
@@ -591,43 +591,61 @@ function getAjax(url){
 }
 
 function postAjax(url,data){
-	$.ajax({
-		
-		dataType:'application/json',
+	return $.ajax({
+		dataType:'json',
 		url : url,
-		type : "POST",
+		type : "post",
+		crossDomain: true,
 		data : data,
-		
-		// as specied in web service doc
-		success : function(data) {
+		converters: {
+	        "text json": function(value) {
+	            console.log("pre-processing...");
+	            /* do stuff */
+	            return value;
+	        }
+	    },
+	    success : function(data) {
 
-			alert('sucess');
+			console.log('postAjax Success');
 
 		},
-		error : function(data) {
-			console.log(data);
+	    
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log(jqXHR);
 		}
 	});
 }
 
 function putAjax(url,data){
 	$.ajax({
-		contentType:"application/x-www-form-urlencoded; charset=utf-8",
+		dataType:'text',
 		url : url,
 		type : "put",
+		crossDomain: true,
 		data : data,
-		
-		// as specied in web service doc
-		success : function(data) {
+		headers: {
+			'Access-Control-Allow-Origin':'*',
+	    },
+		converters: {
+	        "text json": function(value) {
+	            console.log("pre-processing...");
+	            /* do stuff */
+	            return value;
+	        }
+	    },
+	    
+	    success : function(data) {
 
 			alert('sucess');
 
 		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {
-	        console.log(JSON.stringify(XMLHttpRequest));
-	        console.log(JSON.stringify(textStatus));
-	        console.log(JSON.stringify(errorThrown));
-	      },
+		
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('error');
+			alert(textStatus);
+			alert(errorThrown);
+			console.log(jqXHR);
+		}
 	});
 
 }

@@ -69,6 +69,8 @@ function semNumeroMesa(){
 }
 
 $(document).ready(function(){
+	
+	
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
     

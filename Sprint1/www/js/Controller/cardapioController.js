@@ -236,7 +236,9 @@ require([
 	  
 });
 
-
+function confirmarPagamento(btn){
+	
+}
 
 function createIdConta(){
 	db.transaction(function(tx) {
@@ -274,6 +276,7 @@ function limparDados(tx){
 }
 
 function montaCardapio(tx){
+	
 	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
 		 mesa = result.rows.item(0).numero;
 	 },errorCB)
@@ -628,15 +631,21 @@ function selectPedidos(){
 function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
 	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
+	$('#id-efetuar-pedido').removeAttr("disabled");
+	var pedidosPendentes = false;
 	if(meuPedido == true && result.rows.length == 0){
 		show('modal_sem_pedido');
 	}else{
 	for(var i=0;i<result.rows.length;i++){
 		if(result.rows.item(i).status == 'confirmacao'){
+			pedidosPendentes = true;
 			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >Editar</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 		}else{
 			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">Pedido Efetuado</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 		}
+	}
+	if(!pedidosPendentes){
+		$('#id-efetuar-pedido').attr("disabled", "disabled");
 	}
 	$(".btn-decremento").click(function(e){
 		 if(parseInt($(this).next('span').text()) > 1){
@@ -773,12 +782,12 @@ function postPedidoDrupal(tx,result){
 	    			     "title":result.rows.item(i).nome_produto ,
 	    			};
 				 console.log(data);
-				 //"+ decodeURIComponent("212")+".json"
-				 var url=""+ipServidorDrupal+"/node";
-                 postAjax(url,data);
+				 var url=""+ipServidorDrupal+"/node/1007";
+                 //var ajaxPostDrupal = postAjax(url,data);
+                 putAjax(url,data) ;
                  
 				 //putAjax(url,data);
-                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'+preco.toFixed(2)+'" WHERE id='+result.rows.item(i).id+'');
+                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'+preco.toFixed(2)+'"  WHERE id='+result.rows.item(i).id+'');
              
 			 }
 			

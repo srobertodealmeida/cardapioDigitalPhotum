@@ -234,7 +234,7 @@
 		    </div>
 		    <div class="buttons-wfwtuar-pedido">
 		   
-			<button  value="modal_pedido" class="btn_adicionar_pedido  btn-tamanho-confirmacao-pedido"  onclick="showConfirmacaoPedido(this)">Efetuar pedido</button>
+			<button   id="id-efetuar-pedido" value="modal_pedido" class="btn_adicionar_pedido  btn-tamanho-confirmacao-pedido"  onclick="showConfirmacaoPedido(this)">Efetuar pedido</button>
 	    </div>
 	    </div>	
 
@@ -264,6 +264,7 @@
 		<div class="btn_adicionar_pedido_previa_pedido">
 	        <button  id="mesa" value="mesa" class="btn-fechar-conta-previa-pedido"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta da Mesa</button>
 			<button  id="btn_efetuar_pedido_22" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-previa-pedido" onclick="hide('modal_previa_pedido')">Cancelar</button>
+			<button  id="id-confirmarPagametento" value="mesa" class="btn-confirmar-pagamento"  onclick="confirmarPagamento(this)">Confirmar Pagamento</button>
 	    </div>
 	</div>
 
@@ -334,6 +335,8 @@
 		</div>
 		<button class="btn_ok_mensagem" onclick="hide('modal_favor_selecionar_pessoa')" id="btn_ok_final">OK</button>
 	</div>
+	
+	
 	
 		
 </div>	
