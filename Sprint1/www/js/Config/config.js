@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -135,7 +135,6 @@ function getDadosDrupal(tx){
 			  });
 	    	
 			//////////////////////Propagandas///////////////////////////
-			
 			  
 			   $.each(arrayPropagandasAux, function(key1, val1) {
 				      var url = $.parseHTML(val1); //pega apenas href
@@ -416,7 +415,7 @@ function createTable(tx){
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT)');
 	
     ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Mesa
@@ -424,7 +423,7 @@ function createTable(tx){
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT)');
 	
 	
-	////////////////////////////////////////////CONFIG//////////////////////////////////////
+	////////////////////////////////////////////Config//////////////////////////////////////
 	// Table Config ()
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
 	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
@@ -618,14 +617,12 @@ function postAjax(url,data){
 
 function putAjax(url,data){
 	$.ajax({
-		dataType:'text',
 		url : url,
 		type : "put",
-		crossDomain: true,
 		data : data,
-		headers: {
-			'Access-Control-Allow-Origin':'*',
-	    },
+		
+		dataType:'json',
+		contentType: 'application/x-www-form-urlencoded',
 		converters: {
 	        "text json": function(value) {
 	            console.log("pre-processing...");

@@ -135,10 +135,16 @@ require([
 						}
 					},errorCB);
 					
-				},errorCB); 
-			  
+					tx.executeSql('SELECT * FROM Pessoas where nome = "'+ dlg.title +'"',[],function(tx,result){
+						for(i=0;i<result.rows.length;i++){
+						tx.executeSql('UPDATE Pessoas SET ativo="false" WHERE Id='+result.rows.item(i).id+'');
+						}
+					},errorCB);
+					
+				},errorCB);
 			
 		  }else if(dlg.value == 'mesa'){
+			   
 			   tipo = "Mesa";
 			   fechamentoMesa = true;
 			   
@@ -153,29 +159,31 @@ require([
 			   			nomePessoa +=$('#'+this.id+' .btn_fechar_conta_individual').val() + ": "+ preco + " tag-pular ";
 			   		}
 		    		
-		    	 }); 
-			   totalPagamento = "Total: R$ " + totalPagamento.toFixed(2);
+		    	 });
+			   
+			    totalPagamento = "Total: R$ " + totalPagamento.toFixed(2);
 		    	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
-		   		 
 		    		if(this.title == 'aguardando-pedido'){
 		    			var nome = this.value;
 		    			 db.transaction(function(tx){
 		 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ nome +'" and status="aguardando-pedido"  ',[],function(tx,result){
 		 						for(i=0;i<result.rows.length;i++){
-		 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
-		 						limparDados(tx);
+		 						  tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
+		 						  //limparDados(tx);
 		 						
 		 						}
 		 					},errorCB);
 		 					
+		 					tx.executeSql('SELECT * FROM Pessoas where nome = "'+ nome +'"',[],function(tx,result){
+								for(i=0;i<result.rows.length;i++){
+								tx.executeSql('UPDATE Pessoas SET ativo="false" WHERE Id='+result.rows.item(i).id+'');
+								}
+							},errorCB);
+		 					
 		 				},errorCB);
 		    		}
 		    	 }); 
-		    	db.transaction(function(tx){
-		    		limparDados(tx);
-		    		createIdConta();
- 					
- 				},errorCB);
+		    	
 		    }
     	 var qtdTotal = $( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).length;
     	 var qtdAguardandoPagamento = $( "#id-ul-fechamento-conta .mostrarDetalhado .aguardandoPagamento" ).length;
@@ -237,25 +245,116 @@ require([
 });
 
 function confirmarPagamento(btn){
+	db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Pedido where status="aguardando-pagamento" group by pessoa ',[],function(tx,result){
+				$('#modal_confirmacao_pagamento .lista-pessoas-confirmacao-pagamento p').remove();
+				for(i=0;i<result.rows.length;i++){
+					$('#modal_confirmacao_pagamento .lista-pessoas-confirmacao-pagamento').append('<p>'+result.rows.item(i).pessoa+'</p>');
+					$('#modal_confirmacao_pagamento .inputSenha').text('');
+					show('modal_confirmacao_pagamento');
+					//alert(result.rows.item(i).pessoa);
+				}
+			},errorCB);
+			
+		},errorCB);
+}
+
+function inputSenhaConfirmacaoPagamento(){
+	if(window.event.keyCode == 13) {
+		  
+		 $('.inputSenha').trigger('blur');
+		 $('#btn_ok_confirmacao_pagamento').trigger('click');
+		  return false;
+	}
+}
+
+function inputSenhaConfirmacaoPagamentoLimparMesa(){
+	if(window.event.keyCode == 13) {
+		  
+		 $('.inputSenhaLimparDados').trigger('blur');
+		 $('#btn_ok_confirmacao_pagamento_limpar_mesa').trigger('click');
+		  return false;
+	}
+}
+
+
+
+function validarSenhaConfirmacaoPagamento(){
+	var ajax = getAjax(urlViewConfig);
 	
+	 ajax.success(function (data) {
+		 $.each(data, function(key, val) {
+	    	if(val.senha_confirmacao_pagamento == $('.inputSenha').val()){
+	    		
+	    		db.transaction(function(tx){
+ 					tx.executeSql('SELECT * FROM Pedido where status="aguardando-pagamento"',[],function(tx,result){
+ 						for(i=0;i<result.rows.length;i++){
+ 						tx.executeSql('UPDATE Pedido SET status="pagamento-feito" WHERE Id='+result.rows.item(i).id+'');
+ 						//limparDados(tx);
+ 						}
+ 					},errorCB);
+ 					
+ 					tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido"',[],function(tx,result){
+ 						
+ 						if(result.rows.length == 0){
+ 							show('modal_confirmacao_pagamento_limpar_mesa');
+ 							//limparDados(tx);
+ 						}
+ 					},errorCB);
+ 					
+ 				},errorCB);
+	    		montaPreviaPedido();
+	    		hide('modal_confirmacao_pagamento');
+	    		
+	    	}else{
+	    		alert('Senha Inválida');
+	    	}
+	    	
+	       });
+     });
+}
+
+function validarSenhaConfirmacaoPagamentoLimparMesa(){
+	var ajax = getAjax(urlViewConfig);
+	 ajax.success(function (data) {
+		 $.each(data, function(key, val) {
+	    	if(val.senha_confirmacao_pagamento == $('.inputSenhaLimparDados').val()){
+	    		
+	    		limparDadosMesa();
+	    	}else{
+	    		alert('Senha Inválida');
+	    	}
+	    	
+	       });
+     });
+}
+
+function limparDadosMesa(btn){
+	db.transaction(function(tx){
+		limparDados(tx);
+			
+		},errorCB);
+
+	createIdConta();
+    hide('modal_confirmacao_pagamento_limpar_mesa');
 }
 
 function createIdConta(){
 	db.transaction(function(tx) {
-		
 		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
 		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
 			 if(result.rows.length == 0){
 				 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
 			 }else{
+				 
 			   idAtual = result.rows.item(0).idConta;
 			   idAtual = parseInt(idAtual);
 			   idAtual += 1;
 			   tx.executeSql('UPDATE IdConta SET idConta="'+idAtual+'" WHERE Id='+result.rows.item(0).id+'');
 			 }
+			 confirmacaoFechamentoMesa();
 		 },errorCB);
    },errorCB);
-	
 }
 
 function confirmacaoFechamentoMesa(){
@@ -267,16 +366,15 @@ function limparDados(tx){
      ////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT)');
 	
     ////////////////////////////////////////////Pedido///////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT )');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT )');
 }
 
 function montaCardapio(tx){
-	
 	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
 		 mesa = result.rows.item(0).numero;
 	 },errorCB)
@@ -357,10 +455,29 @@ function montaDescricao(tx,result){
 		$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido" onclick="selectPessoa('+result.rows.item(0).id+')">Adicionar</button>');
 		$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido" onclick="hide(\'id-modal-descricao\')">Cancelar</button>');
+		
 		editandoPedido = false;
 		editandoPessoa = false;
 		show('id-modal-descricao');
 	}
+	
+	db.transaction(function(tx){
+		console.log("nameProdutoTentativa: "+ name);
+		
+		tx.executeSql('SELECT * FROM Pessoas',[],function(tx,result){
+			if(result.rows.length != 0){
+				tx.executeSql('SELECT * FROM Pessoas where ativo = "true"',[],function(tx,result){
+					if(result.rows.length == 0){
+						$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_adicionar_pedido").attr('disabled','disabled');
+					}else{
+						$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_adicionar_pedido").removeAttr('disabled');
+					}
+				},errorCB);
+			}
+		},errorCB);
+		
+		
+	},errorCB);
 	
 }
 
@@ -370,7 +487,7 @@ function selectPessoa(idProduto){
 	hide('id-modal-descricao');
 	db.transaction(function(tx){
 		console.log("nameProdutoTentativa: "+ name);
-		tx.executeSql('SELECT * FROM Pessoas',[],montaAdicionarPessoa,errorCB);
+		tx.executeSql('SELECT * FROM Pessoas where ativo = "true"',[],montaAdicionarPessoa,errorCB);
 		
 	},errorCB);
 	
@@ -400,10 +517,9 @@ function montaAdicionarPessoa(tx,result){
 		}
 		
 		
-		
-		
 	}else if(result.rows.length == 1){// Caso tiver apenas uma pessoa no banco de dados gera mais 2 li de adicionar pessoa
-		 $("#id_ul_modal_nome_pessoa")
+		if(result.rows.item(0).nome != "Conta Conjunto"){
+		$("#id_ul_modal_nome_pessoa")
 				.append(
 						'<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
 								+ 1
@@ -416,7 +532,7 @@ function montaAdicionarPessoa(tx,result){
 								+ '" title="'
 								+ result.rows.item(0).id
 								+ '" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
-		 
+		}
 		 if(result.rows.item(0).associado_pedido != "true"){
 			 $('#add'+ 1+' .mblListItemRightIcon').after('<button  value="add1" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+result.rows.item(0).id+'" value="add1" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>')
 		 }
@@ -433,6 +549,7 @@ function montaAdicionarPessoa(tx,result){
 	}else {
 		for(i=0;i<result.rows.length;i++){// monta li de pessoas do banco de dados
 			var value = i + 1; 
+			if(result.rows.item(i).nome != "Conta Conjunto"){
 			$("#id_ul_modal_nome_pessoa").append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
 						+ value
 						+ '" name="'
@@ -445,6 +562,7 @@ function montaAdicionarPessoa(tx,result){
 			if(result.rows.item(i).associado_pedido != "true"){
 				 $('#add'+ value+' .mblListItemRightIcon').after('<button  value="add'+value+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+result.rows.item(i).id+'" value="add'+value+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>')
 			 }
+			}
 		}
 		
 		var valueUltimoLi = result.rows.length +1;
@@ -487,6 +605,14 @@ function montaAdicionarPessoa(tx,result){
 	tx.executeSql('SELECT * FROM Produtos where id='+idProdutoAtual+'',[],function(tx,result){
 		$('#id_modal_nome_pessoa .nome-produto-adicionar-pessoa').text(result.rows.item(0).title);
 	},errorCB);
+	
+	tx.executeSql('SELECT * FROM Pessoas where nome="Conta Conjunto"',[],function(tx,result){
+		if(result.rows.length > 0){
+			if(result.rows.item(0).ativo == "false"){
+		       $('#id_modal_nome_pessoa .div_conjunto').remove();
+	        }
+		}
+	},errorCB);
 		
 	
 	show('id_modal_nome_pessoa');
@@ -496,10 +622,10 @@ function montaAdicionarPessoa(tx,result){
 //Método que mostra o campo para adiiconar Pessoa;
 function mostrarImput(li){
 	
-	 	  if($("#"+ li.id).hasClass('naoEditavel')){
+	 if($("#"+ li.id).hasClass('naoEditavel')){
 	 		 
 	        return false;
-	      }
+	 }
 	 
 	 $("#"+ li.id + ' .editavel').hide();
 	 if($("#"+ li.id + ' .editavel').text() != "Adicionar pessoa..."){
@@ -549,7 +675,7 @@ function salvarPessoa(input){
 		 }else{
 			 // Insert no banco de dados.
 			 db.transaction(function(tx) {
-	             tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido) VALUES ("' + input.value + '","false")');
+	             tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo) VALUES ("' + input.value + '","false","true")');
 	         },errorCB);
 			 
 			 $('<button  value="'+input.name+'" class="btn_editar_pessoa"  onclick="editarPessoa(this)">Editar</button> <button title="'+input.title+'" value="'+input.name+'" class="btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">Excluir</button>').insertAfter($("#" + input.name + " .mblListItemRightIcon"));
@@ -609,8 +735,19 @@ function adicionarPedido(tx,result){
 	meuPedido = false;
     var observacao =  $(".textarea-observacao-produto").val();
 	if(result.rows.length > 0){
-	 if($(".pessoa_selecionado").size() > 0 ){
+	  if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
+			 
+				 tx.executeSql('SELECT * FROM Pessoas where nome="Conta Conjunto"',[],function(fx,result){
+					 if(result.rows.length == 0){
+						 if(pessoaSelecionado == "Conta Conjunto"){
+					    	 tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo) VALUES ("' + pessoaSelecionado + '","true","true")');
+					     }
+					 }
+					 
+				 },errorCB);
+				 
+			     
 				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
 			     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		   
@@ -620,6 +757,13 @@ function adicionarPedido(tx,result){
 		 show("modal_favor_selecionar_pessoa");
      }
 	}
+	
+	tx.executeSql('SELECT * FROM Pessoas',[],function(fx,result){
+		for(i=0;i<result.rows.length;i++){
+		 }
+		 
+	 },errorCB);
+	
 }
 
 function selectPedidos(){
@@ -780,11 +924,11 @@ function postPedidoDrupal(tx,result){
 	    			     "field_status[und][0]":status,
 	    			     "field_id_conta[und][0]":idContaDrupal,
 	    			     "title":result.rows.item(i).nome_produto ,
-	    			};
+	    		};
 				 console.log(data);
-				 var url=""+ipServidorDrupal+"/node/1007";
+				 var url=""+ipServidorDrupal+"/node";
                  //var ajaxPostDrupal = postAjax(url,data);
-                 putAjax(url,data) ;
+                 postAjax(url,data) ;
                  
 				 //putAjax(url,data);
                  tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'+preco.toFixed(2)+'"  WHERE id='+result.rows.item(i).id+'');
@@ -803,13 +947,24 @@ function postPedidoDrupal(tx,result){
 function montaPreviaPedido(){
 	db.transaction(function(tx) {
 		 tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido" or status="aguardando-pagamento" order by pessoa',[],montaModalPreviaPedido,errorCB);
-  },errorCB);
+    },errorCB);
 }
 
+function chamarLimparDadosMesa(){
+	$('#modal_confirmacao_pagamento_limpar_dados_mesa .inputSenhaLimparDados').text('');
+	show('modal_confirmacao_pagamento_limpar_dados_mesa');
+}
 function montaModalPreviaPedido(tx,result){
-    
+	
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
+	if(result.rows.length == 0){
+		$('#id-confirmarPagametento').text('Limpar Dados da Mesa');
+		$('#id-confirmarPagametento').attr('onclick','chamarLimparDadosMesa()');
+	}else{
+		$('#id-confirmarPagametento').text('Confirmar Pagamento');
+		$('#id-confirmarPagametento').attr('onclick','confirmarPagamento(this)');
+	}
 	show('modal_previa_pedido');
 	var ultimaPessoa = "";
 	var ultimoI;
@@ -834,6 +989,7 @@ function montaModalPreviaPedido(tx,result){
 		
 		ultimaPessoa = result.rows.item(i).pessoa;
 	}
+	
 	var totalMesa = 0.00;
 	$( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
    	 var total = 0.00;
@@ -887,13 +1043,41 @@ function mostrarPedidoDetalhado(divDetalhado){
 	  $("#" + divDetalhado).toggle();
 	}
 
-
+function chamarGarcon(){
+	 var mensagem  = {
+		     "value":"Mesa: "+mesa+" Chamando Garçon",
+	 }
+		    
+	 var data  = {
+			 "type":"notificacao",
+		     "field_notificacao_mensagem[und][0]":mensagem,
+		     "title":"Title Notificacao: "+mesa,
+	};
+	 console.log(data);
+	 var url=""+ipServidorDrupal+"/node";
+     //var ajaxPostDrupal = postAjax(url,data);
+     postAjax(url,data) ;
+     hide('modal_chamar_garcon');
+     show('modal_chamar_garcom_confirmacao_mensagem');
+}
 $(document).ready(function(){
-//TODO passar para config getdadosDrupal
-	
+     //TODO passar para config getdadosDrupal
+	//mockPut();
 	db.transaction(montaCardapio,errorCB);
 	
 });
+
+function mockPut(){
+	 var data  = {
+		     "type":"fechamento_conta",
+		     "title":"Fechamento novo novo novo: ",
+		};
+	
+	 //"+ decodeURIComponent("212")+".json"
+	 var url=""+ipServidorDrupal+"/node/1006";
+	 putAjax(url,data);
+}
+
 
 
 
