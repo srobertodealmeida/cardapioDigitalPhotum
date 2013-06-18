@@ -1061,11 +1061,38 @@ function chamarGarcon(){
      show('modal_chamar_garcom_confirmacao_mensagem');
 }
 $(document).ready(function(){
+	document.addEventListener("deviceready", yourCallbackReady, false);
+	
+	
+	
      //TODO passar para config getdadosDrupal
 	//mockPut();
 	db.transaction(montaCardapio,errorCB);
 	
 });
+
+function yourCallbackReady(){
+	document.addEventListener("pause", yourCallbackFunction, false);
+	document.addEventListener("resume", onResume, false);
+	document.addEventListener("backbutton", onBackKeyDown, false);
+	document.addEventListener("endcallbutton", onEndCallKeyDown, false);
+	alert('ready');
+}
+
+function onEndCallKeyDown(){
+	alert('onEndCallKeyDown');
+}
+
+function onBackKeyDown(){
+	alert('onBackKeyDown');
+}
+
+function onResume(){
+	alert('resume');
+}
+function yourCallbackFunction(){
+	alert('pause');
+}
 
 function mockPut(){
 	 var data  = {

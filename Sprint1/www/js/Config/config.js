@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
@@ -42,7 +42,6 @@ function onPause() {
 	alert('pause');
 }
 */
-
 
 function init(versao){
 	versaoAtual = versao;
@@ -318,10 +317,10 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm){
 function populateDB(tx) {
 	console.log("populateDB" + homeForm.icones);
 	createTable(tx);
-	quantidadeRegistros = 7;
-	Mock();
+	//quantidadeRegistros = 7;
+	//Mock();
 	
-   //getDadosDrupal(tx);
+   getDadosDrupal(tx);
 }
 
 function montaHome(tx){
@@ -538,10 +537,6 @@ function insertTable(nomeTable){
 	
 }
 
-
-
-
-
 //Método de erro sqLite
 function errorCB(err) {
 	console.log('testeErroInsertErrorCB '+ testeProdutoErro);
@@ -562,7 +557,7 @@ function successCB(tx,result) {
 }
 
 function successInsert(){
-	quantidadeRegistros = quantidadeRegistros - 1;
+	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('testeErroInsert '+ testeProdutoErro);
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
