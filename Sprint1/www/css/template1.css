@@ -117,6 +117,7 @@
 	-webkit-appearance: none;
 	height: 14%;
 	margin: 10;
+	position: relative;
 }
 
 .imagem_categoria img {
@@ -712,6 +713,12 @@
 .btn_adicionar_pedido_descricao_pedido {
 	clear: both;
 	height: 50px;
+	position: relative;
+}
+
+.btn_adicionar_pedido_carrinho_pedido {
+	clear: both;
+	height: 50px;
 	height: 20%;
 }
 
@@ -727,6 +734,8 @@
 	height: 40px;
 	float: right;
 }
+
+
 
 .btn-previa-pedido {
 	right: 19%;
@@ -1004,8 +1013,8 @@ body {
 }
 
 .img_modal {
-	height: 450px;
-	width: 98%;
+	height: 100%;
+	width: 100%;
 	border-radius: 9 9 9 9;
 	border: 4px solid #626262;
 }
@@ -1470,9 +1479,6 @@ background-image: #4d4d4d !important;
 	width: 60%;
 }
 
-.buttons-wfwtuar-pedido {
-	
-}
 
 .observacao_pedido {
 	margin-bottom: 10;
@@ -1833,3 +1839,81 @@ opacity: 0.18;
 	height: 45;
 	margin: 10px 0 20 0
 }
+
+.img-bacground {
+	border: 5px solid #d5c9e8;
+	width: 1010px;
+	height: 739px;
+}
+
+.efeito-button-efetuar-pedido{
+	position: relative;
+}
+
+.btn_adicionar_pedido_carrinho_pedido button{
+	height: 65% !important;
+	width: 30% !important;
+	margin-top: 30;
+}
+
+
+#id-modal-descricao .btn_adicionar_pedido{
+	position: inherit !important;
+	height: 100% !important;
+	width: 40% !important;
+}
+
+#id-modal-descricao .btn_cancelar_pedido{
+	position: inherit !important;
+	height: 100% !important;
+	width:  40% !important;
+	right: 0;
+}
+
+ .efeito-button:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     top: 4px;
+    }
+    .efeito-button:active:before{
+     border: none;
+     box-shadow:none;
+    }
+    
+ .btn-tamanho-adicionar-pessoa:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     bottom:  3 !important;
+    }
+    .btn-tamanho-adicionar-pessoa:active:before{
+     border: none;
+     box-shadow:none;
+    }
+    
+  .efeito-button-descricao:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     top:  3 !important;
+    }
+    .efeito-button-descricao:active:before{
+     border: none;
+     box-shadow:none;
+    }
+    
+    .efeito-button-efetuar-pedido:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     top:  3 !important;
+    }
+    .efeito-button-efetuar-pedido:before{
+     border: none;
+     box-shadow:none;
+    }
+    
+    .efeito-button-previa-pedido:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     bottom:  -50 !important;
+    }
+    .efeito-button-previa-pedido:before{
+     border: none;
+     box-shadow:none;
+    }
+    
+    
+    

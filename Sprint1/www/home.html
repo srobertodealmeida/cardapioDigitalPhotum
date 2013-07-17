@@ -18,6 +18,7 @@
 
 <script type="text/javascript" src="js/jquery-1.9.min.js"></script>
 
+
 <script type="text/javascript" src="js/Form/homeForm.js"></script>
 <script type="text/javascript" src="js/Form/cardapioForm.js"></script>
 <script type="text/javascript" src="js/Config/config.js"></script>
@@ -34,22 +35,12 @@
 <style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
 </style>
 
-<script type="text/javascript" src="js/meuJSIos.js"></script>
 
-
-<script type="text/javascript">
-
-
-require([
-         "dojox/mobile/Carousel",
-         "dojox/mobile/CarouselItem",
-     ]);
-</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 </head>
 
-<body class="claro"  onload="onDeviceReady();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+<body class="claro"  onload="onDeviceReadyHome();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
 	<div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
@@ -60,9 +51,7 @@ require([
 		<div class="topo">
 		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
 			
-		<img id="logo-home" alt="" src="" class="img-logo">
-		
-		<div class="div-button-config">
+		<div class="div-button-config" onclick="showSelectedValue()">
 		    <span class="span-button-config"></span>
 		</div>
 		
@@ -80,7 +69,8 @@ require([
 		<!-- Aperitivos -->
 		<div class="content" >
 
-			<div id="div-icones">
+			<div id="loadingPercentual"></div>
+			   <div id="div-icones">
 				<div id="content-carousel1" class="content-carousel1"
 					data-dojo-type="dojox.mobile.Carousel"
 					data-dojo-props='height:0, pageIndicator:false, navButton:false, numVisible:3'>
@@ -95,6 +85,34 @@ require([
 
 		</div>
 
+
+		<div class="list-Languages">
+			<div class="language-escolhido" onclick="mostrarListLanguage()">
+
+				<img class="img-language-escolhido" alt="" src="img/logo.jpg">
+				<p class="nome-language-escolhido">Portuguese</p>
+			</div>
+			
+			<div class="panel-languages">
+				<div id="viewLanguages" data-dojo-type="dojox/mobile/View"
+					class="viewLanguages">
+
+					<h1 data-dojo-type="dojox/mobile/Heading">Languages</h1>
+					<div id="spin1" data-dojo-type="dojox/mobile/SpinWheel">
+
+						<div data-dojo-type="dojox/mobile/SpinWheelSlot"
+							labels="<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>"
+							style="width: 400px; height: 980px; text-align: center;"></div>
+
+					</div>
+					<h1 data-dojo-type="dojox/mobile/ToolBarButton" onclick="showSelectedValue()">OK</h1>
+
+				</div>
+			</div>
+			
+		</div>
+
+
 		<div class="footer" class="carrosel">
 			<div id="foo" class="carrosel-content">
 				
@@ -103,8 +121,9 @@ require([
 		</div>
 
 	</div>
-				
+	
 </body>
+
 </html>
 
 

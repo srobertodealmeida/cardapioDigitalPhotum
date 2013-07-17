@@ -35,6 +35,7 @@ box-shadow: 0px 0px 20px #000000;
 	bottom: 5%;
 	margin-left: 5%;
 	margin-right: 5%;
+	z-index: 1000 !important;
 
 }
 
@@ -82,10 +83,17 @@ box-shadow: 0px 0px 20px #000000;
 
 .content {
     height: 80%;
-    margin: 10px auto 0;
     overflow: hidden;
     padding: 0;
     width: 65%;
+}
+
+.list-Languages{
+	float: left;
+	height: 100%;
+	position: fixed;
+	right: 13px;
+	top: 4px;
 }
 
 .geral {
@@ -488,4 +496,50 @@ opacity: 0.6;
 	margin-right:25px;
 	margin-top:15px;
 	color: white;
+}
+.nome-language{
+	position: relative;
+	top: -100px;
+	left: 50px;
+}
+
+.img-language{
+	position: relative;
+	right: 120px;
+	width: 130px;
+	height: 80px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+	margin: 10 10 10 10;
+}
+
+.mblSpinWheelSlotLabel{
+	height: 90px;
+	overflow:visible; 
+}
+
+.mblSpinWheelBar{
+	height: 85px !important;
+top: 61.7px !important;
+}
+
+.img-language-escolhido{
+	height: 60px;
+	width: 90px;
+	right:10px;
+	position: fixed;
+}
+
+.nome-language-escolhido{
+	top:  50px;
+		right:12px;
+	position: fixed;
+}
+
+.language-escolhido{
+	left: 0;
+}
+
+.panel-languages{
+position: fixed;
+top: 100;
+right: 10;
 }

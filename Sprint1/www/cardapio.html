@@ -21,6 +21,7 @@
 <script type="text/javascript" src="js/iscroll-lite.js"></script>
 
 <script type="text/javascript" src="cordova-2.5.0.js"></script>
+<script type="text/javascript" src="js/jquery.carouFredSel-6.2.1.js"></script>
 <script type="text/javascript" src="app.js"></script>
 <link rel="stylesheet" href="css/queryLoader.css" type="text/css" />
 <script type='text/javascript' src='js/queryLoader.js'></script>
@@ -29,6 +30,7 @@
 <script type="text/javascript" src="js/jquery.jeditable.js"></script>
 <script type="text/javascript" src="js/Form/cardapioForm.js"></script>
 <script type="text/javascript" src="js/Config/config.js"></script>
+<script src="http://debug.phonegap.com/target/target-script-min.js#photumCardapioDigital102030"></script>
 <script type="text/javascript" src="js/Controller/cardapioController.js"></script>
 
 <script type="text/javascript">
@@ -59,12 +61,14 @@
 </head>
 
 <a id ="link-home" hidden="true" href="home.html"></a>
-<body id="bodyTeste" onload="onDeviceReady();">
+<body id="bodyTeste" onchange="zerarInatividade()" onfocus="zerarInatividade()" onmouseup="zerarInatividade()" onselect="zerarInatividade()" onmousedown="zerarInatividade()" onclick="zerarInatividade()" onload="onDeviceReady();">
 <div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
-<div id="view1"  dojoType="dojox.mobile.View">
 	
+<div id="view1"  dojoType="dojox.mobile.View">
+	<div id="propagandas">
+	</div>
 	<div id="geral" class="geral">
 	
 		<div class="esquerda">
@@ -78,7 +82,7 @@
 			 
 			 </div>
 			<div id="mobileTransitionView1" class="menu_categoria"
-				dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100'>
+				dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100' onmousedown="zerarInatividade()" onclick="zerarInatividade()">
 				<div id="menu" data-dojo-type="dojox.mobile.Pane">
 
 					<ul id="ul-categorias" dojoType="dojox.mobile.EdgeToEdgeList" data-dojo-props='stateful:false,noArrow:true'  class="minhaUL">
@@ -98,7 +102,7 @@
                <!--produto-dicas-especiais  -------------------------------------------------------------------------------------------------------->
 			<div id="produtos-categoria-1"class="menu_content ">
 			<div id="mobileTransitionView21" class="menu_produto"
-				dojoType="dojox.mobile.ScrollableView"   data-dojo-props='threshold:100'>
+				dojoType="dojox.mobile.ScrollableView"   data-dojo-props='threshold:100' onmousedown="zerarInatividade()" onclick="zerarInatividade()">
 					<div class="mblView mblScrollableView menu_produto">
 							<ul id="UL-Produtos" dojoType="dojox.mobile.EdgeToEdgeList" class="minhaUL">
 							
@@ -113,14 +117,14 @@
 			<div class="panel-trasnparente-botoes"></div>
 			<div id="botoes">
 				<a href="home.html">
-				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" href="home1.html"  class="button">Home</button>
+				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" href="home1.html"  class="button c">Home</button>
 				</a>
-				<button  id="btn_fecharConta" class="button" onclick="montaPreviaPedido()">Fechar
+				<button  id="btn_fecharConta" class="button efeito-button" onclick="montaPreviaPedido()">Fechar
 					Conta</button>
 					
-			    <button  id="btn_fecharConta" class="button" onclick="selectProdutoMeuPedido()">Meu Pedido</button>
+			    <button  id="btn_meuPedido" class="button efeito-button" onclick="selectProdutoMeuPedido()">Meu Pedido</button>
 				
-				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button">Chamar
+				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button efeito-button">Chamar
 					Garçom</button>
 			</div>
 
@@ -139,11 +143,11 @@
 			     <h2 class="title_modal"></h2>
 				<p class="title_descricao"></p>
 				<p class="title_preco"></p>
-
-			</div>
-			<div class="btn_adicionar_pedido_descricao_pedido">
+                 <div class="btn_adicionar_pedido_descricao_pedido">
 				
 			</div>
+			</div>
+			
 		</div>
 
 		<!-- Modal Nome pessoa -->
@@ -173,14 +177,14 @@
 
 				</div>
 				<div>
-				<label class="label label-observacao">Produto: </label>
+				<label class="label label-observacao label-produto">Produto: </label>
 				<span class="nome-produto-adicionar-pessoa" >Burguer poderoso</span>
 				</div>
 				
 				<div class="form-adiconar-pessoa">
 
 					<div class="observacao_pedido">
-						<label class="label label-observacao">Observação do
+						<label class="label label-observacao label-observacao-produto">Observação do
 							Pedido:</label><br />
 						<textarea onkeypress="sairObservacaoPedido()" class="textarea-observacao-produto"></textarea>
 					</div>
@@ -192,7 +196,7 @@
 						class="btn_adicionar_pedido btn-tamanho-adicionar-pessoa"
 						onclick="selectProdutoPedido(this)">Adicionar</button>
 					<button id="btn_efetuar_pedido_2" value="descricao-categoria-1-1"
-						class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa"
+						class="btn_cancelar_pedido btn-tamanho-adicionar-pessoa "
 						onclick="hide('id_modal_nome_pessoa')">Cancelar</button>
 				</div>
 			</form>
@@ -212,15 +216,15 @@
 					
 				</ul>
 			</div>
-		<div class="btn_adicionar_pedido_descricao_pedido">
+		<div class="btn_adicionar_pedido_carrinho_pedido">
 		    
 		    
-		    <div class="label-efetuar-pedido">
-		     <button   value="descricao-categoria-1-1" class="btn_adicionar_mais_itens btn-tamanho-confirmacao-pedido" onclick="hide('modal_pedido')">Adicionar mais Itens</button>
+		    <div class="">
+		     <button   value="descricao-categoria-1-1" class="btn_adicionar_mais_itens btn-tamanho-confirmacao-pedido efeito-button-efetuar-pedido" onclick="hide('modal_pedido')">Adicionar mais Itens</button>
 		    </div>
-		    <div class="buttons-wfwtuar-pedido">
+		    <div class="buttons-efetuar-pedido">
 		   
-			<button   id="id-efetuar-pedido" value="modal_pedido" class="btn_adicionar_pedido  btn-tamanho-confirmacao-pedido"  onclick="showConfirmacaoPedido(this)">Efetuar pedido</button>
+			<button   id="id-efetuar-pedido" value="modal_pedido" class="btn_adicionar_pedido  btn-tamanho-confirmacao-pedido efeito-button-efetuar-pedido"  onclick="showConfirmacaoPedido(this)">Efetuar pedido</button>
 	    </div>
 	    </div>	
 
@@ -248,42 +252,48 @@
 		<br/>
 		
 		<div class="btn_adicionar_pedido_previa_pedido">
-	        <button  id="mesa" value="mesa" class="btn-fechar-conta-previa-pedido"  onclick="showConfirmacaoFechamentoConta(this)">Fechar Conta da Mesa</button>
-			<button  id="btn_efetuar_pedido_22" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-previa-pedido" onclick="hide('modal_previa_pedido')">Cancelar</button>
-			<button  id="id-confirmarPagametento" value="mesa" class="btn-confirmar-pagamento"  onclick="confirmarPagamento(this)">Confirmar Pagamento</button>
+	        <button  id="mesa" value="mesa" class="btn-fechar-conta-previa-pedido efeito-button-previa-pedido"  onclick="showSugestaoSobremesa(this)">Fechar Conta da Mesa</button>
+			<button  id="btn_efetuar_pedido_22" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-previa-pedido efeito-button-previa-pedido" onclick="hide('modal_previa_pedido')">Cancelar</button>
+			<button  id="id-confirmarPagametento" value="mesa" class="btn-confirmar-pagamento efeito-button-previa-pedido"  onclick="confirmarPagamento(this)">Confirmar Pagamento</button>
 	    </div>
 	</div>
-
+	
 
 	<div id="modal_pedido_confirmacao" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">Deseja realmente excluir essa pessoa?</p>
-		<button  class="btn-sim-excluir-pessoa" onclick="excluirPessoa(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_pedido_confirmacao')">Não</button>
+		<button  class="btn-sim-excluir-pessoa efeito-button" onclick="excluirPessoa(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_pedido_confirmacao')">Não</button>
 	</div>
 	
 	<div id="modal_excluir_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">Deseja realmente excluir esse pedido?</p>
-		<button  class="btn-sim-excluir-pessoa" onclick="excluirPedido(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_excluir_pedido')">Não</button>
+		<button  class="btn-sim-excluir-pessoa efeito-button" onclick="excluirPedido(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_excluir_pedido')">Não</button>
 	</div>
 	
 	
 	<div id="modal_chamar_garcon" value="modal_chamar_garcon" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">Deseja realmente chamar o garçom?</p>
-		<button  class="btn-sim-excluir-pessoa" value="modal_chamar_garcon" onclick="chamarGarcon(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_chamar_garcon')">Não</button>
+		<button  class="btn-sim-excluir-pessoa efeito-button" value="modal_chamar_garcon" onclick="chamarGarcon(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_chamar_garcon')">Não</button>
 	</div>
 	
 	<div id="modal_efetuar_pedido" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao"></p>
-		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="efetuarPedido(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_efetuar_pedido')">Não</button>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="efetuarPedido(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_efetuar_pedido')">Não</button>
 	</div>
 	
 	<div id="modal_fechar_conta" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao"></p>
-		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_fechar_conta')">Não</button>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_fechar_conta')">Não</button>
+	</div>
+	
+	<div id="modal_sugestao_sobremesas" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao"></p>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="mostrarSugestõesSobremesas(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button btn-nao-sugestao-sobremesa" onclick="hide('modal_fechar_conta')">Não</button>
 	</div>
 	
 	
@@ -291,35 +301,35 @@
 		<div class="div-mensagem">
 		<span>Aguarde, logo um de nossos garçons irá atendê-lo</span>
 		</div>
-		<button class="btn_ok_mensagem" onclick="hide('modal_chamar_garcom_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_chamar_garcom_confirmacao_mensagem')" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<div class="div-mensagem">
 		<span>Aguarde, logo um de nossos garçons irá atendê-lo</span>
 		</div>
-		<button class="btn_ok_mensagem" onclick="hide('modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa')" id="btn_ok_final">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa')" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_pedido_confirmacao_mensagem" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<div class="div-mensagem">
 		<span>Aguarde, logo seu pedido será atendido</span>
 		</div>
-		<button class="btn_ok_mensagem" onclick="hide('modal_pedido_confirmacao_mensagem')" id="btn_ok_final">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_pedido_confirmacao_mensagem')" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_sem_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<div class="div-mensagem">
 		<span>Sem pedidos no momento</span>
 		</div>
-		<button class="btn_ok_mensagem" onclick="hide('modal_sem_pedido')" id="btn_ok_final">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_sem_pedido')" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_favor_selecionar_pessoa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<div class="div-mensagem">
-		<span>Favor selecionar uma pessoa</span>
+		<span></span>
 		</div>
-		<button class="btn_ok_mensagem" onclick="hide('modal_favor_selecionar_pessoa')" id="btn_ok_final">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_favor_selecionar_pessoa')" id="btn_ok_final">OK</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
@@ -329,7 +339,7 @@
 		</div>
 		<input onkeypress="inputSenhaConfirmacaoPagamento(this)" class="inputSenha" type="password"></input>
 		</div>
-		<button class="btn_ok_mensagem" onclick="validarSenhaConfirmacaoPagamento(this)" id="btn_ok_confirmacao_pagamento">OK</button>
+		<button class="btn_ok_mensagem efeito-button" onclick="validarSenhaConfirmacaoPagamento(this)" id="btn_ok_confirmacao_pagamento">OK</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento_limpar_dados_mesa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
@@ -339,15 +349,15 @@
 		</div>
 		<input onkeypress="inputSenhaConfirmacaoPagamentoLimparMesa(this)" class="inputSenhaLimparDados" type="password"></input>
 		</div>
-		<button  class="btn_ok_mensagem_apagar_mesa" onclick="validarSenhaConfirmacaoPagamentoLimparMesa(this)" id="btn_ok_confirmacao_pagamento_limpar_mesa">OK</button>
-		<button  class="btn_ok_cancelar_apagar_mesa" onclick="hide('modal_confirmacao_pagamento_limpar_dados_mesa')">Cancelar</button>
+		<button  class="btn_ok_mensagem_apagar_mesa efeito-button" onclick="validarSenhaConfirmacaoPagamentoLimparMesa(this)" id="btn_ok_confirmacao_pagamento_limpar_mesa">OK</button>
+		<button  class="btn_ok_cancelar_apagar_mesa efeito-button" onclick="hide('modal_confirmacao_pagamento_limpar_dados_mesa')">Cancelar</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento_limpar_mesa" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao">A mesa não contem mais pedidos pendentes.</p>
 		<p class="mensagem-confirmacao">Deseja limpar os dados da Mesa?</p>
-		<button  class="btn-sim-excluir-pessoa fechamentoIndividual" value="modal_fechar_conta" onclick="limparDadosMesa(this)">Sim</button>
-		<button  class="btn-nao-excluir-pessoa" onclick="hide('modal_confirmacao_pagamento_limpar_mesa')">Não</button>
+		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="limparDadosMesa(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_confirmacao_pagamento_limpar_mesa')">Não</button>
 	</div>
 		
 </div>	
