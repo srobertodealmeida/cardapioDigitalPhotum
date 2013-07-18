@@ -90,9 +90,7 @@ require([
 		}
 	  }
 	  
-	  showChamarGarcom = function(dlg){
-	    registry.byId(dlg).show();
-	  }
+	  
 	  showModal_pedido = function(dlg){
 		    registry.byId(dlg.value).hide();
 		    registry.byId('modal_pedido').show();

@@ -85,30 +85,39 @@ require([
 	  }
 	  
 	  showConfirmacaoPedido = function(dlg){
-		  $('#modal_efetuar_pedido p').text('Deseja realmente efetuar seu pedido?') ;
+		  $('#modal_efetuar_pedido p').text(ObjectLabels.alert_efetuar_pedido) ;
+		  $('#modal_efetuar_pedido .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim) ;
+		  $('#modal_efetuar_pedido .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao) ;
 		  $('#modal_efetuar_pedido .fechamentoIndividual').attr('value',dlg.value) ;
 		  registry.byId('modal_efetuar_pedido').show();
 	  }
 	  
 	  showConfirmacaoGarcom = function(dlg){
 		    registry.byId('modal_fechar_conta').hide();
+		    $('#modal_chamar_garcom_confirmacao_mensagem .div-mensagem span').text(ObjectLabels.alert_garcon_atendelo);
+		    $('#modal_chamar_garcom_confirmacao_mensagem .btn_ok_mensagem').text(ObjectLabels.OK);
 		    registry.byId(dlg.value).hide();
 		    registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
 	  }
 	  
       showExcluirPedido = function(){
-    	  $('#modal_excluir_pedido .mensagem-confirmacao')
+    	  $('#modal_excluir_pedido .mensagem-confirmacao').text(ObjectLabels.alert_excluir_pedido);
+    	  $('#modal_excluir_pedido .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
+    	  $('#modal_excluir_pedido .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
 		  registry.byId('modal_excluir_pedido').show();
 	  }
      
      showConfirmacaoFechamentoConta = function(id,value){
-    	
+    	                                                
     	 hide('modal_sugestao_sobremesas');
     	 if($( "#id-ul-fechamento-conta .mostrarDetalhado").length != 0){
-		  $('#modal_fechar_conta p').text('Deseja realmente fechar a conta ' + value ) ;
+		  $('#modal_fechar_conta p').text(ObjectLabels.alert_fechar_conta +' ' + value ) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',id) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('title',value) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
+		  $('#modal_fechar_conta .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim) ;
+		  $('#modal_fechar_conta .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao) ;
+		  
 		  registry.byId('modal_fechar_conta').show();
     	 }
 		  else{
@@ -116,13 +125,22 @@ require([
 		     }
 	  }
      
+     showChamarGarcom = function(dlg){
+    	 $('#modal_chamar_garcon .mensagem-confirmacao').text(ObjectLabels.alert_chamar_garcon);
+    	 $('#modal_chamar_garcon .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
+    	 $('#modal_chamar_garcon .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
+ 	    registry.byId(dlg).show();
+ 	  }
+     
      showSugestaoSobremesa = function(dlg){
     	 if($( "#id-ul-fechamento-conta .mostrarDetalhado").length != 0){
           
     		 db.transaction(function(tx){
     				tx.executeSql('SELECT * FROM Categorias where title="SOBREMESAS"',[],function(tx,result){
     					if(result.rows.length > 0){
-    						 $('#modal_sugestao_sobremesas p').text('Gostaria de experimentar uma de nossas sobremesas?');
+    						 $('#modal_sugestao_sobremesas p').text(ObjectLabels.alert_experimentar_sobremesa);
+    						 $('#modal_sugestao_sobremesas .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
+    						 $('#modal_sugestao_sobremesas .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
     						   $('#modal_sugestao_sobremesas .btn-nao-sugestao-sobremesa').attr('onClick','showConfirmacaoFechamentoConta("'+dlg.id+'","'+dlg.value+'")') ;
     						
     						  registry.byId('modal_sugestao_sobremesas').show();
@@ -178,7 +196,7 @@ require([
 			   // Monta nome de pessoas para fechamento de conta
 			   totalPagamento = 0.00;
 			   $( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
-			   		if($('#'+this.id+' .btn_fechar_conta_individual').text() == "Fechar Conta Individual"){
+			   		if($('#'+this.id+' .btn_fechar_conta_individual').text() == ""+ObjectLabels.btn_fechar_conta_individual+""){
 			   			var preco = $('#'+this.id+' .preco-fechamento-conta').text();
 			   			preco = preco.replace('Total:','');
 			   			var precoParser = preco.replace('R$ ','');
@@ -262,9 +280,11 @@ require([
 		    
 		    if(fechamentoMesa){
 		    	montaPreviaPedido();
+		    	$('#modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa .div-mensagem span').text(ObjectLabels.alert_garcon_atendelo);
 		    	registry.byId('modal_chamar_garcom_confirmacao_mensagem_fechamento_mesa').show();
 		    }else{
 		    	montaPreviaPedido();
+		    	$('#modal_chamar_garcom_confirmacao_mensagem .div-mensagem span').text(ObjectLabels.alert_garcon_atendelo);
 		    	registry.byId('modal_chamar_garcom_confirmacao_mensagem').show();
 		    }
 	  }
@@ -298,6 +318,7 @@ function confirmarPagamento(btn){
 				for(i=0;i<result.rows.length;i++){
 					$('#modal_confirmacao_pagamento .lista-pessoas-confirmacao-pagamento').append('<p>'+result.rows.item(i).pessoa+'</p>');
 					$('#modal_confirmacao_pagamento .inputSenha').text('');
+					$('#modal_confirmacao_pagamento .div-mensagem span').text(ObjectLabels.alert_confirmar_pagamento_para);
 					show('modal_confirmacao_pagamento');
 				}
 			},errorCB);
@@ -342,6 +363,12 @@ function validarSenhaConfirmacaoPagamento(){
  					tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido"',[],function(tx,result){
  						
  						if(result.rows.length == 0){
+ 							var stringMensagem = ObjectLabels.alert_mesa_contem_pendentes;
+ 							var arrayMensagem = stringMensagem.split('.');
+ 							$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p1').text(arrayMensagem[0]);
+ 							$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p2').text(arrayMensagem[1]);
+ 							
+ 							
  							show('modal_confirmacao_pagamento_limpar_mesa');
  							//limparDados(tx);
  						}
@@ -851,7 +878,7 @@ function adicionarPedido(tx,result){
 		 },errorCB,selectPedidos);
 		 
 	 }else{
-		 $('#modal_favor_selecionar_pessoa .div-mensagem span').val(ObjectLabels.alert_favor_selecionar_pessoa);
+		 $('#modal_favor_selecionar_pessoa .div-mensagem span').text(ObjectLabels.alert_favor_selecionar_pessoa);
 		 show("modal_favor_selecionar_pessoa");
      }
 	}
@@ -888,7 +915,7 @@ function montaModalPedido(tx,result){
 			pedidosPendentes = true;
 			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento efeito-button" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >'+ObjectLabels.btn_editar+'</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 		}else{
-			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">Pedido Efetuado</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">Observação: </p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 		}
 	}
 	if(!pedidosPendentes){
@@ -978,6 +1005,7 @@ function efetuarPedido(){
 function postPedidoDrupal(tx,result){
 		 db.transaction(function(tx) {
 			 for(var i=0;i<result.rows.length;i++){
+				 
 				 console.log(result.rows.item(i));
 				 
 				 preco = result.rows.item(i).preco_produto * result.rows.item(i).quantidade;
@@ -1040,6 +1068,8 @@ function postPedidoDrupal(tx,result){
 			
 			 hide('modal_pedido');
 			 hide('modal_efetuar_pedido');
+			 $('#modal_pedido_confirmacao_mensagem .div-mensagem span').text(ObjectLabels.alert_pedido_atendido);
+			 $('#modal_pedido_confirmacao_mensagem .btn_ok_mensagem').text(ObjectLabels.OK);
 			 show('modal_pedido_confirmacao_mensagem');
          },errorCB);
 }
@@ -1052,17 +1082,28 @@ function montaPreviaPedido(){
 
 function chamarLimparDadosMesa(){
 	$('#modal_confirmacao_pagamento_limpar_dados_mesa .inputSenhaLimparDados').text('');
+	$('#modal_confirmacao_pagamento_limpar_dados_mesa .div-mensagem span').text();
 	show('modal_confirmacao_pagamento_limpar_dados_mesa');
 }
 function montaModalPreviaPedido(tx,result){
 	
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
+	
+	$('#modal_previa_pedido .title_modal_nome_pessoa').text(ObjectLabels.title_total);
+	$('#modal_previa_pedido .btn-confirmar-pagamento').text(ObjectLabels.btn_confirmar_pagamento);
+	$('#modal_previa_pedido .btn_cancelar_pedido').text(ObjectLabels.btn_cancelar);
+	$('#modal_previa_pedido .btn-fechar-conta-previa-pedido').text(ObjectLabels.btn_fechar_conta_da_mesa);
+	
+	
+	
+	
+	
 	if(result.rows.length == 0){
-		$('#id-confirmarPagametento').text('Limpar Dados da Mesa');
+		$('#id-confirmarPagametento').text(ObjectLabels.btn_limpar_dados_da_mesa);
 		$('#id-confirmarPagametento').attr('onclick','chamarLimparDadosMesa()');
 	}else{
-		$('#id-confirmarPagametento').text('Confirmar Pagamento');
+		$('#id-confirmarPagametento').text(ObjectLabels.btn_confirmar_pagamento);
 		$('#id-confirmarPagametento').attr('onclick','confirmarPagamento(this)');
 	}
 	show('modal_previa_pedido');
@@ -1079,7 +1120,7 @@ function montaModalPreviaPedido(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div id="div-modal_previa_preco_produto'+i+'" class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual efeito-button"  onclick="showSugestaoSobremesa(this)">Fechar Conta Individual</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div id="div-modal_previa_preco_produto'+i+'" class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual efeito-button"  onclick="showSugestaoSobremesa(this)">'+ObjectLabels.btn_fechar_conta_individual+'</button> </div> 	</li>  <div id="pedido_detalhado-'
 								+ i
 								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
 	    }else{
@@ -1104,7 +1145,7 @@ function montaModalPreviaPedido(tx,result){
      	totalMesa += total;
      	
     });
-	$("#total-mesa").text('Total Mesa: '+ totalMesa.toFixed(2));
+	$("#total-mesa").text(ObjectLabels.label_total_mesa+': '+ totalMesa.toFixed(2));
 	
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){
@@ -1131,9 +1172,9 @@ function montaModalPreviaPedido(tx,result){
 		if(this.title == 'aguardando-pagamento'){
 		  $('#'+this.id).addClass('aguardandoPagamento');
 		    
-		  $('#'+this.id).text('Aguardando Pagamento');
+		  $('#'+this.id).text(ObjectLabels.label_aguardando_pagamento);
 		  $('#'+this.id).attr("disabled", "disabled");
-		}
+		}  
 	 });
 	
 	
@@ -1158,6 +1199,8 @@ function chamarGarcon(){
      //var ajaxPostDrupal = postAjax(url,data);
      postAjax(url,data) ;
      hide('modal_chamar_garcon');
+     $('#modal_chamar_garcom_confirmacao_mensagem .div-mensagem span').text(ObjectLabels.alert_garcon_atendelo);
+     $('#modal_chamar_garcom_confirmacao_mensagem .btn_ok_mensagem').text(ObjectLabels.OK);
      show('modal_chamar_garcom_confirmacao_mensagem');
 }
 

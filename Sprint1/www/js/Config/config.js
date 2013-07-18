@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -1053,7 +1053,7 @@ function setLabels(){
 		},errorCB);
 		
 		// OK
-		tx.executeSql('SELECT * FROM Labels where categoria_label = "OK" and language="'+constLanguageSelected+'"',[],function(tx,result){
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "btn_ok" and language="'+constLanguageSelected+'"',[],function(tx,result){
 			if(result.rows.length > 0){
 				ObjectLabels.OK = result.rows.item(0).valor;
 			}
@@ -1198,6 +1198,23 @@ function setLabels(){
 				ObjectLabels.alert_sem_pedidos_no_momento = result.rows.item(0).valor;
 			}
 		},errorCB);
+		
+		// label_aguardando_pagamento
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "label_aguardando_pagamento" and language="'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				ObjectLabels.label_aguardando_pagamento = result.rows.item(0).valor;
+			}
+		},errorCB);
+		
+		// btn_limpar_dados_da_mesa
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "btn_limpar_dados_da_mesa" and language="'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				ObjectLabels.btn_limpar_dados_da_mesa = result.rows.item(0).valor;
+			}
+		},errorCB);
+		
+		
+		
 		
 		
 	},errorCB);

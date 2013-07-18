@@ -35,6 +35,7 @@ var ObjectLabels = {
 		alert_excluir_pessoa:"",
 		btn_nao:"",
 		btn_sim:"",
+		btn_limpar_dados_da_mesa:"",
 		alert_favor_selecionar_pessoa:"",
 		OK:"",
 		title_pedidos_da_mesa:"",
@@ -56,5 +57,6 @@ var ObjectLabels = {
 		alert_fechar_conta:"",
 		alert_confirmar_pagamento_para:"",
 		alert_mesa_contem_pendentes:"",
+		label_aguardando_pagamento:"",
 		alert_sem_pedidos_no_momento:""
  };
