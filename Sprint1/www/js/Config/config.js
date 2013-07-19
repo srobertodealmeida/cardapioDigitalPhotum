@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -346,12 +346,14 @@ function getDadosDrupal(tx){
 			  
 			  var produtosForm = {
 						title:"",
+						title_comum:"",
 						previa_descricao:"",
 						preco:"",
 						descricao:"",
 						descricao_saiba_mais:"",
 						categoria:"",
-						image:""
+						image:"",
+						language:""
 			  };
 			  
 			  var produtosFinalDownloadForm = {
@@ -360,17 +362,25 @@ function getDadosDrupal(tx){
 						pathDestino:"",
 			  };
 			  
-			  produtosForm.title = escapeHtml(val.node_title);
+			  produtosForm.title = escapeHtml(val.titulo);
+			  produtosForm.title_comum = escapeHtml(val.node_title);
+			  produtosForm.language = escapeHtml(val.language);
 			  produtosForm.previa_descricao =escapeHtml(val.previa_descricao);
 			  produtosForm.preco = val.preco;
 			  produtosForm.descricao = escapeHtml(val.descricao);
 			  produtosForm.descricao_saiba_mais = escapeHtml(val.descricao_saiba_mais);
 			  produtosForm.categoria = escapeHtml(val.categoria);
 			  
+			  if(val.imagem != null){
 			  var url = $.parseHTML(val.imagem); //pega apenas href
 			  var urlString = url.toString();
 			  var extencao =  urlString.substr(urlString.length - 3);
 			  var pathDestino = pathAplicativo + "/home/produto." + key  + "."+ extencao; // url onde será salvo a imagen
+			  }else{
+				  url = null;
+				  pathDestino = null;
+			  }
+			  
 			  var typeImagen = "produtos";
 			  
 			  produtosFinalDownloadForm.produtosForm = produtosForm;
@@ -429,8 +439,6 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
     	      var imagePath = fs.root.fullPath + pathDestino; // full file path
     	      var fileTransfer = new FileTransfer();
     	      
-    	      
-    	      
     	      fileTransfer.onprogress = function(progressEvent) {
     	  		if (progressEvent.lengthComputable) {
     	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
@@ -462,8 +470,9 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
 
 // Método para fazer download de produtos, para fazer download de cada vez e nao em treads.
 function downloadImagesProdutos(tx,qtdProdutos,indice){
-
-     if (indice != qtdProdutos) {
+   
+	
+     if (indice != qtdProdutos && arrayProdutosForm[indice] != null) {
 		var url = encodeURI(arrayProdutosForm[indice].url);
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
 			var imagePath = fs.root.fullPath + arrayProdutosForm[indice].pathDestino; // full file path
@@ -481,6 +490,15 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 			}, false);
 
 		})
+	}else{// Caso a imagem for nula ou seja produto de outra language que não possui imagem é inserio no array.
+			arrayProdutos.push(arrayProdutosForm[indice].produtosForm);
+			console.log('length: '+arrayProdutos.length+"qtdProdutos: "+qtdProdutos);
+			if(arrayProdutos.length == qtdProdutos){
+				insertTable("produtos");
+			}else{
+				indice = indice + 1;
+				downloadImagesProdutos(tx,qtdProdutos,indice)
+			}
 	}
 }
 
@@ -751,7 +769,7 @@ function createTable(tx){
     ////////////////////////////////////////////Produtos//////////////////////////////////////
 	// Table Produtos
 	tx.executeSql('DROP TABLE IF EXISTS Produtos');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT )');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT)');
 	
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
@@ -869,7 +887,7 @@ function insertTable(nomeTable){
 				
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
-										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image) VALUES ("'
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language) VALUES ("'
 												+ arrayProdutos[i].title
 												+ '","'
 												+ arrayProdutos[i].previa_descricao
@@ -882,7 +900,11 @@ function insertTable(nomeTable){
 												+ '","'
 												+ arrayProdutos[i].categoria
 												+ '","'
-												+ arrayProdutos[i].image +
+												+ arrayProdutos[i].image 
+												+ '","'
+												+ arrayProdutos[i].title_comum 
+												+ '","'
+												+ arrayProdutos[i].language +
 												'" )');
 								testeProdutoErro = "produtos" + arrayProdutos[i].title;
 			}
