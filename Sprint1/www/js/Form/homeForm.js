@@ -9,6 +9,16 @@ var iconesForm = {
 		image:""
 };
 
+var atualizaForm = {
+		categoria:"",
+		configuracao:"",
+		home:"",
+		label:"",
+		produto:"",
+		propaganda:""
+};
+
+
 
 var title_lenguage_cardapio_Form = {
 		icones_cardapio_english:"",

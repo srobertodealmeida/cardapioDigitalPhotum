@@ -102,10 +102,8 @@ function atualizaLabelsHome(){
 		  //Cardapio
 		
 		    tx.executeSql('SELECT * FROM Labels where categoria_label="label_icone_cardapio" and language="'+constLanguageSelected+'"',[],function(fx,result){
-		    	alert(result.rows.length);
 		    	if(result.rows.length > 0){
 				 titleIcone = result.rows.item(0).valor;
-				 alert(titleIcone);
 				 $('.mblCarouselItemFooterText').text(titleIcone);
 			 }
 			 
@@ -161,12 +159,24 @@ function  atualizar(){
 		 $.each(data, function(key, val) {
 	    	 if(val.atualizar == 'true'){
 	    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
-	    			 init(val.versao);
+					atualizaForm.categoria = val.atualiza_categoria;
+					atualizaForm.configuracao = val.atualiza_configuracao;
+					atualizaForm.home = val.atualiza_home;
+					atualizaForm.label = val.atualiza_label;
+					atualizaForm.produto = val.atualiza_produto;
+					atualizaForm.propaganda = val.atualiza_propaganda;
+					init(val.versao);
 	    		 } else {
 	    			 versao = val.versao;
-	    			init(5);
-	    			console.log('atualizar');
-	    			//db.transaction(pegarUltimaVersao,errorCB); 
+	    			//init(5);
+	    			//console.log('atualizar');
+	    			atualizaForm.categoria = val.atualiza_categoria;
+	    			atualizaForm.configuracao = val.atualiza_configuracao;
+	    			atualizaForm.home = val.atualiza_home;
+	    			atualizaForm.label = val.atualiza_label;
+	    			atualizaForm.produto = val.atualiza_produto;
+	    			atualizaForm.propaganda = val.atualiza_propaganda;
+	    			db.transaction(pegarUltimaVersao,errorCB); 
 	    		 }
 		    	 
 		     }
@@ -207,9 +217,9 @@ function criarIdContaPrimeiraVez(){
 function pegarUltimaVersao(tx){
 	console.log('pegarUltimaVersao');
 	tx.executeSql('SELECT versao, MAX(id) FROM Config',[],function(tx,result) {
-		  console.log(result.rows.item(0).versao);
 		  if(versao > parseInt(result.rows.item(0).versao)){// Caso versao for maior atualiza banco.
 			  console.log('maior');
+			  
 			  init(versao);
 		  }else{
 			  console.log('menor');

@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.107/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -21,14 +21,26 @@ var logo = false;
 var background = false;
 var sucessBanco = false;
 var versaoAtual = 0;
+var titleIcone ="";
 var qtdIcones = 0;
+var titleLanguage="";
 var qtdLanguages = 0;
 var qtdPropaganda = 0;
+var produtosFormVazio = {
+		title:"",
+		previa_descricao:"",
+		preco:"",
+		descricao:"",
+		descricao_saiba_mais:"",
+		categoria:"",
+		image:""
+};
+
 var qtdProdutos = 0;
 var qtdPropagandas = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
-var quantidadeRegistros = 1;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
+var quantidadeRegistros = 0;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
 
 
 function onLoad() {
@@ -108,15 +120,14 @@ function escapeHtml(unsafe) {
     }
  }
 
-function getDadosDrupal(tx){
+function getDrupalLanguages(tx){
 	
-    /////////////////Languages///////////////////////////////////////////////////////////////////////////////
-	var titleLanguage="";
+	/////////////////Languages///////////////////////////////////////////////////////////////////////////////
     var ajaxUrlViewConfig = getAjax(urlViewConfig);
 	
     ajaxUrlViewConfig.success(function (data) {
 
-    	var arrayLanguages
+    	var arrayLanguages;
     	$.each(data, function(key, val) {
     	   val.languages = escapeHtml(val.languages);
 		   arrayLanguages = val.languages.split(',');
@@ -160,6 +171,11 @@ function getDadosDrupal(tx){
 	}); 
 	
 	
+}
+
+function getDrupalLabel(tx){
+   
+	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxLabels = getAjax(urlViewLabels);
@@ -199,21 +215,12 @@ function getDadosDrupal(tx){
 		alert('error');
 	});
 	
-	
-	/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
+}
+
+function getDrupalHome(tx){
+/////////////////////////////////////////////////////////////////////HOME///////////////////////////////////////////////////////
+	quantidadeRegistros += 1;
 	var ajaxHome = getAjax(urlViewHome);
-	
-	var titleIcone ="";
-	
-	var produtosFormVazio = {
-			title:"",
-			previa_descricao:"",
-			preco:"",
-			descricao:"",
-			descricao_saiba_mais:"",
-			categoria:"",
-			image:""
-    };
 	
 	ajaxHome.success(function (data) {
 	  $.each(data, function(key, val) {
@@ -312,29 +319,42 @@ function getDadosDrupal(tx){
 	ajaxHome.error(function (jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 	});
-	
-	/////////////////Categoria/////////////////////////////////////
-	
-    var ajaxCategoria = getAjax(urlViewCategoria);
-	
-	ajaxCategoria.success(function (data) {
+}
+
+function getDrupalCategoria(tx) {
+	// ///////////////Categoria/////////////////////////////////////
+
+	var ajaxCategoria = getAjax(urlViewCategoria);
+
+	ajaxCategoria.success(function(data) {
 		$.each(data, function(key, val) {
-			  console.log(val);
-			  val.node_title = escapeHtml(val.node_title);
-			  arrayCategorias.push(val.node_title);
-			  
-		  });
-		  quantidadeRegistros += arrayCategorias.length;
-		  insertTable("categorias");
-		  
-    });
-	
-	ajaxCategoria.error(function (jqXHR, textStatus, errorThrown) {
+			console.log(val);
+			val.node_title = escapeHtml(val.node_title);
+
+			var categoriaForm = {
+				title : "",
+				title_comum : "",
+				language : ""
+			};
+			categoriaForm.title = val.titulo;
+			categoriaForm.language = val.language;
+			categoriaForm.title_comum = val.node_title;
+			arrayCategorias.push(categoriaForm);
+
+		});
+		quantidadeRegistros += arrayCategorias.length;
+		insertTable("categorias");
+
+	});
+
+	ajaxCategoria.error(function(jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 		alert('error');
 	});
-	
-   //////////////////////////////////////////////////////////////////Produtos/////////////////////////////////////
+}
+
+function getDrupalProduto(tx){
+//////////////////////////////////////////////////////////////////Produtos/////////////////////////////////////
 	
     var ajaxProdutos = getAjax(urlViewProdutos);
 	
@@ -356,7 +376,7 @@ function getDadosDrupal(tx){
 						language:""
 			  };
 			  
-			  var produtosFinalDownloadForm = {
+			                                                                                                                                                                                                                                                                                        var produtosFinalDownloadForm = {
 					    produtosForm:produtosForm,
 						url:"",
 						pathDestino:"",
@@ -399,9 +419,10 @@ function getDadosDrupal(tx){
 		sucessDadosDrupal = false;
 		alert('error');
 	});
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////Propagandas/////////////////////////////////////
+}
+
+function getDrupalPropaganda(tx){
+  ///////////////////////////////////////////////////////////////////////////////////Propagandas/////////////////////////////////////
 	
     var ajaxPropagandas = getAjax(urlViewPropagandas);
 	
@@ -426,6 +447,46 @@ function getDadosDrupal(tx){
 		sucessDadosDrupal = false;
 		alert('error');
 	});
+    
+}
+
+function getDadosDrupal(tx){
+	console.log(atualizaForm.configuracao);
+	console.log(atualizaForm.label);
+	console.log(atualizaForm.home);
+	console.log(atualizaForm.categoria);
+	
+	console.log(atualizaForm.produto);
+	console.log(atualizaForm.propaganda);
+	// Categoria
+	if(atualizaForm.configuracao == 'true'){
+		getDrupalLanguages(tx);
+	}
+	
+	// Label
+	if(atualizaForm.label == 'true'){
+		getDrupalLabel(tx);
+	}
+	
+	// Home
+	if(atualizaForm.home == 'true'){
+		getDrupalHome(tx);
+	}
+	
+	// Categoria
+	if(atualizaForm.categoria == 'true'){
+		getDrupalCategoria(tx);
+	}
+	
+	// Produtos
+	if(atualizaForm.produto == 'true'){
+		getDrupalProduto(tx);
+	}
+	
+	// Propagandas
+	if(atualizaForm.propaganda == 'true'){
+		getDrupalPropaganda(tx);
+	}
     
 }
 
@@ -472,7 +533,7 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
 function downloadImagesProdutos(tx,qtdProdutos,indice){
    
 	
-     if (indice != qtdProdutos && arrayProdutosForm[indice] != null) {
+     if (indice != qtdProdutos && arrayProdutosForm[indice].pathDestino != null) {
 		var url = encodeURI(arrayProdutosForm[indice].url);
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
 			var imagePath = fs.root.fullPath + arrayProdutosForm[indice].pathDestino; // full file path
@@ -604,14 +665,43 @@ function populateDB(tx) {
 }
 
 function montaHome(tx){
+	
 	console.log('montaHome');
 	tx.executeSql('SELECT * FROM Languages',[],montaBanderaLanguage,errorCB);
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
 	tx.executeSql('SELECT * FROM Icones',[],montaIcones,errorCB);
 	
-	tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
+	//tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
 	tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
 	
+}
+
+//Método utilizado para atualizar os produtos de outras linguas que nao tem image setado e setar com,  o respectivo image.
+function atualizaImageProdutosLanguage(tx,result){
+	if(result.rows.length > 0){
+		for(var i=0;i<result.rows.length;i++){
+			console.log('Atualiza: '+result.rows.item(i).title_comum);
+			tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(i).title_comum+'"',[],function(fx,result){
+				 if(result.rows.length > 0){
+					 var image;
+					 for(var l=0;l<result.rows.length;l++){
+						 if(result.rows.item(l).language == "Portuguese-Brazil"){
+							 image = result.rows.item(l).image;
+							 break;
+						 }
+					 }
+					 
+					 for(var m=0;m<result.rows.length;m++){
+						 if(result.rows.item(m).language != "Portuguese-Brazil"){
+							 tx.executeSql('UPDATE Produtos SET image="'+image+'" WHERE Id='+result.rows.item(m).id+'');
+						 }
+					 }
+					 
+					 
+				 }
+		    },errorCB);
+	    }
+	}
 }
 
 function montaBanderaLanguage(tx,result){
@@ -742,54 +832,71 @@ function selecionarLanguage(div){
  */
 function createTable(tx){
 	
-	////////////////////////HOME//////////////////////////////////
 
-	// Table home (logo/background)
-	tx.executeSql('DROP TABLE IF EXISTS Home');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Home (id INTEGER PRIMARY KEY AUTOINCREMENT, logo TEXT NOT NULL, background TEXT NOT NULL)');
+	// Categoria
+	if(atualizaForm.configuracao == 'true'){
+		 ////////////////////////////////////////////Languages//////////////////////////////////////
+		// Table Mesa
+		tx.executeSql('DROP TABLE IF EXISTS Languages');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Languages (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT , nome TEXT)');
+	}
 	
+	// Label
+	if(atualizaForm.label == 'true'){
+		  ////////////////////////////////////////////Labels//////////////////////////////////////
+		// Table Mesa
+		tx.executeSql('DROP TABLE IF EXISTS Labels');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Labels (id INTEGER PRIMARY KEY AUTOINCREMENT, categoria_label TEXT, language TEXT, valor TEXT, valor_english TEXT, valor_spanish TEXT, valor_french TEXT)');
+	}
 	
-	// Table home (icones)
-	tx.executeSql('DROP TABLE IF EXISTS Icones');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Icones (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, image TEXT NOT NULL, icone_cardapio_english TEXT,icone_cardapio_spanish TEXT,icone_cardapio_french TEXT)');
+	// Home
+	if(atualizaForm.home == 'true'){
+        ////////////////////////HOME//////////////////////////////////
+
+		// Table home (logo/background)
+		tx.executeSql('DROP TABLE IF EXISTS Home');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Home (id INTEGER PRIMARY KEY AUTOINCREMENT, logo TEXT NOT NULL, background TEXT NOT NULL)');
+		
+		
+		// Table home (icones)
+		tx.executeSql('DROP TABLE IF EXISTS Icones');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Icones (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, image TEXT NOT NULL, icone_cardapio_english TEXT,icone_cardapio_spanish TEXT,icone_cardapio_french TEXT)');
+		
+		// Table home (propaganda)
+		tx.executeSql('DROP TABLE IF EXISTS Propaganda');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
+		
+		// Table home (propaganda)
+		tx.executeSql('DROP TABLE IF EXISTS Propagandas');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
+	}
 	
-	// Table home (propaganda)
-	tx.executeSql('DROP TABLE IF EXISTS Propaganda');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
+	// Categoria
+	if(atualizaForm.categoria == 'true'){
+         ////////////////////////////////////////////Categorias//////////////////////////////////////
+		// Table cATEGORIAS
+		tx.executeSql('DROP TABLE IF EXISTS Categorias');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT)');
+	}
 	
-	// Table home (propaganda)
-	tx.executeSql('DROP TABLE IF EXISTS Propagandas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
-	
-    ////////////////////////////////////////////Categorias//////////////////////////////////////
-	// Table cATEGORIAS
-	tx.executeSql('DROP TABLE IF EXISTS Categorias');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL)');
-	
-    ////////////////////////////////////////////Produtos//////////////////////////////////////
-	// Table Produtos
-	tx.executeSql('DROP TABLE IF EXISTS Produtos');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT)');
+	// Produtos
+	if(atualizaForm.produto == 'true'){
+          ////////////////////////////////////////////Produtos//////////////////////////////////////
+		// Table Produtos
+		tx.executeSql('DROP TABLE IF EXISTS Produtos');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT)');
+	}
 	
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT)');
 	
-    ////////////////////////////////////////////Labels//////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Labels');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Labels (id INTEGER PRIMARY KEY AUTOINCREMENT, categoria_label TEXT, language TEXT, valor TEXT, valor_english TEXT, valor_spanish TEXT, valor_french TEXT)');
-	
     ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT)');
 	
-    ////////////////////////////////////////////Languages//////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Languages');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Languages (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT , nome TEXT)');
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
 	tx.executeSql('DROP TABLE IF EXISTS LanguageSelect');
@@ -819,8 +926,6 @@ function insertTable(nomeTable){
 		console.log('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
 		
 	}else if (nomeTable == "languages") {
-		
-		
 		
 		db.transaction(function(tx) {
 			for(i=0; i < arrayLanguagesForm.length;i++){
@@ -866,16 +971,13 @@ function insertTable(nomeTable){
 			}
             },errorCB,successInsert);
 	}else if (nomeTable == "categorias") {
-        console.log("insertCategoria")
 		db.transaction(function(tx) {
-		    console.log("transactionCategoria");
 			var teste = arrayCategorias.length;
-			  console.log("arrayCategorias "+ teste);
 			for(i=0;i<arrayCategorias.length;i++){
-				console.log('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
+				
 				quantidadeRegistros = quantidadeRegistros - 1;
-				tx.executeSql('INSERT INTO Categorias(title) VALUES ("' + arrayCategorias[i] + '")');
-				testeProdutoErro = "categorias" + arrayPropagandasForm[i];
+				console.log('INSERT INTO Categorias(title,language,title_comum) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'")');
+				tx.executeSql('INSERT INTO Categorias(title,language,title_comum) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'")');
 			}
             },errorCB,successInsert);
 		
@@ -949,6 +1051,9 @@ function successInsert(){
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
 		db.transaction(montaHome,errorCB);
+		db.transaction(function(tx){
+		tx.executeSql('SELECT DISTINCT title_comum FROM Produtos',[],atualizaImageProdutosLanguage,errorCB);
+		},errorCB);
 	}
 }
 
