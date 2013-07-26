@@ -40,7 +40,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 </head>
 
-<body class="claro"  onload="onDeviceReadyHome();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+<body id="bodyTeste" onchange="zerarInatividade()" onfocus="zerarInatividade()" onmouseup="zerarInatividade()" onselect="zerarInatividade()" onmousedown="zerarInatividade()" onclick="zerarInatividade()" onload="onDeviceReady();" class="claro"  onload="onDeviceReadyHome();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
 	<div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
@@ -51,7 +51,7 @@
 		<div class="topo">
 		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
 			
-		<div class="div-button-config" onclick="showSelectedValue()">
+		<div class="div-button-config">
 		    <span class="span-button-config"></span>
 		</div>
 		
@@ -89,8 +89,8 @@
 		<div class="list-Languages">
 			<div class="language-escolhido" onclick="mostrarListLanguage()">
 
-				<img class="img-language-escolhido" alt="" src="img/logo.jpg">
-				<p class="nome-language-escolhido">Portuguese</p>
+				<img class="img-language-escolhido" alt="" src="">
+				<p class="nome-language-escolhido"></p>
 			</div>
 			
 			<div class="panel-languages">

@@ -78,20 +78,38 @@ function focusOutInput(){
 }
 
 function validarSenha(){
-	var ajax = getAjax(urlViewConfig);
 	
-	 ajax.success(function (data) {
-		 $.each(data, function(key, val) {
-	    	if(val.senha_configuracao == $('.inputSenha').val()){
-	    		hide_preloader();
-	    		$('#geral').show();
-	    		hide('senha_configaracao');
-	    	}else{
-	    		alert('Senha Errada');
-	    	}
-	    	
-	       });
-    });
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			 if(result.rows.length != 0){
+				 connectionWIFI = result.rows.item(0).connectionWIFI;
+				 if (connectionWIFI != "") {
+						if (connectionWIFI == "connectionTrue") {
+							var ajax = getAjax(urlViewConfig);
+							
+							
+							 ajax.success(function (data) {
+								 $.each(data, function(key, val) {
+							    	if(val.senha_configuracao == $('.inputSenha').val()){
+							    		hide_preloader();
+							    		$('#geral').show();
+							    		hide('senha_configaracao');
+							    	}else{
+							    		alert('Senha Errada');
+							    	}
+							    	
+							       });
+						    });
+						} else {
+							hide_preloader();
+							$('#geral').show();
+							hide('senha_configaracao');
+						}
+					}
+			 }
+		   },errorCB);
+		},errorCB);
+	
 }
 
 
@@ -105,23 +123,37 @@ function showTelaSenha(){
 
 function getMesas(valor){
 	var post = true;
-	var ajax = getAjax(urlViewMesas);
 	
-	 ajax.success(function (data) {
-		 $.each(data, function(key, val) {
-	    	 if(val.node_title == valor){
-	    		 post = false;
-	    	 }
-	    	
-	       });
-		  if (post) {
-			  
-			  postInsertMesa(valor);
-			
-		} else {
-			alert('Mesa já esta sendo utilizada');
-		}
-    });
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			 if(result.rows.length != 0){
+				 connectionWIFI = result.rows.item(0).connectionWIFI;
+				 if (connectionWIFI != "") {
+						if (connectionWIFI == "connectionTrue") {
+							var ajax = getAjax(urlViewMesas);
+							 ajax.success(function (data) {
+								 $.each(data, function(key, val) {
+							    	 if(val.node_title == valor){
+							    		 post = false;
+							    	 }
+							    	
+							       });
+								  if (post) {
+									  
+									  postInsertMesa(valor);
+									
+								} else {
+									alert('Mesa já esta sendo utilizada');
+								}
+						    });
+						} else {
+							 postInsertMesa(valor);
+						}
+					}
+			 }
+		   },errorCB);
+		},errorCB);
+
 }
 
 

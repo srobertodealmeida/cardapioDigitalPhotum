@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.107/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.109/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -11,7 +11,7 @@ var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
 var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
-
+var connectionWIFI = "";
 
 var arrayLabels = new Array();
 
@@ -49,7 +49,11 @@ function onLoad() {
 
 function onDeviceReady() {
 	$("#preloader").fadeOut(1000);
-	 window.addEventListener("batterystatus", onBatteryStatus, false);
+	
+	if(connectionWIFI == "connectionTrue"){
+		window.addEventListener("batterystatus", onBatteryStatus, false);
+	}
+	 
 }
 
 // Handle the batterystatus event
@@ -148,7 +152,6 @@ function getDrupalLanguages(tx){
 			  if(key1 >= 1){
 				 url = url[1];
 			   }
-			  
 			  var urlString = url.toString();
 			  var extencao =  urlString.substr(urlString.length - 3);
 			  var pathDestino = pathAplicativo + "/home/Languages" + key1 + "."+ extencao; // url onde será salvo a imagen
@@ -1354,45 +1357,61 @@ function retornaIconeLenguage(language){
 /*
  * Método que faz requisição ajax.
  */
-function getAjax(url){
-	
+function getAjax(url) {
+
 	return $.ajax({
-	      async: false,
-	      url: url,
-	      crossDomain: true,
-	      dataType: 'jsonp',
-	      error: function(jqXHR, textStatus, errorThrown){
-	        alert('erro ajax: '+ url);
-	    	console.log('erro ajax: '+ url);
-	      }
+		async : false,
+		url : url,
+		crossDomain : true,
+		dataType : 'jsonp',
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('erro ajax: ' + url);
+			console.log('erro ajax: ' + url);
+		}
 	});
-	
+
 }
 
 function postAjax(url,data){
-	return $.ajax({
-		dataType:'json',
-		url : url,
-		type : "post",
-		crossDomain: true,
-		data : data,
-		converters: {
-	        "text json": function(value) {
-	            console.log("pre-processing...");
-	            /* do stuff */
-	            return value;
-	        }
-	    },
-	    success : function(data) {
 
-			console.log('postAjax Success');
+	db.transaction(function(tx){
+	tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+		 if(result.rows.length != 0){
+			 connectionWIFI = result.rows.item(0).connectionWIFI;
+			 if (connectionWIFI != "") {
+					if (connectionWIFI == "connectionTrue") {
+						return $.ajax({
+							dataType:'json',
+							url : url,
+							type : "post",
+							crossDomain: true,
+							data : data,
+							converters: {
+						        "text json": function(value) {
+						            console.log("pre-processing...");
+						            /* do stuff */
+						            return value;
+						        }
+						    },
+						    success : function(data) {
 
-		},
-	    
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log(jqXHR);
-		}
-	});
+								console.log('postAjax Success');
+
+							},
+						    
+							error : function(jqXHR, textStatus, errorThrown) {
+								console.log(jqXHR);
+							}
+						});
+						
+					} else {
+						return null;
+					}
+				}
+		 }
+	   },errorCB);
+	},errorCB);
+	
 }
 
 function putAjax(url,data){
@@ -1426,6 +1445,53 @@ function putAjax(url,data){
 	});
 
 }
+
+function inatividade() {
+	if(contador == 50) {
+		//alert('chamouPropaganda');
+		//window.location = 'propagandas.html';
+			$('#propagandas').load('propagandas.html');
+			$('#geral').hide();
+			$('#propagandas').show();
+		
+	}
+	if (contador != 50){
+		contador = contador+1;
+		//alert(contador);
+		setTimeout("inatividade()", 1000);
+	}
+}
+
+$(document).ready(function(){
+	
+	inatividade();
+	
+	$('#propagandas').click(function(e){
+		zerarInatividade();
+		inatividade();
+		
+		$('#propagandas').hide();
+		$('#geral').show();
+		console.log("propagandasClick");
+	});
+
+	$('#propagandas').bind('touchstart click', function(){
+		zerarInatividade();
+		inatividade();
+		
+		$('#propagandas').hide();
+		$('#geral').show();
+		console.log("propagandasClick");
+	});
+
+	$('#bodyTeste').bind('touchstart click', function(){
+		console.log('touchstart');
+		zerarInatividade();
+	});
+	
+});
+
+
 
 function Mock(){
 	

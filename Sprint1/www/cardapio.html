@@ -116,7 +116,7 @@
 		<div id="barra_botoes">
 			<div class="panel-trasnparente-botoes"></div>
 			<div id="botoes">
-				<a href="home.html">
+				<a onclick="voltaHome()" >
 				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" href="home1.html"  class="button c">Home</button>
 				</a>
 				<button  id="btn_fecharConta" class="button efeito-button" onclick="montaPreviaPedido()">Fechar
@@ -339,7 +339,8 @@
 		</div>
 		<input onkeypress="inputSenhaConfirmacaoPagamento(this)" class="inputSenha" type="password"></input>
 		</div>
-		<button class="btn_ok_mensagem efeito-button" onclick="validarSenhaConfirmacaoPagamento(this)" id="btn_ok_confirmacao_pagamento">OK</button>
+		<button class="btn_ok_mensagem_modal_confirmacao_pagamento efeito-button" onclick="validarSenhaConfirmacaoPagamento(this)" id="btn_ok_confirmacao_pagamento">OK</button>
+		<button class="btn_ok_cancelar_modal_confirmacao_pagamento efeito-button" onclick="hide('modal_confirmacao_pagamento')">Cancelar</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento_limpar_dados_mesa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">

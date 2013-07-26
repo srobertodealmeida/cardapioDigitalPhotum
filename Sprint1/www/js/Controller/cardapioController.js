@@ -136,12 +136,12 @@ require([
     	 if($( "#id-ul-fechamento-conta .mostrarDetalhado").length != 0){
           
     		 db.transaction(function(tx){
-    				tx.executeSql('SELECT * FROM Categorias where title="SOBREMESAS"',[],function(tx,result){
+    				tx.executeSql('SELECT * FROM Categorias where title_comum="SOBREMESAS"',[],function(tx,result){
     					if(result.rows.length > 0){
     						 $('#modal_sugestao_sobremesas p').text(ObjectLabels.alert_experimentar_sobremesa);
     						 $('#modal_sugestao_sobremesas .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
     						 $('#modal_sugestao_sobremesas .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
-    						   $('#modal_sugestao_sobremesas .btn-nao-sugestao-sobremesa').attr('onClick','showConfirmacaoFechamentoConta("'+dlg.id+'","'+dlg.value+'")') ;
+    						 $('#modal_sugestao_sobremesas .btn-nao-sugestao-sobremesa').attr('onClick','showConfirmacaoFechamentoConta("'+dlg.id+'","'+dlg.value+'")') ;
     						
     						  registry.byId('modal_sugestao_sobremesas').show();
     					}else{
@@ -155,7 +155,7 @@ require([
 		  else{
 		    	 show("modal_sem_pedido");
 		      }
-	  }
+	 }
      
      showConfirmacaoPedidoIndividualGarcom = function(dlg){
 		 var post = false;
@@ -229,7 +229,8 @@ require([
 		    		}
 		    	 }); 
 		    	
-		    }
+		 }
+    	 
     	 var qtdTotal = $( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).length;
     	 var qtdAguardandoPagamento = $( "#id-ul-fechamento-conta .mostrarDetalhado .aguardandoPagamento" ).length;
     	 
@@ -294,12 +295,12 @@ require([
 
 function mostrarSugestõesSobremesas(dlg){
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Categorias where title="SOBREMESAS"',[],function(tx,result){
+		tx.executeSql('SELECT * FROM Categorias where title_comum="SOBREMESAS"',[],function(tx,result){
 			if(result.rows.length > 0){
 				hide('modal_sugestao_sobremesas');
 				hide('modal_previa_pedido');
 				$('#ul-categorias .nome_categoria').each(function( index ) {
-					if($(this).text() == "SOBREMESAS"){
+					if($(this).parents('.divClicavel').attr('name') == "SOBREMESAS"){
 						$(this).parents('.divClicavel').trigger('click');
 					}
 				 });
@@ -307,7 +308,6 @@ function mostrarSugestõesSobremesas(dlg){
 		},errorCB);
 		
 	},errorCB);
-	
 	
 }
 
@@ -319,6 +319,7 @@ function confirmarPagamento(btn){
 					$('#modal_confirmacao_pagamento .lista-pessoas-confirmacao-pagamento').append('<p>'+result.rows.item(i).pessoa+'</p>');
 					$('#modal_confirmacao_pagamento .inputSenha').text('');
 					$('#modal_confirmacao_pagamento .div-mensagem span').text(ObjectLabels.alert_confirmar_pagamento_para);
+					$('#modal_confirmacao_pagamento .btn_ok_cancelar_apagar_mesa').text(ObjectLabels.btn_cancelar);
 					show('modal_confirmacao_pagamento');
 				}
 			},errorCB);
@@ -346,59 +347,106 @@ function inputSenhaConfirmacaoPagamentoLimparMesa(){
 
 
 function validarSenhaConfirmacaoPagamento(){
-	var ajax = getAjax(urlViewConfig);
 	
-	 ajax.success(function (data) {
-		 $.each(data, function(key, val) {
-	    	if(val.senha_confirmacao_pagamento == $('.inputSenha').val()){
-	    		
-	    		db.transaction(function(tx){
- 					tx.executeSql('SELECT * FROM Pedido where status="aguardando-pagamento"',[],function(tx,result){
- 						for(i=0;i<result.rows.length;i++){
- 						tx.executeSql('UPDATE Pedido SET status="pagamento-feito" WHERE Id='+result.rows.item(i).id+'');
- 						//limparDados(tx);
- 						}
- 					},errorCB);
- 					
- 					tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido"',[],function(tx,result){
- 						
- 						if(result.rows.length == 0){
- 							var stringMensagem = ObjectLabels.alert_mesa_contem_pendentes;
- 							var arrayMensagem = stringMensagem.split('.');
- 							$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p1').text(arrayMensagem[0]);
- 							$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p2').text(arrayMensagem[1]);
- 							
- 							
- 							show('modal_confirmacao_pagamento_limpar_mesa');
- 							//limparDados(tx);
- 						}
- 					},errorCB);
- 					
- 				},errorCB);
-	    		montaPreviaPedido();
-	    		hide('modal_confirmacao_pagamento');
-	    		
-	    	}else{
-	    		alert('Senha Inválida');
-	    	}
-	    	
-	       });
-     });
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			 if(result.rows.length != 0){
+				 connectionWIFI = result.rows.item(0).connectionWIFI;
+				 if (connectionWIFI != "") {
+						if (connectionWIFI == "connectionTrue") {
+							var ajax = getAjax(urlViewConfig);
+
+							
+							 ajax.success(function (data) {
+								 $.each(data, function(key, val) {
+							    	if(val.senha_confirmacao_pagamento == $('.inputSenha').val()){
+							    		atualizaPagamentoFeito();
+							    		montaPreviaPedido();
+							    		hide('modal_confirmacao_pagamento');
+							    		
+							    	}else{
+							    		alert('Senha Inválida');
+							    	}
+							    	
+							       });
+						     });
+						} else {
+							atualizaPagamentoFeito();
+				    		montaPreviaPedido();
+				    		hide('modal_confirmacao_pagamento');
+						}
+					}
+			 }
+		   },errorCB);
+		},errorCB);
+	
+}
+
+function atualizaPagamentoFeito(){
+	db.transaction(function(tx){
+			tx.executeSql('SELECT * FROM Pedido where status="aguardando-pagamento"',[],function(tx,result){
+				for(i=0;i<result.rows.length;i++){
+				tx.executeSql('UPDATE Pedido SET status="pagamento-feito" WHERE Id='+result.rows.item(i).id+'');
+				//limparDados(tx);
+				}
+			},errorCB);
+			
+			tx.executeSql('SELECT * FROM Pedido where status="aguardando-pedido"',[],function(tx,result){
+				
+				if(result.rows.length == 0){
+					
+					/**
+					var stringMensagem = ObjectLabels.alert_mesa_contem_pendentes;
+					var arrayMensagem = stringMensagem.split('.');
+					$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p1').text(arrayMensagem[0]);
+					$('#modal_confirmacao_pagamento_limpar_mesa .mensagem-confirmacao-p2').text(arrayMensagem[1]);
+					
+					
+					show('modal_confirmacao_pagamento_limpar_mesa');
+					*/
+					
+					limparDadosMesa('');
+					//limparDados(tx);
+				}
+				
+			},errorCB);
+			
+		},errorCB);
+}
+
+function voltaHome(){
+	window.location = 'home.html';
 }
 
 function validarSenhaConfirmacaoPagamentoLimparMesa(){
-	var ajax = getAjax(urlViewConfig);
-	 ajax.success(function (data) {
-		 $.each(data, function(key, val) {
-	    	if(val.senha_confirmacao_pagamento == $('.inputSenhaLimparDados').val()){
-	    		
-	    		limparDadosMesa();
-	    	}else{
-	    		alert('Senha Inválida');
-	    	}
-	    	
-	       });
-     });
+	
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			 if(result.rows.length != 0){
+				 connectionWIFI = result.rows.item(0).connectionWIFI;
+				 if (connectionWIFI != "") {
+						if (connectionWIFI == "connectionTrue") {
+							var ajax = getAjax(urlViewConfig);
+							 ajax.success(function (data) {
+								 $.each(data, function(key, val) {
+							    	if(val.senha_confirmacao_pagamento == $('.inputSenhaLimparDados').val()){
+							    		
+							    		limparDadosMesa();
+							    		
+							    	}else{
+							    		alert('Senha Inválida');
+							    	}
+							    	
+							       });
+						     });
+						} else {
+							limparDadosMesa();
+						}
+					}
+			 }
+		   },errorCB);
+		},errorCB);
+
 }
 
 function limparDadosMesa(btn){
@@ -536,7 +584,8 @@ function montaProdutos(tx,result){
 		 
 		 $(".mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 		 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
-		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+result.rows.item(i).title+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
+		 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
+		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+titleProduto+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
 		
 	}
 }
@@ -831,6 +880,7 @@ function excluirPessoa(div){
      },errorCB);
 	
 	$("#"+ div.title).hide();
+	$("#"+ div.name).removeClass('pessoa_selecionado');
 	$("#"+ div.name).hide();
 	
 }
@@ -903,7 +953,15 @@ function montaModalPedido(tx,result){
 	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
 	$('#id-efetuar-pedido').removeAttr("disabled");
 	$('#modal_pedido .title_modal_nome_pessoa').text(ObjectLabels.title_pedidos_da_mesa);
-	$('#modal_pedido .btn_adicionar_mais_itens').text(ObjectLabels.btn_adicionar_mais_itens);
+	if(meuPedido == true){
+		$('#modal_pedido .btn_adicionar_mais_itens').text(ObjectLabels.btn_cancelar);
+		$('#modal_pedido .btn_adicionar_mais_itens').removeClass('cor-verde');
+		
+	}else{
+		$('#modal_pedido .btn_adicionar_mais_itens').text(ObjectLabels.btn_adicionar_mais_itens);
+		$('#modal_pedido .btn_adicionar_mais_itens').addClass('cor-verde');
+	}
+	
 	$('#modal_pedido .btn_adicionar_pedido').text(ObjectLabels.btn_efetuar_pedido);
 	
 	
@@ -919,6 +977,7 @@ function montaModalPedido(tx,result){
 			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div></div>');
 		}
 	}
+	
 	if(!pedidosPendentes){
 		$('#id-efetuar-pedido').attr("disabled", "disabled");
 	}
@@ -1003,76 +1062,88 @@ function efetuarPedido(){
    },errorCB);
 }
 
-function postPedidoDrupal(tx,result){
-		 db.transaction(function(tx) {
-			 for(var i=0;i<result.rows.length;i++){
-				 
-				 console.log(result.rows.item(i));
-				 
-				 preco = result.rows.item(i).preco_produto * result.rows.item(i).quantidade;
-			 
-				 var mesa  = {
-	    			     "value":result.rows.item(i).mesa,
-				 }
-				 
-				 var idContaDrupal = {
-						 
-				    "value":idConta,
-						 
-				 }
-				 
-				 var pessoa  = {
-	    			     "value":""+result.rows.item(i).pessoa+"",
-				 }
-				 
-				 var observacao  = {
-	    			     "value":""+result.rows.item(i).observacao+"",
-				 }
-				 
-				 var nome_produto  = {
-	    			     "value":""+result.rows.item(i).nome_produto+"",
-				 }
-				 
-				 var preco_produto  = {
-	    			     "value":""+preco.toFixed(2)+"",
-				 }
-				 
-				 var quantidade_produto  = {
-	    			     "value":result.rows.item(i).quantidade,
-				 }
-				 
-				 var status  = {
-	    			     "value":""+result.rows.item(i).status+"",
-				 }
-	    			    
-	    		 var data  = {
-	    			     "type":"pedido",
-	    			     "field_mesa[und][0]":mesa,
-	    			     "field_pessoa[und][0]":pessoa,
-	    			     "field_observacao[und][0]":observacao,
-	    			     "field_nome_produto[und][0]":nome_produto,
-	    			     "field_preco_produto[und][0]":preco_produto,
-	    			     "field_quantidade[und][0]":quantidade_produto,
-	    			     "field_status[und][0]":status,
-	    			     "field_id_conta[und][0]":idContaDrupal,
-	    			     "title":result.rows.item(i).nome_produto ,
-	    		};
-				 console.log(data);
-				 var url=""+ipServidorDrupal+"/node";
-                 //var ajaxPostDrupal = postAjax(url,data);
-                 postAjax(url,data) ;
-                 
-				 //putAjax(url,data);
-                 tx.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'+preco.toFixed(2)+'"  WHERE id='+result.rows.item(i).id+'');
-             
-			 }
-			
-			 hide('modal_pedido');
-			 hide('modal_efetuar_pedido');
-			 $('#modal_pedido_confirmacao_mensagem .div-mensagem span').text(ObjectLabels.alert_pedido_atendido);
-			 $('#modal_pedido_confirmacao_mensagem .btn_ok_mensagem').text(ObjectLabels.OK);
-			 show('modal_pedido_confirmacao_mensagem');
-         },errorCB);
+function postPedidoDrupal(tx, result) {
+	db
+			.transaction(
+					function(tx) {
+						for ( var i = 0; i < result.rows.length; i++) {
+
+							console.log(result.rows.item(i));
+
+							preco = result.rows.item(i).preco_produto
+									* result.rows.item(i).quantidade;
+
+							var mesa = {
+								"value" : result.rows.item(i).mesa,
+							}
+
+							var idContaDrupal = {
+
+								"value" : idConta,
+
+							}
+
+							var pessoa = {
+								"value" : "" + result.rows.item(i).pessoa + "",
+							}
+
+							var observacao = {
+								"value" : "" + result.rows.item(i).observacao
+										+ "",
+							}
+
+							var nome_produto = {
+								"value" : "" + result.rows.item(i).nome_produto
+										+ "",
+							}
+
+							var preco_produto = {
+								"value" : "" + preco.toFixed(2) + "",
+							}
+
+							var quantidade_produto = {
+								"value" : result.rows.item(i).quantidade,
+							}
+
+							var status = {
+								"value" : "" + result.rows.item(i).status + "",
+							}
+
+							var data = {
+								"type" : "pedido",
+								"field_mesa[und][0]" : mesa,
+								"field_pessoa[und][0]" : pessoa,
+								"field_observacao[und][0]" : observacao,
+								"field_nome_produto[und][0]" : nome_produto,
+								"field_preco_produto[und][0]" : preco_produto,
+								"field_quantidade[und][0]" : quantidade_produto,
+								"field_status[und][0]" : status,
+								"field_id_conta[und][0]" : idContaDrupal,
+								"title" : result.rows.item(i).nome_produto,
+							};
+							console.log(data);
+							var url = "" + ipServidorDrupal + "/node";
+							// var ajaxPostDrupal = postAjax(url,data);
+							postAjax(url, data);
+
+							// putAjax(url,data);
+							tx
+									.executeSql('UPDATE Pedido SET status="aguardando-pedido" , preco_produto = "'
+											+ preco.toFixed(2)
+											+ '"  WHERE id='
+											+ result.rows.item(i).id + '');
+
+						}
+
+						hide('modal_pedido');
+						hide('modal_efetuar_pedido');
+						$(
+								'#modal_pedido_confirmacao_mensagem .div-mensagem span')
+								.text(ObjectLabels.alert_pedido_atendido);
+						$('#modal_pedido_confirmacao_mensagem .btn_ok_mensagem')
+								.text(ObjectLabels.OK);
+						show('modal_pedido_confirmacao_mensagem');
+					}, errorCB);
 }
 
 function montaPreviaPedido(){
@@ -1095,10 +1166,6 @@ function montaModalPreviaPedido(tx,result){
 	$('#modal_previa_pedido .btn-confirmar-pagamento').text(ObjectLabels.btn_confirmar_pagamento);
 	$('#modal_previa_pedido .btn_cancelar_pedido').text(ObjectLabels.btn_cancelar);
 	$('#modal_previa_pedido .btn-fechar-conta-previa-pedido').text(ObjectLabels.btn_fechar_conta_da_mesa);
-	
-	
-	
-	
 	
 	if(result.rows.length == 0){
 		$('#id-confirmarPagametento').text(ObjectLabels.btn_limpar_dados_da_mesa);
@@ -1205,21 +1272,7 @@ function chamarGarcon(){
      show('modal_chamar_garcom_confirmacao_mensagem');
 }
 
-function inatividade() {
-	if(contador == 50) {
-		//alert('chamouPropaganda');
-		//window.location = 'propagandas.html';
-			$('#propagandas').load('propagandas.html');
-			$('#geral').hide();
-			$('#propagandas').show();
-		
-	}
-	if (contador != 50){
-		contador = contador+1;
-		//alert(contador);
-		setTimeout("inatividade()", 1000);
-	}
-}
+
 
 function zerarInatividade(){
 	console.log("zerarInatividade");
@@ -1230,29 +1283,8 @@ $(document).ready(function(){
 	
 	setLanguage();
 	setLabels();
-	inatividade();
-	$('#propagandas').click(function(e){
-		zerarInatividade();
-		inatividade();
-		
-		$('#propagandas').hide();
-		$('#geral').show();
-		console.log("propagandasClick");
-	});
 	
-	$('#propagandas').bind('touchstart click', function(){
-		zerarInatividade();
-		inatividade();
-		
-		$('#propagandas').hide();
-		$('#geral').show();
-		console.log("propagandasClick");
-    });
 	
-	$('#bodyTeste').bind('touchstart click', function(){
-		console.log('touchstart');
-		zerarInatividade();
-		});
 	//document.addEventListener("deviceready", yourCallbackReady, false);
 	
      //TODO passar para config getdadosDrupal
@@ -1261,6 +1293,15 @@ $(document).ready(function(){
 	
 	
 });
+
+function delimitadorFrase(frase,qdtCaracter){
+	if(frase.length > qdtCaracter){
+		var fraseLimitada = frase.substr(0,qdtCaracter) + "...";
+		return fraseLimitada;
+	}else{
+		return frase;
+	}
+}
 
 function yourCallbackReady(){
 	document.addEventListener("pause", yourCallbackFunction, false);

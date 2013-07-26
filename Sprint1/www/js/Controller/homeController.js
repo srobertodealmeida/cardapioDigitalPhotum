@@ -153,36 +153,51 @@ function hide_preloader() { // DOM
 var versao;
 function  atualizar(){
 	
-	var ajax = getAjax(urlViewConfig);
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			 if(result.rows.length != 0){
+				 connectionWIFI = result.rows.item(0).connectionWIFI;
+				 if (connectionWIFI != "") {
+						if (connectionWIFI == "connectionTrue") {
+							var ajax = getAjax(urlViewConfig);
+							
+							 ajax.success(function (data) {
+								 $.each(data, function(key, val) {
+							    	 if(val.atualizar == 'true'){
+							    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
+											atualizaForm.categoria = val.atualiza_categoria;
+											atualizaForm.configuracao = val.atualiza_configuracao;
+											atualizaForm.home = val.atualiza_home;
+											atualizaForm.label = val.atualiza_label;
+											atualizaForm.produto = val.atualiza_produto;
+											atualizaForm.propaganda = val.atualiza_propaganda;
+											init(val.versao);
+							    		 } else {
+							    			 versao = val.versao;
+							    			//init(5);
+							    			//console.log('atualizar');
+							    			atualizaForm.categoria = val.atualiza_categoria;
+							    			atualizaForm.configuracao = val.atualiza_configuracao;
+							    			atualizaForm.home = val.atualiza_home;
+							    			atualizaForm.label = val.atualiza_label;
+							    			atualizaForm.produto = val.atualiza_produto;
+							    			atualizaForm.propaganda = val.atualiza_propaganda;
+							    			db.transaction(pegarUltimaVersao,errorCB); 
+							    		 }
+								    	 
+								     }
+							    	
+							       });
+						     });
+							
+						} else {
+							db.transaction(montaHome, errorCB);
+						}
+					}
+			 }
+		   },errorCB);
+		},errorCB);
 	
-	 ajax.success(function (data) {
-		 $.each(data, function(key, val) {
-	    	 if(val.atualizar == 'true'){
-	    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
-					atualizaForm.categoria = val.atualiza_categoria;
-					atualizaForm.configuracao = val.atualiza_configuracao;
-					atualizaForm.home = val.atualiza_home;
-					atualizaForm.label = val.atualiza_label;
-					atualizaForm.produto = val.atualiza_produto;
-					atualizaForm.propaganda = val.atualiza_propaganda;
-					init(val.versao);
-	    		 } else {
-	    			 versao = val.versao;
-	    			//init(5);
-	    			//console.log('atualizar');
-	    			atualizaForm.categoria = val.atualiza_categoria;
-	    			atualizaForm.configuracao = val.atualiza_configuracao;
-	    			atualizaForm.home = val.atualiza_home;
-	    			atualizaForm.label = val.atualiza_label;
-	    			atualizaForm.produto = val.atualiza_produto;
-	    			atualizaForm.propaganda = val.atualiza_propaganda;
-	    			db.transaction(pegarUltimaVersao,errorCB); 
-	    		 }
-		    	 
-		     }
-	    	
-	       });
-     });
 	 
 }
 
@@ -233,13 +248,60 @@ function semNumeroMesa(){
 	alert('semNumeroMesa');
 }
 
+function validaConnection(tx){
+	 tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+		 if(result.rows.length != 0){
+			 connectionWIFI = result.rows.item(0).connectionWIFI;
+			 if (connectionWIFI != "") {
+					if (connectionWIFI == "connectionTrue") {
+						atualizar();
+					} else {
+						db.transaction(montaHome, errorCB);
+					}
+				}
+		 }
+	   },errorCB);
+	
+}
+
+function connectionNaoCriado(err){
+	console.log('connectionNaoCriado');
+}
+
+
+function checkConnection() {
+	var states = {};
+	var networkState = navigator.connection.type;
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'connectionTrue';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'connectionFalse';
+    connectionWIFI = states[networkState];
+    
+    db.transaction(function(tx) {
+    	tx.executeSql('DROP TABLE IF EXISTS Connection');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Connection (id INTEGER PRIMARY KEY AUTOINCREMENT, connectionWIFI TEXT NOT NULL)');
+		tx.executeSql('INSERT INTO Connection(connectionWIFI) VALUES ("'+connectionWIFI+'")');
+		atualizar();
+    },errorCB);
+    
+
+}
+
+
+
 $(document).ready(function(){
+    document.addEventListener("deviceready", checkConnection, false);
+    //atualizar();
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
 	// db.transaction(populateDB, errorCB, successCB);
 	//quantidadeRegistros = 7;
 	 // Atualiza caso checbox no backend esteja setado como true;
-	 atualizar();
+	
 	//init(5);
 	 //db.transaction(selectDados,errorCB);
 	 $('.div-button-config').click(function(){
