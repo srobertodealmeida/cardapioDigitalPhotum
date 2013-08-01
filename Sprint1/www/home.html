@@ -35,15 +35,26 @@
 <style>@import "themes/claro/claro.css";@import "./lib/dojo/dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css";@import "app.css";
 </style>
 
-
+<script>
+    
+    require([
+             "dojo/ready",
+             "dijit/registry",
+             "dojox/mobile/SpinWheel",
+             "dojox/mobile/SpinWheelSlot",
+             "dojox/mobile/parser"
+             ]);
+</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 </head>
 
-<body id="bodyTeste" onchange="zerarInatividade()" onfocus="zerarInatividade()" onmouseup="zerarInatividade()" onselect="zerarInatividade()" onmousedown="zerarInatividade()" onclick="zerarInatividade()" onload="onDeviceReady();" class="claro"  onload="onDeviceReadyHome();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+<body id="bodyTeste" onchange="zerarInatividade()" onfocus="zerarInatividade()" onmouseup="zerarInatividade()" onselect="zerarInatividade()" onmousedown="zerarInatividade()" onclick="zerarInatividade()" class="claro"  onload="onDeviceReadyHome();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
 	<div id="preloader">Page loading...
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
+<div id="propagandas">
+	</div>
 	<div id="geral" class="geral" >
 
 	<img id="background-home" alt="" src="" class="img-bacground"/>
@@ -91,6 +102,7 @@
 
 				<img class="img-language-escolhido" alt="" src="">
 				<p class="nome-language-escolhido"></p>
+				<div class="div-icon-arrow"><img class="img-icon-arrow"  src="img/seta.png"></div>
 			</div>
 			
 			<div class="panel-languages">
@@ -100,12 +112,11 @@
 					<h1 data-dojo-type="dojox/mobile/Heading">Languages</h1>
 					<div id="spin1" data-dojo-type="dojox/mobile/SpinWheel">
 
-						<div data-dojo-type="dojox/mobile/SpinWheelSlot"
+						<div onclick="showSelectedValue()" data-dojo-type="dojox/mobile/SpinWheelSlot"
 							labels="<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>,<img src=img/logo.jpg>"
 							style="width: 400px; height: 980px; text-align: center;"></div>
 
 					</div>
-					<h1 data-dojo-type="dojox/mobile/ToolBarButton" onclick="showSelectedValue()">OK</h1>
 
 				</div>
 			</div>
