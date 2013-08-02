@@ -58,5 +58,6 @@ var ObjectLabels = {
 		alert_confirmar_pagamento_para:"",
 		alert_mesa_contem_pendentes:"",
 		label_aguardando_pagamento:"",
-		alert_sem_pedidos_no_momento:""
+		alert_sem_pedidos_no_momento:"",
+		label_mesa_home:""
  };

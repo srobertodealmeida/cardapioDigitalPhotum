@@ -11,7 +11,8 @@ function selectPropagandas(){
 function montaPropagandas(tx,result){
 
 	for(var i=0;i<result.rows.length;i++){
-		$("#foo").append('<img src="'+result.rows.item(i).image+'" class="img-bacground"/> ');
+		$("#foo").append('<video width="320" height="240" controls><source src="movie.mp4" type="video/mp4"></video>');
+		
     }
 
 	 $("#foo").carouFredSel({

@@ -1,12 +1,6 @@
-.geral {
-	margin: auto;
-	overflow: hidden;
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
 
-.img-bacground {
+
+.img-propagandas{
 	border: 5px solid #d5c9e8;
 	width: 1012px;
 	height: 739px;
@@ -15,12 +9,6 @@
 
 #foo{
 	z-index: 2000 !important;
-}
-
-body {
-	height: 100%;
-	margin: 0;
-	min-height: 100%;
 }
 
 .btn-voltar {

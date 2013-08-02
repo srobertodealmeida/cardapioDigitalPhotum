@@ -8,7 +8,6 @@ var nomePessoaEditando;
 var mesa;
 var idConta;
 var meuPedido = false;
-var contador = 0;
 var dlgConta;
 
 require([
@@ -66,12 +65,18 @@ require([
 "dojox/mobile/Button",
 "dojox/mobile/GridLayout",
 "dojox/mobile/Pane",
+"dojo/dom-construct",
+"dojo/ready",
+"dijit/registry",
+"dojox/mobile/SpinWheel",
+"dojox/mobile/SpinWheelSlot",
+"dojox/mobile/parser",
 "dojox/mobile/RoundRectStoreList",
 "dojo/store/Memory"
 ], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
     console.log(registry);
 	  show = function(dlg){
-	    registry.byId(dlg).show();
+	    registry.byId(dlg).show(); 
 	  }
 	  
 	  hide = function(dlg){
@@ -1250,7 +1255,7 @@ function montaModalPreviaPedido(tx,result){
 
 function mostrarPedidoDetalhado(divDetalhado){
 	  $("#" + divDetalhado).toggle();
-	}
+}
 
 function chamarGarcon(){
 	 var mensagem  = {
@@ -1272,18 +1277,34 @@ function chamarGarcon(){
      show('modal_chamar_garcom_confirmacao_mensagem');
 }
 
-
-
-function zerarInatividade(){
-	console.log("zerarInatividade");
-	contador = 0;
-}
-
 $(document).ready(function(){
 	
 	setLanguage();
 	setLabels();
-	
+	inatividade();
+		
+		$('#propagandas').click(function(e){
+			zerarInatividade();
+			inatividade();
+			
+			$('#propagandas').hide();
+			$('#geral').show();
+			console.log("propagandasClick");
+		});
+
+		$('#propagandas').bind('touchstart click', function(){
+			zerarInatividade();
+			inatividade();
+			
+			$('#propagandas').hide();
+			$('#geral').show();
+			console.log("propagandasClick");
+		});
+
+		$('#bodyTeste').bind('touchstart click', function(){
+			console.log('touchstart');
+			zerarInatividade();
+		});
 	
 	//document.addEventListener("deviceready", yourCallbackReady, false);
 	
@@ -1336,8 +1357,3 @@ function mockPut(){
 	 var url=""+ipServidorDrupal+"/node/1006";
 	 putAjax(url,data);
 }
-
-
-
-
-

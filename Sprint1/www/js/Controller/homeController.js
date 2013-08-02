@@ -81,6 +81,7 @@ require([
      ], function(dom, registry,dom, on,ProgressIndicator,parser,SpinWheelSlot){
 	
 	
+	
 	showSelectedValue = function() {
 		var w = registry.byId("spin1");
 		var languageSelected = w.get('values');
@@ -129,6 +130,16 @@ function atualizaLabelsHome(){
 		    },errorCB);
 		    
 		    $('.panel-languages').hide('slow');
+		    
+		    
+		//Label Mesa
+		    
+		    tx.executeSql('SELECT * FROM Labels where categoria_label = "label_mesa_home" and language="'+constLanguageSelected+'"',[],function(fx,result){
+		    	if(result.rows.length > 0){
+					$('.span-label-config').text(result.rows.item(0).valor);
+				}
+		    },errorCB);
+		    
 		    
    },errorCB);
 	
@@ -295,7 +306,8 @@ function checkConnection() {
 
 $(document).ready(function(){
     document.addEventListener("deviceready", checkConnection, false);
-    //atualizar();
+	$("#preloader").fadeOut(1000);
+    atualizar();
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
 	// db.transaction(populateDB, errorCB, successCB);
@@ -311,6 +323,31 @@ $(document).ready(function(){
 	 $('.cancelarConfig').click(function(){
 		 $('.divConfig').hide();
 	 });
+	 
+	 inatividade();
+		
+		$('#propagandas').click(function(e){
+			zerarInatividade();
+			inatividade();
+			
+			$('#propagandas').hide();
+			$('#geral').show();
+			console.log("propagandasClick");
+		});
+
+		$('#propagandas').bind('touchstart click', function(){
+			zerarInatividade();
+			inatividade();
+			
+			$('#propagandas').hide();
+			$('#geral').show();
+			console.log("propagandasClick");
+		});
+
+		$('#bodyTeste').bind('touchstart click', function(){
+			console.log('touchstart');
+			zerarInatividade();
+		});
 	 
      // Carrosel propaganda
 	 $("#foo").carouFredSel({

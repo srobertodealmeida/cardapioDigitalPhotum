@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.109/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -12,7 +12,8 @@ var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
 var connectionWIFI = "";
-
+var contador = 0;
+var montaLanguage = false;
 var arrayLabels = new Array();
 
 var rulFullImage = "" ;
@@ -42,6 +43,17 @@ var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 0;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
 
+
+require([
+         "dojo/dom-construct",
+         "dojo/ready",
+         "dijit/registry",
+         "dojox/mobile/SpinWheel",
+         "dojox/mobile/SpinWheelSlot",
+         "dojox/mobile/parser"
+     ], function(domConst, ready, registry, SpinWheel, SpinWheelSlot){
+	 
+});
 
 function onLoad() {
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -152,6 +164,7 @@ function getDrupalLanguages(tx){
 			  if(key1 >= 1){
 				 url = url[1];
 			   }
+			  console.log('url-languages: '+url);
 			  var urlString = url.toString();
 			  var extencao =  urlString.substr(urlString.length - 3);
 			  var pathDestino = pathAplicativo + "/home/Languages" + key1 + "."+ extencao; // url onde será salvo a imagen
@@ -668,15 +681,22 @@ function populateDB(tx) {
 }
 
 function montaHome(tx){
-	
 	console.log('montaHome');
 	tx.executeSql('SELECT * FROM Languages',[],montaBanderaLanguage,errorCB);
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
 	tx.executeSql('SELECT * FROM Icones',[],montaIcones,errorCB);
+	tx.executeSql('SELECT * FROM Labels where categoria_label = "label_mesa_home" and language="'+constLanguageSelected+'"',[],montaLabelMesa,errorCB);
 	
 	//tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
-	tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
+	  tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
+
 	
+}
+
+function montaLabelMesa(tx,result){
+	if(result.rows.length > 0){
+		$('.span-label-config').text(result.rows.item(0).valor);
+	}
 }
 
 //Método utilizado para atualizar os produtos de outras linguas que nao tem image setado e setar com,  o respectivo image.
@@ -801,6 +821,7 @@ function montaLanguages(tx,result){
 		$("#spin1 .mblSpinWheelSlotContainer .mblSpinWheelSlotPanel").append('<div class="mblSpinWheelSlotLabel" name="0" val="'+result.rows.item(i).nome+'"><img class="img-language" src="'+result.rows.item(i).image+'"><p class="nome-language">'+result.rows.item(i).nome+'</p></div>');
     }
 	}
+	
 
 	$('.panel-languages').hide();
 	$("#preloader").fadeOut(1000);
@@ -1343,10 +1364,6 @@ function setLabels(){
 			}
 		},errorCB);
 		
-		
-		
-		
-		
 	},errorCB);
 }
 
@@ -1462,32 +1479,13 @@ function inatividade() {
 	}
 }
 
+
+function zerarInatividade(){
+	console.log("zerarInatividade");
+	contador = 0;
+}
+
 $(document).ready(function(){
-	
-	inatividade();
-	
-	$('#propagandas').click(function(e){
-		zerarInatividade();
-		inatividade();
-		
-		$('#propagandas').hide();
-		$('#geral').show();
-		console.log("propagandasClick");
-	});
-
-	$('#propagandas').bind('touchstart click', function(){
-		zerarInatividade();
-		inatividade();
-		
-		$('#propagandas').hide();
-		$('#geral').show();
-		console.log("propagandasClick");
-	});
-
-	$('#bodyTeste').bind('touchstart click', function(){
-		console.log('touchstart');
-		zerarInatividade();
-	});
 	
 });
 
