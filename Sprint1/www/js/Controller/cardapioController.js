@@ -1261,13 +1261,18 @@ function chamarGarcon(){
 	 var mensagem  = {
 		     "value":"Mesa: "+mesa+" Chamando Garçon",
 	 }
+	 
+	 var typeNotificacao  = {
+		     "value":"chamaGarcon",
+	 }
 		    
 	 var data  = {
 			 "type":"notificacao",
 		     "field_notificacao_mensagem[und][0]":mensagem,
-		     "title":"Title Notificacao: "+mesa,
+		     "field_notificacao_type[und][0]":typeNotificacao,
+		     "title":mesa,
 	};
-	 console.log(data);
+	 console.log(data.field_notificacao_type);
 	 var url=""+ipServidorDrupal+"/node";
      //var ajaxPostDrupal = postAjax(url,data);
      postAjax(url,data) ;

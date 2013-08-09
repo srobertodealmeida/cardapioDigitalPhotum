@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.105/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -36,7 +36,6 @@ var produtosFormVazio = {
 		categoria:"",
 		image:""
 };
-
 var qtdProdutos = 0;
 var qtdPropagandas = 0;
 var sucessDadosDrupal = true;
@@ -79,11 +78,16 @@ function onBatteryStatus(info) {
     	   		 var mensagem  = {
     	   		        "value":"Bateria em "+info.level+"% na mesa: "+mesa+"",
     	   		      }
+    	   		 
+    	   		 var typeNotificacao  = {
+    	   			     "value":"bateria",
+    	   		 }
     	   		    			    
     	   		       var data  = {
     	   		         "type":"notificacao",
     	   		    	  "field_notificacao_mensagem[und][0]":mensagem,
-    	   		    	   "title":"Title Notificacao: " + mesa,
+    	   		    	 "field_notificacao_type[und][0]":typeNotificacao,
+    	   		    	   "title":mesa,
     	   		        };
     	   		    	console.log(data);
     	   		    	var url=""+ipServidorDrupal+"/node";

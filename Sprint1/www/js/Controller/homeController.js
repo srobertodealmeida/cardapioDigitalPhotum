@@ -307,7 +307,6 @@ function checkConnection() {
 $(document).ready(function(){
     document.addEventListener("deviceready", checkConnection, false);
 	$("#preloader").fadeOut(1000);
-    atualizar();
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
 	// db.transaction(populateDB, errorCB, successCB);

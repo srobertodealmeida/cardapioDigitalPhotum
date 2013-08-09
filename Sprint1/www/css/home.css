@@ -496,7 +496,7 @@ top: 29px;
 	color: black;
     font-size:60px;
     font-family: helvetica;
-    letter-spacing: -2px;
+    letter-spacing: -2px !important;
     font-weight: bold;
 }
 .nome-language{
