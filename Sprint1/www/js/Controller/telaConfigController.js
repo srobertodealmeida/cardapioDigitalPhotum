@@ -79,10 +79,7 @@ function focusOutInput(){
 
 function validarSenha(){
 	
-	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-			 if(result.rows.length != 0){
-				 connectionWIFI = result.rows.item(0).connectionWIFI;
+
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
@@ -106,9 +103,7 @@ function validarSenha(){
 							hide('senha_configaracao');
 						}
 					}
-			 }
-		   },errorCB);
-		},errorCB);
+	
 	
 }
 

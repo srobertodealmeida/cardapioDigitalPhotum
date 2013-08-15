@@ -153,7 +153,7 @@ function mostrarListLanguage(){
 }
 
 function onDeviceReadyHome(){
-	window.addEventListener("batterystatus", onBatteryStatus, false);
+	 document.addEventListener("deviceready", onDeviceReady, false);
 }
      
      
@@ -305,8 +305,9 @@ function checkConnection() {
 
 
 $(document).ready(function(){
-    document.addEventListener("deviceready", checkConnection, false);
-	$("#preloader").fadeOut(1000);
+	atualizar();
+   // document.addEventListener("deviceready", checkConnection, false);
+	
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
 	// db.transaction(populateDB, errorCB, successCB);

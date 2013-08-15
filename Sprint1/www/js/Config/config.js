@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -11,7 +11,7 @@ var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
 var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
-var connectionWIFI = "";
+var connectionWIFI = "connectionTrue";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
@@ -55,12 +55,12 @@ require([
 });
 
 function onLoad() {
+    $("#preloader").fadeOut(1000);
     document.addEventListener("deviceready", onDeviceReady, false);
 }
 
 function onDeviceReady() {
 	$("#preloader").fadeOut(1000);
-	
 	if(connectionWIFI == "connectionTrue"){
 		window.addEventListener("batterystatus", onBatteryStatus, false);
 	}
@@ -70,8 +70,10 @@ function onDeviceReady() {
 // Handle the batterystatus event
 //
 function onBatteryStatus(info) {
-    console.log("Level: " + info.level + " isPlugged: " + info.isPlugged); 
-    if(info.level < 1000){
+    alert("baterystatus");
+    console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
+    alert(info.level);
+    if(info.level < 20){
     	 db.transaction(function(tx) {
     		 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
     	   		 mesa = result.rows.item(0).numero;
@@ -918,12 +920,12 @@ function createTable(tx){
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
 	
     ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT)');
 	
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////

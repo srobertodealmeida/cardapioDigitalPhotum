@@ -9,6 +9,7 @@ var mesa;
 var idConta;
 var meuPedido = false;
 var dlgConta;
+var label_conta_conjunto_portugues = "";
 
 require([
 "dojo/dom",
@@ -175,10 +176,17 @@ require([
     		  ultimoCaracterId = dlg.value.charAt(dlg.value.length-1);
     		  var preco = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
 	   			preco = preco.replace('Total:','');
-    		  nomePessoa = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .span-nome-pessoa-fechamento-conta').text() +': ' + preco;
+	   		
+	   			
+	   			if(dlg.title == ObjectLabels.label_conta_conjunto){
+	   					    nomePessoa = label_conta_conjunto_portugues +': ' + preco;
+		   		  }	else{
+		   			 nomePessoa = dlg.title +': ' + preco;
+		   		  }
+    		 
     		  totalPagamento = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
     		  
-			  db.transaction(function(tx){
+    		  db.transaction(function(tx){
 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ dlg.title +'" and status="aguardando-pedido" ',[],function(tx,result){
 						for(i=0;i<result.rows.length;i++){
 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
@@ -206,7 +214,13 @@ require([
 			   			preco = preco.replace('Total:','');
 			   			var precoParser = preco.replace('R$ ','');
 			   			totalPagamento += parseFloat(precoParser);
-			   			nomePessoa +=$('#'+this.id+' .btn_fechar_conta_individual').val() + ": "+ preco + " tag-pular ";
+			   			
+			   			if($('#'+this.id+' .btn_fechar_conta_individual').val() == ObjectLabels.label_conta_conjunto){
+	   					    nomePessoa = label_conta_conjunto_portugues +": "+ preco + " tag-pular ";
+		   		        }	else{
+		   		        	nomePessoa +=$('#'+this.id+' .btn_fechar_conta_individual').val() + ": "+ preco + " tag-pular ";
+		   		        }
+			   			
 			   		}
 		    		
 		    	 });
@@ -491,12 +505,12 @@ function limparDados(tx){
      ////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
 	
     ////////////////////////////////////////////Pedido///////////////////////////////////////
 	// Table Mesa
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT )');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT)');
 }
 
 function montaCardapio(tx){
@@ -854,7 +868,7 @@ function salvarPessoa(input){
 		 }else{
 			 // Insert no banco de dados.
 			 db.transaction(function(tx) {
-	             tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo) VALUES ("' + input.value + '","false","true")');
+	             tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo,contaConjunto) VALUES ("' + input.value + '","false","true","false")');
 	         },errorCB);
 			 
 			 $('<button  value="'+input.name+'" class="btn_editar_pessoa efeito-button"  onclick="editarPessoa(this)">'+ObjectLabels.btn_editar+'</button> <button title="'+input.title+'" value="'+input.name+'" class=" efeito-button btn_excluir_pessoa" onclick="showConfirmacaoPessoa(\'modal_pedido_confirmacao\',this)">'+ObjectLabels.btn_excluir+'</button>').insertAfter($("#" + input.name + " .mblListItemRightIcon"));
@@ -918,17 +932,16 @@ function adicionarPedido(tx,result){
 	  if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
 			 
-				 tx.executeSql('SELECT * FROM Pessoas where nome="Conta Conjunto"',[],function(fx,result){
+				 tx.executeSql('SELECT * FROM Pessoas where nome="'+ObjectLabels.label_conta_conjunto+'"',[],function(fx,result){
 					 if(result.rows.length == 0){
 						 if(pessoaSelecionado == ""+ObjectLabels.label_conta_conjunto+""){
-					    	 tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo) VALUES ("Conta Conjunto","true","true")');
+					    	 tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo,contaConjunto) VALUES ("Conta Conjunto","true","true","true")');
 					     }
 					 }
 					 
 				 },errorCB);
-				 
 			     
-				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao")');
+				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao","'+result.rows.item(0).title_comum+'")');
 			     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		   
 		 },errorCB,selectPedidos);
@@ -1098,7 +1111,7 @@ function postPedidoDrupal(tx, result) {
 							}
 
 							var nome_produto = {
-								"value" : "" + result.rows.item(i).nome_produto
+								"value" : "" + result.rows.item(i).nome_produto_portugues
 										+ "",
 							}
 
@@ -1124,7 +1137,7 @@ function postPedidoDrupal(tx, result) {
 								"field_quantidade[und][0]" : quantidade_produto,
 								"field_status[und][0]" : status,
 								"field_id_conta[und][0]" : idContaDrupal,
-								"title" : result.rows.item(i).nome_produto,
+								"title" : result.rows.item(i).nome_produto_portugues,
 							};
 							console.log(data);
 							var url = "" + ipServidorDrupal + "/node";
@@ -1200,6 +1213,14 @@ function montaModalPreviaPedido(tx,result){
 	    	$("#pedido_detalhado-"+ultimoI+" .minhaUL-modal-nome-pessoa")
 		    .append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> ');
 	    }
+		
+		 if(result.rows.item(i).pessoa == ObjectLabels.label_conta_conjunto){
+				tx.executeSql('SELECT * FROM Labels where categoria_label = "label_conta_conjunto" and language="Portuguese-Brazil"',[],function(tx,result){
+					if(result.rows.length > 0){
+						 label_conta_conjunto_portugues = result.rows.item(0).valor ;
+					}
+				},errorCB);
+	   		  }	
 		
 		ultimaPessoa = result.rows.item(i).pessoa;
 	}

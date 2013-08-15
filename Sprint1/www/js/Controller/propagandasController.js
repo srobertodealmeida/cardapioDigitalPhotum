@@ -10,7 +10,7 @@ function selectPropagandas(){
 function montaPropagandas(tx,result){
 	
 	for(var i=0;i<result.rows.length;i++){
-		$("#foo").append('<img src="'+result.rows.item(i).image+'" class="img-bacground"/> ');
+		$("#foo").append('<img src="'+result.rows.item(i).image+'" class="img-propagandas"/> ');
     }
 	
 	 $("#foo").carouFredSel({
@@ -28,7 +28,7 @@ function montaPropagandas(tx,result){
 }
 
 $(document).ready(function(){
+	onLoad();
 	selectPropagandas();
-	
 });
 
