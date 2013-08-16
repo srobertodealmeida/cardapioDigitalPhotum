@@ -915,17 +915,6 @@ function createTable(tx){
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT)');
 	}
 	
-	////////////////////////////////////////////Pessoas//////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
-	
-    ////////////////////////////////////////////Pedido//////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT)');
-	
-	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
 	tx.executeSql('DROP TABLE IF EXISTS LanguageSelect');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS LanguageSelect (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)');
@@ -936,7 +925,26 @@ function createTable(tx){
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Config (id INTEGER PRIMARY KEY AUTOINCREMENT, versao TEXT NOT NULL)');
 	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
 	
+	// Tables Pedido e Mesa
+	createTablesdoCardapio(tx);
+	
 }
+
+// Tabelas referente ao cardapio e conta.
+function createTablesdoCardapio(tx){
+	
+	////////////////////////////////////////////Pessoas//////////////////////////////////////
+	// Table Pessoas
+	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
+	
+	 ////////////////////////////////////////////Pedido//////////////////////////////////////
+	// Table Pedido
+	tx.executeSql('DROP TABLE IF EXISTS Pedido');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT)');
+	
+}
+
 /*
  * Faz os inserts
  */

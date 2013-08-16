@@ -502,15 +502,7 @@ function confirmacaoFechamentoMesa(){
 
 
 function limparDados(tx){
-     ////////////////////////////////////////////Pessoas//////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
-	
-    ////////////////////////////////////////////Pedido///////////////////////////////////////
-	// Table Mesa
-	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT)');
+	createTablesdoCardapio(tx);
 }
 
 function montaCardapio(tx){
@@ -941,7 +933,7 @@ function adicionarPedido(tx,result){
 					 
 				 },errorCB);
 			     
-				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao","'+result.rows.item(0).title_comum+'")');
+				 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao","'+result.rows.item(0).title_comum+'","'+result.rows.item(0).categoria+'")');
 			     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		   
 		 },errorCB,selectPedidos);
@@ -1126,6 +1118,10 @@ function postPedidoDrupal(tx, result) {
 							var status = {
 								"value" : "" + result.rows.item(i).status + "",
 							}
+							
+							var categoria_produto = {
+									"value" : "" + result.rows.item(i).categoria_produto + "",
+							}
 
 							var data = {
 								"type" : "pedido",
@@ -1137,6 +1133,7 @@ function postPedidoDrupal(tx, result) {
 								"field_quantidade[und][0]" : quantidade_produto,
 								"field_status[und][0]" : status,
 								"field_id_conta[und][0]" : idContaDrupal,
+								"field_categoria_produto_pedido[und][0]" : categoria_produto,
 								"title" : result.rows.item(i).nome_produto_portugues,
 							};
 							console.log(data);
