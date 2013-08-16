@@ -53,6 +53,12 @@ require([
 "dojox/mobile/Button",
 "dojox/mobile/GridLayout",
 "dojox/mobile/Pane",
+"dojo/dom-construct",
+"dojo/ready",
+"dijit/registry",
+"dojox/mobile/SpinWheel",
+"dojox/mobile/SpinWheelSlot",
+"dojox/mobile/parser",
 "dojox/mobile/RoundRectStoreList",
 "dojo/store/Memory"
 ], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){

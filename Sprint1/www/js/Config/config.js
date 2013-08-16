@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -70,9 +70,7 @@ function onDeviceReady() {
 // Handle the batterystatus event
 //
 function onBatteryStatus(info) {
-    alert("baterystatus");
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
-    alert(info.level);
     if(info.level < 20){
     	 db.transaction(function(tx) {
     		 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
