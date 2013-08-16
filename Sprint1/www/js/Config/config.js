@@ -385,6 +385,7 @@ function getDrupalProduto(tx){
 		  $.each(data, function(key, val) {
 			  
 			  var produtosForm = {
+					    nid:"",
 						title:"",
 						title_comum:"",
 						previa_descricao:"",
@@ -396,12 +397,13 @@ function getDrupalProduto(tx){
 						language:""
 			  };
 			  
-			                                                                                                                                                                                                                                                                                        var produtosFinalDownloadForm = {
+			  var produtosFinalDownloadForm = {
 					    produtosForm:produtosForm,
 						url:"",
 						pathDestino:"",
 			  };
 			  
+			  produtosForm.nid = val.nid;
 			  produtosForm.title = escapeHtml(val.titulo);
 			  produtosForm.title_comum = escapeHtml(val.node_title);
 			  produtosForm.language = escapeHtml(val.language);
@@ -561,6 +563,7 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 
 			fileTransfer.download(url, imagePath, function(entry) {
 				console.log("download complete: " + entry.fullPath); // entry
+				 zerarInatividade();
 				salvaPathImagenProdutos(tx,imagePath,qtdProdutos,indice);
 			}, function(error) {
 				sucessDadosDrupal = false;
@@ -686,14 +689,13 @@ function populateDB(tx) {
 
 function montaHome(tx){
 	console.log('montaHome');
-	tx.executeSql('SELECT * FROM Languages',[],montaBanderaLanguage,errorCB);
+	tx.executeSql('SELECT * FROM Languages',[],montaBanderaLanguage,errorCB); 	
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
 	tx.executeSql('SELECT * FROM Icones',[],montaIcones,errorCB);
 	tx.executeSql('SELECT * FROM Labels where categoria_label = "label_mesa_home" and language="'+constLanguageSelected+'"',[],montaLabelMesa,errorCB);
 	
 	//tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
 	  tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
-
 	
 }
 
@@ -912,7 +914,7 @@ function createTable(tx){
           ////////////////////////////////////////////Produtos//////////////////////////////////////
 		// Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Produtos');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT)');
 	}
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
@@ -941,7 +943,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, nid TEXT)');
 	
 }
 
@@ -1022,10 +1024,10 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			
 			for(i=0;i<arrayProdutos.length;i++){
-				
+				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
-										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language) VALUES ("'
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid) VALUES ("'
 												+ arrayProdutos[i].title
 												+ '","'
 												+ arrayProdutos[i].previa_descricao
@@ -1042,7 +1044,9 @@ function insertTable(nomeTable){
 												+ '","'
 												+ arrayProdutos[i].title_comum 
 												+ '","'
-												+ arrayProdutos[i].language +
+												+ arrayProdutos[i].language
+												+ '","'
+												+ arrayProdutos[i].nid +
 												'" )');
 								testeProdutoErro = "produtos" + arrayProdutos[i].title;
 			}
