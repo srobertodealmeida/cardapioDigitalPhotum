@@ -1,7 +1,7 @@
 <head>
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 <title>Untitled</title>
-<link rel="stylesheet" href="css/telaConfig.css"/>
+<link rel="stylesheet" href="css/telaConfig.css" />
 
 
 
@@ -26,117 +26,200 @@
 <script type="text/javascript" src="js/Form/homeForm.js"></script>
 <script type="text/javascript" src="js/Form/cardapioForm.js"></script>
 <script type="text/javascript" src="js/Config/config.js"></script>
-<script src="http://debug.phonegap.com/target/target-script-min.js#photumCardapioDigital102030"></script>
+<script
+	src="http://debug.phonegap.com/target/target-script-min.js#photumCardapioDigital102030"></script>
 <script type="text/javascript" src="js/Controller/cardapioController.js"></script>
-<script type="text/javascript" src="js/Controller/telaConfigController.js"></script>
+<script type="text/javascript"
+	src="js/Controller/telaConfigController.js"></script>
 
 
 
 <script type="text/javascript">
-
-require([
-         "dojox/mobile/Carousel",
-         "dojox/mobile/CarouselItem",
-     ]);
+	require([ "dojox/mobile/Carousel", "dojox/mobile/CarouselItem", ]);
 </script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 </head>
 
-<body class="claro"  onload="showTelaSenha();" data-maq-device="androidtablet" data-maq-flow-layout="true" data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
-	<div id="preloader">Page loading...
-<div><img src="img/loading.gif" id="preloader_image" ></div>
-</div>
-	<div id="geral" class="geral"  style="display: none">
-	
-	<div id="senha_configaracao" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
-		<form onsubmit=" return false;">
-		<div class="div-mensagem">
-		<label class="labelSenha">Senha: </label>
-		<input onkeypress="focusOutInput(this)" class="inputSenha" type="password"></input>
+<body class="claro" onload="showTelaSenha();"
+	data-maq-device="androidtablet" data-maq-flow-layout="true"
+	data-maq-comptype="mobile" data-maq-ws="collapse" id="myapp"
+	data-maq-appstates="{}">
+	<div id="preloader">
+		Page loading...
+		<div>
+			<img src="img/loading.gif" id="preloader_image">
 		</div>
-		<button class="btn_ok_mensagem" onclick="validarSenha()" id="btn_ok_final">OK</button>
-		<a href="home.html"><button  class="btn-cancelar-senha">Cancelar</button></a>
-		</form>
 	</div>
-	
-	<img id="background-config" alt="" src="" class="img-bacground"/>
-		<div class="topo">
-		<pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
-		<img id="logo-home" alt="" src="" class="img-logo">
-		   <div>
-		   <ul class="ul-configuracao">
-		   <li class="li-configuracao"><button id="btn-mudar-mesa" value="1" >Mudar Numero Mesa</button></li>
-		   <li class="li-configuracao"><a href="home.html"><button value="1" >Voltar Home</button></a></li>
-		   
-		   </ul>
-		   </div>
-		   
+	<div id="geral" class="geral" style="display: none">
+
+		<div id="senha_configaracao" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<form onsubmit=" return false;">
+				<div class="div-mensagem">
+					<label class="labelSenha">Senha: </label> <input
+						onkeypress="focusOutInput(this)" class="inputSenha"
+						type="password"></input>
+				</div>
+				<button class="btn_ok_mensagem" onclick="validarSenha()"
+					id="btn_ok_final">OK</button>
+				<a href="home.html"><button class="btn-cancelar-senha">Cancelar</button></a>
+			</form>
 		</div>
-		
+
+		<img id="background-config" alt="" src="" class="img-bacground" />
+		<div class="topo">
+			<pre id="ajaxPane" style="white-space: pre-wrap;"></pre>
+			<img id="logo-home" alt="" src="" class="img-logo">
+			<div>
+				<ul class="ul-configuracao">
+					<li class="li-configuracao"><button id="btn-mudar-mesa"
+							value="1">Mudar Numero Mesa</button></li>
+					<li class="li-configuracao"><button onclick="sincronizarDados()"
+							value="1">Sincronizar Ipad</button></li>
+					<li class="li-configuracao"><a href="home.html"><button
+								value="1">Voltar Home</button></a></li>
+
+				</ul>
+			</div>
+
+		</div>
+
 
 
 		<div class="space"></div>
 
 		<!-- Aperitivos -->
-		<div class="content" >
-				<div class="panel-numero-mesa" style="display: none;">
+		<div class="content">
+			<div class="panel-numero-mesa" style="display: none;">
 				<span class="titulo-mesa">Mesa: <span class="numero-mesa"></span></span>
 				<div class="linha"></div>
-				
-				
-				<div class="margem-panel-numero-mesa">
-				<div class="primeira-linha">
-				<div class="button-numerico"><button value="1" class="button-numerico">1</button></div>
-				
-				<div class="button-numerico"><button value="4" class="button-numerico">4</button></div>
-				
-				<div class="button-numerico"><button value="7" class="button-numerico">7</button></div>
-				
-				
-				
-				<div class="button-numerico"><button value="x" class="button-numerico">X</button></div>
-				
-				
-				</div>
-				<div class="primeira-linha">
-				<div class="button-numerico"><button value="2" class="button-numerico">2</button></div>
-				
-				
-				<div class="button-numerico"><button value="5" class="button-numerico">5</button></div>
-				
-				
-				<div class="button-numerico"><button value="8" class="button-numerico">8</button></div>
-				
-				
-				
-				<div class="button-numerico"><button value="0" class="button-numerico">0</button></div>
-				
-				
-				</div>
-				<div class="primeira-linha">
-				<div class="button-numerico"><button value="3" class="button-numerico">3</button></div>
-				
-				
-				<div class="button-numerico"><button value="6" class="button-numerico">6</button></div>
-				
-				
-				<div class="button-numerico"><button value="9" class="button-numerico">9</button></div>
-				
-				
-				<div class="button-numerico"><button value="OK" class="button-numerico">OK</button></div>
-				
-				
-				</div>
-				<div>
-				
-	    </div>
- 
-	    </div>
 
-	</div></div>
-			</div>	
-	
+
+				<div class="margem-panel-numero-mesa">
+					<div class="primeira-linha">
+						<div class="button-numerico">
+							<button value="1" class="button-numerico">1</button>
+						</div>
+
+						<div class="button-numerico">
+							<button value="4" class="button-numerico">4</button>
+						</div>
+
+						<div class="button-numerico">
+							<button value="7" class="button-numerico">7</button>
+						</div>
+
+
+
+						<div class="button-numerico">
+							<button value="x" class="button-numerico">X</button>
+						</div>
+
+
+					</div>
+					<div class="primeira-linha">
+						<div class="button-numerico">
+							<button value="2" class="button-numerico">2</button>
+						</div>
+
+
+						<div class="button-numerico">
+							<button value="5" class="button-numerico">5</button>
+						</div>
+
+
+						<div class="button-numerico">
+							<button value="8" class="button-numerico">8</button>
+						</div>
+
+
+
+						<div class="button-numerico">
+							<button value="0" class="button-numerico">0</button>
+						</div>
+
+
+					</div>
+					<div class="primeira-linha">
+						<div class="button-numerico">
+							<button value="3" class="button-numerico">3</button>
+						</div>
+
+
+						<div class="button-numerico">
+							<button value="6" class="button-numerico">6</button>
+						</div>
+
+
+						<div class="button-numerico">
+							<button value="9" class="button-numerico">9</button>
+						</div>
+
+
+						<div class="button-numerico">
+							<button value="OK" class="button-numerico">OK</button>
+						</div>
+
+
+					</div>
+					<div></div>
+
+				</div>
+
+			</div>
+		</div>
+		<div id="modal_sincronizacao_ipad"
+			dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+			<p class="mensagem-confirmacao">Escolha uma opção:</p>
+			<div>
+				<img src="img/loading.gif" class="preloader_image"
+					style="display: none;">
+			</div>
+			<p style="display: none;" class="frase-loading"></p>
+
+			<div class="div-frase-sincronizacao" style="display: none;">
+				<p>Inserir a seguinte chave no novo cardapio:</p>
+				<p class="frase-chave-sincronizacao"></p>
+			</div>
+
+			<div style="display: none;" class="div-buttons-depois-sincronizacao">
+				<a href="cardapio.html"><button
+						class="btn-sim-excluir-pessoa efeito-button">Manter
+						Dados</button></a>
+				<button class="btn-sim-excluir-pessoa efeito-button"
+					onclick="limparDadosMesa()">limpar Dados</button>
+			</div>
+
+			<div class="div-buttons-sincronizacao">
+				<button class="btn-sim-excluir-pessoa efeito-button"
+					onclick="sincronizarMandarDados()">Mandar Dados</button>
+				<button class="btn-sim-excluir-pessoa efeito-button"
+					onclick="show('modal_sincronizacao_form_receber_dados')">Receber Dados</button>
+				<button class="btn-sim-excluir-pessoa efeito-button"
+					onclick="limparDadosMesa()">limpar Dados</button>
+				<button class="btn-sim-excluir-pessoa efeito-button"
+					onclick="hide('modal_sincronizacao_ipad')">Fechar</button>
+			</div>
+		</div>
+
+		<div id="modal_sincronizacao_form_receber_dados" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div class="div-form-sincronizacao-receber-dados">
+				<form onsubmit=" return false;">
+					<div class="div-mensagem">
+						<label class="labelSenha">Chave: </label> <input
+							onkeypress="focusOutInputReceberDados(this)" class="inputChaveSincronizacao"></input>
+					</div>
+					<button class="btn_ok_mensagem" onclick="sincronizarReceberDados()" id="btn-receber-dados">OK</button>
+					<button class="btn-cancelar-senha" onclick="hide('modal_sincronizacao_form_receber_dados')">Cancelar</button>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
 </body>
 </html>
 

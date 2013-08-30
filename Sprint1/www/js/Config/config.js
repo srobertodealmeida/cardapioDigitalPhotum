@@ -9,6 +9,10 @@ var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
 var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
 var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
 var connectionWIFI = "connectionTrue";
@@ -138,7 +142,7 @@ function escapeHtml(unsafe) {
     }else{
     	return unsafe;
     }
- }
+}
 
 function getDrupalLanguages(tx){
 	
@@ -1447,6 +1451,29 @@ function postAjax(url,data){
 	
 }
 
+function postAjaxSinc(url, data) {
+
+	return $.ajax({
+		dataType : 'json',
+		url : url,
+		type : "post",
+		crossDomain : true,
+		data : data,
+		converters : {
+			"text json" : function(value) {
+				console.log("pre-processing...");
+				/* do stuff */
+				return value;
+			}
+		},
+
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log(jqXHR);
+		}
+	});
+
+}
+
 function putAjax(url,data){
 	$.ajax({
 		url : url,
@@ -1493,6 +1520,38 @@ function inatividade() {
 		//alert(contador);
 		setTimeout("inatividade()", 1000);
 	}
+}
+
+function limparDadosMesa(btn){
+	db.transaction(function(tx){
+		limparDados(tx);
+			
+		},errorCB);
+
+	createIdConta();
+    hide('modal_confirmacao_pagamento_limpar_mesa');
+}
+
+function createIdConta(){
+	db.transaction(function(tx) {
+		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
+		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
+			 if(result.rows.length == 0){
+				 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
+			 }else{
+				 
+			   idAtual = result.rows.item(0).idConta;
+			   idAtual = parseInt(idAtual);
+			   idAtual += 1;
+			   tx.executeSql('UPDATE IdConta SET idConta="'+idAtual+'" WHERE Id='+result.rows.item(0).id+'');
+			 }
+			 confirmacaoFechamentoMesa();
+		 },errorCB);
+   },errorCB);
+}
+
+function confirmacaoFechamentoMesa(){
+	window.location = 'home.html';
 }
 
 
@@ -1556,3 +1615,8 @@ function Mock(){
 function testeSelect(tx){
 	tx.executeSql('SELECT * FROM Produtos where categoria = "OUTROS"',[],successCB,errorCB);
 }
+
+
+
+
+

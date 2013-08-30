@@ -468,38 +468,6 @@ function validarSenhaConfirmacaoPagamentoLimparMesa(){
 
 }
 
-function limparDadosMesa(btn){
-	db.transaction(function(tx){
-		limparDados(tx);
-			
-		},errorCB);
-
-	createIdConta();
-    hide('modal_confirmacao_pagamento_limpar_mesa');
-}
-
-function createIdConta(){
-	db.transaction(function(tx) {
-		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
-		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
-			 if(result.rows.length == 0){
-				 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
-			 }else{
-				 
-			   idAtual = result.rows.item(0).idConta;
-			   idAtual = parseInt(idAtual);
-			   idAtual += 1;
-			   tx.executeSql('UPDATE IdConta SET idConta="'+idAtual+'" WHERE Id='+result.rows.item(0).id+'');
-			 }
-			 confirmacaoFechamentoMesa();
-		 },errorCB);
-   },errorCB);
-}
-
-function confirmacaoFechamentoMesa(){
-	window.location = 'home.html';
-}
-
 
 function limparDados(tx){
 	createTablesdoCardapio(tx);
