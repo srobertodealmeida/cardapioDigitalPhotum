@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -457,7 +457,7 @@ function getDrupalPropaganda(tx){
     	  quantidadeRegistros += qtdPropagandas;
 		  $.each(data, function(key, val) {
 			  console.log(val);
-			  var url = $.parseHTML(val.image_propaganda); //pega apenas href
+			  var url = $.parseHTML(val.file_propaganda); //pega apenas href
 			  var urlString = url.toString();
 			  var extencao =  urlString.substr(urlString.length - 3);
 			  var pathDestino = pathAplicativo + "/propagandas/propaganda." + key  + "."+ extencao; // url onde será salvo a imagen
@@ -1537,9 +1537,9 @@ function createIdConta(){
 		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
 		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
 			 if(result.rows.length == 0){
-				 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
+			   tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
 			 }else{
-				 
+			 
 			   idAtual = result.rows.item(0).idConta;
 			   idAtual = parseInt(idAtual);
 			   idAtual += 1;

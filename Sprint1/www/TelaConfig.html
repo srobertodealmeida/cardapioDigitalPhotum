@@ -171,7 +171,7 @@
 			</div>
 		</div>
 		<div id="modal_sincronizacao_ipad"
-			dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+			dojoType="dojox.mobile.SimpleDialog" class="modal-sincronizacao">
 			<p class="mensagem-confirmacao">Escolha uma opção:</p>
 			<div>
 				<img src="img/loading.gif" class="preloader_image"
@@ -180,26 +180,34 @@
 			<p style="display: none;" class="frase-loading"></p>
 
 			<div class="div-frase-sincronizacao" style="display: none;">
-				<p>Inserir a seguinte chave no novo cardapio:</p>
+				<p class="mensagem-frase-sincronizacao">Inserir a seguinte chave no novo cardapio:</p>
 				<p class="frase-chave-sincronizacao"></p>
 			</div>
 
-			<div style="display: none;" class="div-buttons-depois-sincronizacao">
+			<div style="display: none;" class="div-buttons-depois-mandar-sincronizacao">
 				<a href="cardapio.html"><button
-						class="btn-sim-excluir-pessoa efeito-button">Manter
+						class="btn-sincronizacao-verde efeito-button">Manter
 						Dados</button></a>
-				<button class="btn-sim-excluir-pessoa efeito-button"
+				<button class="btn-sincronizacao-verde efeito-button"
 					onclick="limparDadosMesa()">limpar Dados</button>
+			</div>
+			
+			<div style="display: none;" class="div-buttons-depois-receber-sincronizacao">
+				<a href="home.html"><button
+						class="btn-sincronizacao-verde efeito-button">Voltar Home</button></a>
+						<button onclick="hide('modal_sincronizacao_ipad')"
+						class="btn-sincronizacao-vermelho efeito-button">Fechar</button>
+				
 			</div>
 
 			<div class="div-buttons-sincronizacao">
-				<button class="btn-sim-excluir-pessoa efeito-button"
+				<button class="btn-sincronizacao-verde efeito-button"
 					onclick="sincronizarMandarDados()">Mandar Dados</button>
-				<button class="btn-sim-excluir-pessoa efeito-button"
+				<button class="btn-sincronizacao-verde efeito-button"
 					onclick="show('modal_sincronizacao_form_receber_dados')">Receber Dados</button>
-				<button class="btn-sim-excluir-pessoa efeito-button"
+				<button class="btn-sincronizacao-verde efeito-button"
 					onclick="limparDadosMesa()">limpar Dados</button>
-				<button class="btn-sim-excluir-pessoa efeito-button"
+				<button class="btn-sincronizacao-vermelho efeito-button"
 					onclick="hide('modal_sincronizacao_ipad')">Fechar</button>
 			</div>
 		</div>
@@ -225,4 +233,12 @@
 
 
 
+
+
+
+
+<a href=\"http://192.168.0.102/drupal-7.20/sites/default/files/cerveja.jpg\"><img
+	typeof=\ "foaf:Image\" src=\
+	"http://192.168.0.102/drupal-7.20/sites/default/files/cerveja.jpg\" width=\
+	"1280\" height=\ "960\" alt=\ "\" /></a>
 

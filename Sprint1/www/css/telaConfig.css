@@ -67,6 +67,19 @@ margin-top: 10;
 .labelSenha{
 	color: black;
 }
+.modal-sincronizacao {
+	height: auto !important;
+	width: auto!important;
+	background-color: #000000 !important;
+	border: 3px solid #fff0fc !important;
+	border-radius: 29px !important;
+	background-image: -moz-linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-image: -webkit-linear-gradient(top, #fff7f2, #cfcdc4)
+		!important;
+	background-image: linear-gradient(top, #fff7f2, #cfcdc4) !important;
+	background-clip: padding-box !important;
+}
+
 .mensagem {
 	height: auto !important;
 	width: 40% !important;
@@ -137,3 +150,96 @@ margin-top: 10;
 	float: left !important;
 	margin: 10px 0 20 80
 }
+
+.mensagem-confirmacao{
+	font-size: 25;
+	color: black;
+	margin-top: 10;
+}
+
+.btn-sincronizacao-verde {
+	float: left;
+	z-index: 10;
+	background: #1a1103;
+	background: -webkit-gradient(linear, left top, left bottom, from(#59a382),
+		to(#1a1103) );
+	background: -webkit-linear-gradient(top, #59a382, #1a1103);
+	background: -moz-linear-gradient(top, #59a382, #1a1103);
+	background: -ms-linear-gradient(top, #59a382, #1a1103);
+	background: -o-linear-gradient(top, #59a382, #1a1103);
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+	color: white;
+	font-size: 96%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none;
+	vertical-align: middle;
+	size: 20px;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-appearance: none;
+	height: 45;
+	margin: 1px 10 1 0
+}
+
+.btn-sincronizacao-vermelho{
+	float: left;
+	z-index: 10;
+		background-image: -moz-linear-gradient(top, #ff2136, #100401);
+	background-image: -webkit-linear-gradient(top, #ff2136, #100401);
+	background-image: linear-gradient(top, #ff2136, #100401);
+	background-clip: padding-box;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	-moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+	text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+	color: white;
+	font-size: 96%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none;
+	vertical-align: middle;
+	size: 20px;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-appearance: none;
+	height: 45;
+}
+
+.frase-loading{
+	font-size: 20;
+	color: green;
+	margin-top: 10;
+}
+
+.frase-loading{
+	font-size: 20;
+	color: green;
+	margin-top: 10;
+}
+
+.mensagem-frase-sincronizacao{
+	font-size: 18;
+	color: black;
+	margin-top: 10;
+}
+
+.frase-chave-sincronizacao{
+	font-size: 23;
+	color: red;
+	margin-top: 10;
+}
+
+ .efeito-button:active{
+     box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
+     top: 4px;
+    }
+    .efeito-button:active:before{
+     border: none;
+     box-shadow:none;
+    }

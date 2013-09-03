@@ -1,9 +1,15 @@
 var mesaConfig = "";
 var constLanguageSelectedConf = "";
+var numeroContaConf = "";
 
-var flagPedidoSincronizacao = false;
-var flagPessoaSincronizacao = false;
-var flagConfSincronizacao = false;
+var flagMandarPedidoSincronizacao = false;
+var flagMandarPessoaSincronizacao = false;
+var flagMandarConfSincronizacao = false;
+
+var flagReceberPedidoSincronizacao = false;
+var flagReceberPessoaSincronizacao = false;
+var flagReceberConfSincronizacao = false;
+
 var chaveSincronizacao = "";
 
 require([
@@ -229,6 +235,9 @@ function sincronizarMandarDados() {
 }
 
 function sincronizarReceberDados(){
+	hide('modal_sincronizacao_form_receber_dados');
+	$('.mensagem-confirmacao').text('Recebendo Dados');
+	$('.preloader_image').show();
 	var chaveDigitada = $('.inputChaveSincronizacao').val();
 	receberDadosPedido(chaveDigitada);
 	receberDadosPessoa(chaveDigitada);
@@ -274,6 +283,10 @@ function receberDadosPedido(chaveDigitada){
 			}
 
 		});
+		
+		flagReceberPedidoSincronizacao = true;
+		finalizaRecebeDadosSincronizacao();
+
 		},errorCB, successCB);
 		
 
@@ -309,6 +322,9 @@ function receberDadosPessoa(chaveDigitada){
 			}
 
 		});
+		
+		flagReceberPessoaSincronizacao = true;
+		finalizaRecebeDadosSincronizacao();
 		},errorCB, successCB);
 		
 
@@ -324,7 +340,7 @@ function receberDadosConf(chaveDigitada){
 
 	var ajaxSincronizacaoConf = getAjax(urlViewSincronizacaoConf);
 
-	ajaxSincronizacaoConf.success(function(data) {3
+	ajaxSincronizacaoConf.success(function(data) {
 		db.transaction(function(tx) {
 		$.each(data, function(key, val) {
 			// Pegas elementos com a chave digitada:
@@ -332,10 +348,22 @@ function receberDadosConf(chaveDigitada){
 				 tx
 					.executeSql('INSERT INTO Mesa(numero) VALUES ("' + val.mesa_sincronizacao + '")');
 				 tx
-					.executeSql('INSERT INTO LanguageSelect(nome) VALUES ("'+val.languageSelect_sincronizacao+'")');
+					.executeSql('INSERT INTO LanguageSelect(nome) VALUES ("'+val.languageselect_sincronizacao+'")');
+				
+				 tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
+				 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
+					 if(result.rows.length == 0){
+						 tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("'+val.numero_conta_sincronizacao+'")'); 
+					 }else{
+					   tx.executeSql('UPDATE IdConta SET idConta="'+val.numero_conta_sincronizacao+'" WHERE Id='+result.rows.item(0).id+'');
+					 }
+					
+				 },errorCB);
 			}
 
 		});
+		flagReceberConfSincronizacao = true;
+		finalizaRecebeDadosSincronizacao();
 		},errorCB, successCB);
 		
 
@@ -426,7 +454,7 @@ function sincronizarMandaPedidos(chaveSincronizacao){
 					var ajaxPedidoSincronizacao = postAjaxSinc(url,data);
 					ajaxPedidoSincronizacao.success(function (data) {
 						if(i == result.rows.length){
-							flagPedidoSincronizacao = true;
+							flagMandarPedidoSincronizacao = true;
 							finalizaMandaDadosSincronizacao();
 						}
 				    	
@@ -483,7 +511,7 @@ function sincronizarMandaPessoa(chaveSincronizacao){
 					var ajaxPessoaSincronizacao = postAjaxSinc(url,data);
 					ajaxPessoaSincronizacao.success(function (data) {
 						if(i == result.rows.length){
-							flagPessoaSincronizacao = true;
+							flagMandarPessoaSincronizacao = true;
 							finalizaMandaDadosSincronizacao();
 						}
 				    	
@@ -509,18 +537,23 @@ function sincronizarMandaConf(chaveSincronizacao) {
 	var languageSelect_sincronizacao = {
 			"value" : constLanguageSelectedConf,
 	}
+	
+	var numeroConta_sincronizacao = {
+			"value" : numeroContaConf,
+	}
 
 	var data = {
 		"type" : "sincronizacao_conf",
 		"field_chave_sincronizacao[und][0]" : chave_sincronizacao,
 		"field_mesa_sincronizacao[und][0]" : mesa_sincronizacao,
-		"field_languageSelect_sincronizac[und][0]" : languageSelect_sincronizacao,
+		"field_languageselect_sincronizac[und][0]" : languageSelect_sincronizacao,
+		"field_numero_conta_sincronizacao[und][0]" : numeroConta_sincronizacao,
 		"title" : "Conf Mesa: " + mesaConfig,
 	};
 	var url = "" + ipServidorDrupal + "/node";
 	var ajaxConfSincronizacao = postAjaxSinc(url, data);
 	ajaxConfSincronizacao.success(function(data) {
-			flagConfSincronizacao = true;
+			flagMandarConfSincronizacao = true;
 			finalizaMandaDadosSincronizacao();
 
 	});
@@ -529,14 +562,25 @@ function sincronizarMandaConf(chaveSincronizacao) {
 
 
 function finalizaMandaDadosSincronizacao(){
-	if(flagPedidoSincronizacao == true & flagPessoaSincronizacao == true & flagConfSincronizacao == true){
+	if(flagMandarPedidoSincronizacao == true & flagMandarPessoaSincronizacao == true & flagMandarConfSincronizacao == true){
 		$('.preloader_image').hide();
+		$('.mensagem-confirmacao').hide();
 		$('.frase-loading').text('Dados Enviado com Sucesso');
 		$('.frase-loading').show();
 		$('.frase-chave-sincronizacao').text(chaveSincronizacao);
 		$('.div-buttons-sincronizacao').hide();
 		$('.div-frase-sincronizacao').show();
-		$('.div-buttons-depois-sincronizacao').show();
+		$('.div-buttons-depois-mandar-sincronizacao').show();
+	}
+}
+
+function finalizaRecebeDadosSincronizacao(){
+	if(flagReceberPedidoSincronizacao == true & flagReceberPessoaSincronizacao == true & flagReceberConfSincronizacao == true){
+		$('.preloader_image').hide();
+		$('.frase-loading').text('Dados Recebido com Sucesso');
+		$('.frase-loading').show();
+		$('.div-buttons-sincronizacao').hide();
+		$('.div-buttons-depois-receber-sincronizacao').show();
 	}
 }
 
@@ -557,6 +601,14 @@ $(document).ready(function(){
 		}
 	 },errorCB)
 	
+	 
+	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
+		 if(result.rows.length > 0){
+		 numeroContaConf = result.rows.item(0).idConta;
+		 }
+	 }, errorCB);
+	 
+	 
 	},errorCB, successCB);
 	$("#linkHome").click(function() {
 		  alert('clicou');
@@ -566,9 +618,6 @@ $(document).ready(function(){
 		$(".panel-numero-mesa").show();
 	});
 	
-	
-	
-	
 	/**
 	function montaHome(tx){
 		db.transaction(function(tx) {
@@ -577,6 +626,7 @@ $(document).ready(function(){
 		
 	}
 	*/
+	
 	/**
 	function montaBackground(tx,result){
 		for(var i=0;i<result.rows.length;i++){
