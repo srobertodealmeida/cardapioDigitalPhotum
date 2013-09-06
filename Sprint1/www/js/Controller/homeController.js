@@ -80,8 +80,6 @@ require([
          "dojox/mobile/parser"
      ], function(dom, registry,dom, on,ProgressIndicator,parser,SpinWheelSlot){
 	
-	
-	
 	showSelectedValue = function() {
 		var w = registry.byId("spin1");
 		var languageSelected = w.get('values');
@@ -305,6 +303,7 @@ function checkConnection() {
 
 
 $(document).ready(function(){
+	
 	atualizar();
    // document.addEventListener("deviceready", checkConnection, false);
 	

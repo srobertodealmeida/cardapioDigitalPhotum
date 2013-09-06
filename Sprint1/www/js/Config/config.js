@@ -1,7 +1,7 @@
 
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -53,10 +53,82 @@ require([
          "dijit/registry",
          "dojox/mobile/SpinWheel",
          "dojox/mobile/SpinWheelSlot",
-         "dojox/mobile/parser"
-     ], function(domConst, ready, registry, SpinWheel, SpinWheelSlot){
-	 
+         "dojox/mobile/parser",
+         "dojo/dom",
+         "dijit/dijit",
+         "dojo/parser",
+         "dojo/on", 
+         "dojo/_base/window", 
+         "dojo/_base/Deferred", 
+         "dojo/dom", 
+         "maqetta/space",
+         "maqetta/AppStates",
+         "dojox/mobile",
+         "dojox/mobile/deviceTheme",
+         "dojox/mobile/compat",
+         "dojo/hash",
+         "dojox/mobile",
+         "dijit/registry",
+         "dojox/mobile/ProgressIndicator",
+         "dojox/mobile/ScrollableView",
+         "dojox/mobile/SwapView",
+         "dojox/mobile/IconItem",
+         "dojox/mobile/IconContainer",
+         "dojox/mobile/TextBox",
+         "dojox/mobile/CarouselItem",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/CheckBox",
+         "dojox/mobile/SimpleDialog",
+         "dojox/mobile/parser",
+         "dojo/domReady!",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/Slider",
+         "dojox/mobile/Button",
+         "dojox/mobile/Opener",
+         "dojox/mobile/ContentPane",
+         "dijit/registry",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/Button",
+         "dojo/_base/window",
+         "dojo/_base/Deferred",
+         "dijit/registry",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/compat",
+         "dojox/mobile/Button",
+         "dojo/_base/window",
+         "dojo/_base/Deferred",
+         "dijit/registry",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/compat",
+         "dojox/mobile/Button",
+         "dojox/mobile/GridLayout",
+         "dojox/mobile/Pane",
+         "dojo/dom-construct",
+         "dojo/ready",
+         "dijit/registry",
+         "dojox/mobile/SpinWheel",
+         "dojox/mobile/SpinWheelSlot",
+         "dojox/mobile/parser",
+         "dojox/mobile/RoundRectStoreList",
+         "dojo/store/Memory"
+         
+     ], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
+	
+	show = function(dlg){
+	    registry.byId(dlg).show();
+	  }
+    hide = function(dlg){
+	    registry.byId(dlg).hide();
+    }
+    
 });
+
+
 
 function onLoad() {
     $("#preloader").fadeOut(1000);
@@ -65,6 +137,7 @@ function onLoad() {
 
 function onDeviceReady() {
 	$("#preloader").fadeOut(1000);
+	
 	if(connectionWIFI == "connectionTrue"){
 		window.addEventListener("batterystatus", onBatteryStatus, false);
 	}
@@ -448,6 +521,7 @@ function getDrupalProduto(tx){
 }
 
 function getDrupalPropaganda(tx){
+	
   ///////////////////////////////////////////////////////////////////////////////////Propagandas/////////////////////////////////////
 	
     var ajaxPropagandas = getAjax(urlViewPropagandas);
@@ -456,16 +530,122 @@ function getDrupalPropaganda(tx){
     	  qtdPropagandas = data.length;  
     	  quantidadeRegistros += qtdPropagandas;
 		  $.each(data, function(key, val) {
-			  console.log(val);
-			  var url = $.parseHTML(val.file_propaganda); //pega apenas href
-			  var urlString = url.toString();
-			  var extencao =  urlString.substr(urlString.length - 3);
-			  var pathDestino = pathAplicativo + "/propagandas/propaganda." + key  + "."+ extencao; // url onde será salvo a imagen
-			  var typeImagen = "sleep-propagandas";
 			  
-			 downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio,titleLanguage); //faz donwload da imagen;
+			  tx.executeSql('SELECT * FROM Propagandas where nid="'+val.nid+'"',[],function(tx,result){
+				  
+				  //Se encontrar registro com mesmo nid faz update senao faz insert.
+				  if(result.rows.length > 0){
+					     // Vericiar a versao do registro caso for maior, foi feito alteração é feito update senao apenas seta deletaBanco como falso e chama successInsert.
+						 if(val.versao_propaganda > result.rows.item(i).versao){
+							 //Caso campo atualizar_arquivo estiver ocmo true faz o download novamente do registro se nao apenas atualizaos dados.
+							 if(val.atualizar_arquivo == true){
+								 
+								 var objectArrayPropagandasDownloadUpdate = {
+						    			  duration:"",
+						    			  versao:"",
+						    			  ordenacao:"",
+						    			  url:"",
+						    			  pathDestino:"",
+						    			  image:""
+						    	 }
+								 
+								  //Prepara url
+								  var regex = /<a href.*?<\/a>/;
+								  var urlPreparado = val.file_propaganda.match(regex);
+								  console.log(urlPreparado[0]);
+								  var stringUrlPreparado = urlPreparado[0].toString();
+								  console.log(stringUrlPreparado);
+								  var url = $.parseHTML(stringUrlPreparado);
+								  var urlString = url.toString();
+								  var extencao =  urlString.substr(urlString.length - 3);
+								  var pathDestino = pathAplicativo + "/propagandas/propaganda." + val.nid  + "."+ extencao; // url onde será salvo a imagen
+								  
+								  //Prepara objeto
+								  objectArrayPropagandasDownloadUpdate.duration = val.duracao_video;
+								  objectArrayPropagandasDownloadUpdate.versao = val.versao_propaganda;
+								  objectArrayPropagandasDownloadUpdate.ordenacao = val.ordem_propaganda;
+								  objectArrayPropagandasDownloadUpdate.url = url;
+								  objectArrayPropagandasDownloadUpdate.pathDestino = pathDestino;
+								 
+								  arrayPropagandasDownloadUpdate.push(objectArrayPropagandasDownloadUpdate);
+								  
+							 }else{
+								 tx.executeSql('UPDATE Propagandas SET duration="'+val.duration+'",deletadoBanco="false", versao = "'+val.versao_propaganda+'",ordenacao="'+val.ordem_propaganda+'" WHERE Id='+result.rows.item(i).id+'');
+								 quantidadeRegistros = quantidadeRegistros-1;
+								 successInsert();
+							 }
+						 }else{
+							 tx.executeSql('UPDATE Propagandas SET deletadoBanco="false" WHERE Id='+result.rows.item(i).id+'');
+							 quantidadeRegistros = quantidadeRegistros-1;
+							 successInsert();
+						 }
+					}else{
+						var objectArrayPropagandasDownloadInsert = {
+				    			  duration:"",
+				    			  versao:"",
+				    			  ordenacao:"",
+				    			  url:"",
+				    			  pathDestino:"",
+				    			  image:""
+				    	 }
+						
+						 //Prepara url
+						  var regex = /<a href.*?<\/a>/;
+						  var urlPreparado = val.file_propaganda.match(regex);
+						  console.log(urlPreparado[0]);
+						  var stringUrlPreparado = urlPreparado[0].toString();
+						  console.log(stringUrlPreparado);
+						  var url = $.parseHTML(stringUrlPreparado);
+						  var urlString = url.toString();
+						  var extencao =  urlString.substr(urlString.length - 3);
+						  var pathDestino = pathAplicativo + "/propagandas/propaganda." + val.nid  + "."+ extencao; // url onde será salvo a imagen
+						  
+						  //Prepara objeto
+						  objectArrayPropagandasDownloadInsert.duration = val.duracao_video;
+						  objectArrayPropagandasDownloadInsert.versao = val.versao_propaganda;
+						  objectArrayPropagandasDownloadInsert.ordenacao = val.ordem_propaganda;
+						  objectArrayPropagandasDownloadInsert.url = url;
+						  objectArrayPropagandasDownloadInsert.pathDestino = pathDestino;
+						 
+						  arrayPropagandasDownloadInsert.push(objectArrayPropagandasDownloadInsert); 
+					}
+		      },errorCB)
 
-	});
+		  });
+		  
+          var typeImagen = "sleep-propagandas";
+		  
+		  var downloadsArquivosErro = false;
+		  var objectArquivosDownloadsErroRemover = {
+    			  url:"",
+    			  pathDestino:"",
+    			  tx:"",
+    			  titleIcone:"",
+    			  typeImagen:"",
+    			  produtosForm:"",
+    			  titleLanguage:""
+    			  }
+		  //Caso tiver arquivo para fazer download update
+		  if(arrayPropagandasDownloadUpdate.length > 0){
+			  
+			  for(i=0;i<arrayPropagandasDownloadUpdate.length;i++){
+				  
+				  downloadVideosImagesPropagandasUpdate()
+				  
+			  }
+			  
+			  
+			  
+		  }
+		  
+		  //Caso tiver arquivo para fazer download insert
+		  if(arrayPropagandasDownloadInsert.length > 0){
+			  
+		  }
+		  
+		  downloadVideosImagesPropagandas(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover); //faz donwload da imagen;
+
+
 		  
     });
 	
@@ -477,6 +657,7 @@ function getDrupalPropaganda(tx){
 }
 
 function getDadosDrupal(tx){
+	show('modal_loading_atualizando_cardapio');
 	console.log(atualizaForm.configuracao);
 	console.log(atualizaForm.label);
 	console.log(atualizaForm.home);
@@ -520,16 +701,17 @@ function getDadosDrupal(tx){
  * Método que faz download das imagense faz inserts
  */
 function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage){
-    var fileTransfer = new FileTransfer();
     var url = encodeURI(url);
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
     	      var imagePath = fs.root.fullPath + pathDestino; // full file path
     	      var fileTransfer = new FileTransfer();
-    	      
     	      fileTransfer.onprogress = function(progressEvent) {
     	  		if (progressEvent.lengthComputable) {
+    	  			zerarInatividade();
     	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-    	  			$('#loadingPercentual').innerHTML = perc + "% loaded...";
+    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
+    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+    	  			console.log(perc + "% loaded...");
     	  		} else {
     	  			if($('#loadingPercentual').innerHTML == "") {
     	  				$('#loadingPercentual').innerHTML = "Loading";
@@ -555,21 +737,170 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
     	   })
 }
 
+/*
+ * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
+ */
+function downloadVideosImagesPropagandasInsert(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover){
+	var url = encodeURI(url);
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
+    	      var imagePath = fs.root.fullPath + pathDestino; // full file path
+    	      var fileTransfer = new FileTransfer();
+    	      fileTransfer.onprogress = function(progressEvent) {
+    	  		if (progressEvent.lengthComputable) {
+    	  			zerarInatividade();
+    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
+    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+    	  			console.log(perc + "% loaded...");
+    	  		} else {
+    	  			if($('#loadingPercentual').innerHTML == "") {
+    	  				$('#loadingPercentual').innerHTML = "Loading";
+    	  			} else {
+    	  				$('#loadingPercentual').innerHTML += ".";
+    	  			}
+    	  		}
+    	  	};
+    	  	
+    	      fileTransfer.download(url, imagePath, function (entry) {
+    	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
+    	    	  if(downloadsArquivosErro == true){
+    	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
+    	    				return val != objectArquivosDownloadsErroRemover;
+    	    			});
+    	    	  }
+    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLanguage);
+    	      }, function (error) {
+    	    	  var ObjectArquivosDownloadsErro = {
+    	    			  url:"",
+    	    			  pathDestino:"",
+    	    			  tx:"",
+    	    			  titleIcone:"",
+    	    			  typeImagen:"",
+    	    			  produtosForm:"",
+    	    			  titleLanguage:""
+    	    			  }
+    	    	  
+    	    	  ObjectArquivosDownloadsErro.url = url;
+    	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
+    	    	  ObjectArquivosDownloadsErro.tx = tx;
+    	    	  ObjectArquivosDownloadsErro.titleIcone = titleIcone;
+    	    	  ObjectArquivosDownloadsErro.typeImagen = typeImagen;
+    	    	  ObjectArquivosDownloadsErro.produtosForm = produtosForm;
+    	    	  ObjectArquivosDownloadsErro.titleLanguage = titleLanguage;
+    	    	  
+    	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
+    	    	  
+    	    	  qtdPropagandas = qtdPropagandas -1;
+    	    	 
+    	    	  console.log("download error source " + error.source);
+                  console.log("download error target " + error.target);
+                  console.log("upload error code" + error.code);
+                  console.log("error respoinse:"+error.response);
+    	      },
+    	      false
+    	      );
+    	      
+    	   })
+}
+
+/*
+ * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
+ */
+function downloadVideosImagesPropagandasUpdate(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover){
+	var url = encodeURI(url);
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
+    	      var imagePath = fs.root.fullPath + pathDestino; // full file path
+    	      var fileTransfer = new FileTransfer();
+    	      fileTransfer.onprogress = function(progressEvent) {
+    	  		if (progressEvent.lengthComputable) {
+    	  			zerarInatividade();
+    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
+    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+    	  			console.log(perc + "% loaded...");
+    	  		} else {
+    	  			if($('#loadingPercentual').innerHTML == "") {
+    	  				$('#loadingPercentual').innerHTML = "Loading";
+    	  			} else {
+    	  				$('#loadingPercentual').innerHTML += ".";
+    	  			}
+    	  		}
+    	  	};
+    	  	
+    	      fileTransfer.download(url, imagePath, function (entry) {
+    	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
+    	    	  if(downloadsArquivosErro == true){
+    	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
+    	    				return val != objectArquivosDownloadsErroRemover;
+    	    			});
+    	    	  }
+    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLanguage);
+    	      }, function (error) {
+    	    	  var ObjectArquivosDownloadsErro = {
+    	    			  url:"",
+    	    			  pathDestino:"",
+    	    			  tx:"",
+    	    			  titleIcone:"",
+    	    			  typeImagen:"",
+    	    			  produtosForm:"",
+    	    			  titleLanguage:""
+    	    			  }
+    	    	  
+    	    	  ObjectArquivosDownloadsErro.url = url;
+    	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
+    	    	  ObjectArquivosDownloadsErro.tx = tx;
+    	    	  ObjectArquivosDownloadsErro.titleIcone = titleIcone;
+    	    	  ObjectArquivosDownloadsErro.typeImagen = typeImagen;
+    	    	  ObjectArquivosDownloadsErro.produtosForm = produtosForm;
+    	    	  ObjectArquivosDownloadsErro.titleLanguage = titleLanguage;
+    	    	  
+    	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
+    	    	  
+    	    	  qtdPropagandas = qtdPropagandas -1;
+    	    	 
+    	    	  console.log("download error source " + error.source);
+                  console.log("download error target " + error.target);
+                  console.log("upload error code" + error.code);
+                  console.log("error respoinse:"+error.response);
+    	      },
+    	      false
+    	      );
+    	      
+    	   })
+}
+
+
 // Método para fazer download de produtos, para fazer download de cada vez e nao em treads.
 function downloadImagesProdutos(tx,qtdProdutos,indice){
-   
-	
      if (indice != qtdProdutos && arrayProdutosForm[indice].pathDestino != null) {
 		var url = encodeURI(arrayProdutosForm[indice].url);
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
 			var imagePath = fs.root.fullPath + arrayProdutosForm[indice].pathDestino; // full file path
 			var fileTransfer = new FileTransfer();
 
+			 fileTransfer.onprogress = function(progressEvent) {
+	    	  		if (progressEvent.lengthComputable) {
+	    	  			zerarInatividade();
+	    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+	    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
+	    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+	    	  			console.log(perc + "% loaded...");
+	    	  		} else {
+	    	  			if($('#loadingPercentual').innerHTML == "") {
+	    	  				$('#loadingPercentual').innerHTML = "Loading";
+	    	  			} else {
+	    	  				$('#loadingPercentual').innerHTML += ".";
+	    	  			}
+	    	  		}
+	    	  	};
+			
+			
 			fileTransfer.download(url, imagePath, function(entry) {
 				console.log("download complete: " + entry.fullPath); // entry
 				 zerarInatividade();
 				salvaPathImagenProdutos(tx,imagePath,qtdProdutos,indice);
 			}, function(error) {
+				downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage);
 				sucessDadosDrupal = false;
 				console.log("download error source " + error.source);
 				console.log("download error target " + error.target);
@@ -637,7 +968,17 @@ function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLa
 		
 		arrayPropagandas.push(imagePath);
 		if(arrayPropagandas.length == qtdPropagandas){
-			insertTable("sleep-propagandas");
+			if(arrayArquivosDownloadsErro.length > 0){
+				qtdPropagandas = qtdPropagandas + arrayArquivosDownloadsErro.length;
+				
+				for(i=0;i<arrayArquivosDownloadsErro.length;i++){
+					  
+					  downloadVideosImagesPropagandas(arrayArquivosDownloadsErro[i].url, arrayArquivosDownloadsErro[i].pathDestino, arrayArquivosDownloadsErro[i].tx, arrayArquivosDownloadsErro[i].titleIcone, arrayArquivosDownloadsErro[i].typeImagen, arrayArquivosDownloadsErro[i].produtosForm, arrayArquivosDownloadsErro[i].titleLanguage, true, arrayArquivosDownloadsErro[i]);
+				}
+			}else{
+				insertTable("sleep-propagandas");
+			}
+			
 		}
 	}else if (typeImagen == "languages") {
 		
@@ -700,7 +1041,7 @@ function montaHome(tx){
 	
 	//tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
 	  tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
-	
+	  
 }
 
 function montaLabelMesa(tx,result){
@@ -900,9 +1241,12 @@ function createTable(tx){
 		tx.executeSql('DROP TABLE IF EXISTS Propaganda');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Propaganda (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
 		
-		// Table home (propaganda)
-		tx.executeSql('DROP TABLE IF EXISTS Propagandas');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL)');
+	}
+	
+	// Home
+	if(atualizaForm.propaganda == 'true'){
+ 
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, nid TEXT, duration TEXT, deletadoBanco TEXT, versao TEXT, ordenacao TEXT)');
 	}
 	
 	// Categoria
@@ -1094,6 +1438,7 @@ function successInsert(){
 	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
+		 hide('modal_loading_atualizando_cardapio');
 		db.transaction(montaHome,errorCB);
 		db.transaction(function(tx){
 		tx.executeSql('SELECT DISTINCT title_comum FROM Produtos',[],atualizaImageProdutosLanguage,errorCB);

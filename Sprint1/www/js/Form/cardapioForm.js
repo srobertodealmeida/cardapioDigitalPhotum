@@ -4,6 +4,12 @@ var arrayProdutos = new Array();
 
 var arrayPropagandas = new Array();
 
+var arrayPropagandasDownloadInsert = new Array();
+
+var arrayPropagandasDownloadUpdate = new Array();
+
+var arrayArquivosDownloadsErro = new Array();
+
 var categoriaSelecionado;
 
 var buttons = {
