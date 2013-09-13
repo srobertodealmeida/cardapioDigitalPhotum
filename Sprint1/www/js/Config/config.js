@@ -1,10 +1,10 @@
-
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.103/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
+var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
 var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
 var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
 var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
@@ -162,9 +162,9 @@ function onBatteryStatus(info) {
     	   		    			    
     	   		       var data  = {
     	   		         "type":"notificacao",
-    	   		    	  "field_notificacao_mensagem[und][0]":mensagem,
+    	   		    	 "field_notificacao_mensagem[und][0]":mensagem,
     	   		    	 "field_notificacao_type[und][0]":typeNotificacao,
-    	   		    	   "title":mesa,
+    	   		    	 "title":mesa,
     	   		        };
     	   		    	console.log(data);
     	   		    	var url=""+ipServidorDrupal+"/node";
@@ -193,7 +193,7 @@ function setLanguage(){
 	 ////////////////////////////////////////////LanguageSelected//////////////////////////////////////
 	// Table Config ()
 	
-	 db.transaction(function(tx) {
+	db.transaction(function(tx) {
   
 	tx.executeSql('SELECT * FROM LanguageSelect',[],function(tx,result){
 		if(result.rows.length > 0){
@@ -219,7 +219,7 @@ function escapeHtml(unsafe) {
 
 function getDrupalLanguages(tx){
 	
-	/////////////////Languages///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////Languages///////////////////////////////////////////////////////////////////////////////
     var ajaxUrlViewConfig = getAjax(urlViewConfig);
 	
     ajaxUrlViewConfig.success(function (data) {
@@ -247,7 +247,7 @@ function getDrupalLanguages(tx){
 			   }
 			  console.log('url-languages: '+url);
 			  var urlString = url.toString();
-			  var extencao =  urlString.substr(urlString.length - 3);
+			  var extencao  =  urlString.substr(urlString.length - 3);
 			  var pathDestino = pathAplicativo + "/home/Languages" + key1 + "."+ extencao; // url onde será salvo a imagen
 			  var typeImagen = "languages";
 			  
@@ -520,33 +520,36 @@ function getDrupalProduto(tx){
 	});
 }
 
-function getDrupalPropaganda(tx){
-	
+function getDrupalPropaganda(txx){
   ///////////////////////////////////////////////////////////////////////////////////Propagandas/////////////////////////////////////
 	
     var ajaxPropagandas = getAjax(urlViewPropagandas);
 	
     ajaxPropagandas.success(function (data) {
+    	db.transaction(function(tx) {
     	  qtdPropagandas = data.length;  
     	  quantidadeRegistros += qtdPropagandas;
-		  $.each(data, function(key, val) {
+    	  
+    	  $.each(data, function(key, val) {
 			  
 			  tx.executeSql('SELECT * FROM Propagandas where nid="'+val.nid+'"',[],function(tx,result){
 				  
 				  //Se encontrar registro com mesmo nid faz update senao faz insert.
 				  if(result.rows.length > 0){
 					     // Vericiar a versao do registro caso for maior, foi feito alteração é feito update senao apenas seta deletaBanco como falso e chama successInsert.
-						 if(val.versao_propaganda > result.rows.item(i).versao){
+						  if(val.versao_propaganda > result.rows.item(0).versao){
 							 //Caso campo atualizar_arquivo estiver ocmo true faz o download novamente do registro se nao apenas atualizaos dados.
 							 if(val.atualizar_arquivo == true){
 								 
-								 var objectArrayPropagandasDownloadUpdate = {
+								 var objectArrayPropagandasDownload = {
 						    			  duration:"",
 						    			  versao:"",
 						    			  ordenacao:"",
 						    			  url:"",
 						    			  pathDestino:"",
-						    			  image:""
+						    			  image:"",
+						    			  nid:"",
+						    			  type:""
 						    	 }
 								 
 								  //Prepara url
@@ -561,32 +564,38 @@ function getDrupalPropaganda(tx){
 								  var pathDestino = pathAplicativo + "/propagandas/propaganda." + val.nid  + "."+ extencao; // url onde será salvo a imagen
 								  
 								  //Prepara objeto
-								  objectArrayPropagandasDownloadUpdate.duration = val.duracao_video;
-								  objectArrayPropagandasDownloadUpdate.versao = val.versao_propaganda;
-								  objectArrayPropagandasDownloadUpdate.ordenacao = val.ordem_propaganda;
-								  objectArrayPropagandasDownloadUpdate.url = url;
-								  objectArrayPropagandasDownloadUpdate.pathDestino = pathDestino;
+								  objectArrayPropagandasDownload.duration = val.duracao_video;
+								  objectArrayPropagandasDownload.nid = val.nid
+								  objectArrayPropagandasDownload.versao = val.versao_propaganda;
+								  objectArrayPropagandasDownload.ordenacao = parserInt(val.ordem_propaganda);
+								  objectArrayPropagandasDownload.url = url;
+								  objectArrayPropagandasDownload.pathDestino = pathDestino;
+								  objectArrayPropagandasDownload.type = "update";
 								 
-								  arrayPropagandasDownloadUpdate.push(objectArrayPropagandasDownloadUpdate);
+								  arrayPropagandasDownload.push(objectArrayPropagandasDownload);
 								  
 							 }else{
-								 tx.executeSql('UPDATE Propagandas SET duration="'+val.duration+'",deletadoBanco="false", versao = "'+val.versao_propaganda+'",ordenacao="'+val.ordem_propaganda+'" WHERE Id='+result.rows.item(i).id+'');
+								 tx.executeSql('UPDATE Propagandas SET duration="'+val.duracao_video+'",deletadoBanco="false", versao = "'+val.versao_propaganda+'",ordenacao="'+val.ordem_propaganda+'" WHERE Id='+result.rows.item(0).id+'');
 								 quantidadeRegistros = quantidadeRegistros-1;
+								 qtdPropagandas = qtdPropagandas-1;
 								 successInsert();
 							 }
 						 }else{
-							 tx.executeSql('UPDATE Propagandas SET deletadoBanco="false" WHERE Id='+result.rows.item(i).id+'');
+							 tx.executeSql('UPDATE Propagandas SET deletadoBanco="false" WHERE Id='+result.rows.item(0).id+'');
 							 quantidadeRegistros = quantidadeRegistros-1;
+							 qtdPropagandas = qtdPropagandas-1;
 							 successInsert();
 						 }
 					}else{
-						var objectArrayPropagandasDownloadInsert = {
+						var objectArrayPropagandasDownload = {
 				    			  duration:"",
 				    			  versao:"",
 				    			  ordenacao:"",
 				    			  url:"",
 				    			  pathDestino:"",
-				    			  image:""
+				    			  image:"",
+				    			  nid:"",
+				    			  type:""
 				    	 }
 						
 						 //Prepara url
@@ -601,51 +610,55 @@ function getDrupalPropaganda(tx){
 						  var pathDestino = pathAplicativo + "/propagandas/propaganda." + val.nid  + "."+ extencao; // url onde será salvo a imagen
 						  
 						  //Prepara objeto
-						  objectArrayPropagandasDownloadInsert.duration = val.duracao_video;
-						  objectArrayPropagandasDownloadInsert.versao = val.versao_propaganda;
-						  objectArrayPropagandasDownloadInsert.ordenacao = val.ordem_propaganda;
-						  objectArrayPropagandasDownloadInsert.url = url;
-						  objectArrayPropagandasDownloadInsert.pathDestino = pathDestino;
+						  objectArrayPropagandasDownload.duration = val.duracao_video;
+						  objectArrayPropagandasDownload.versao = val.versao_propaganda;
+						  objectArrayPropagandasDownload.ordenacao = val.ordem_propaganda;
+						  objectArrayPropagandasDownload.url = url;
+						  objectArrayPropagandasDownload.nid = val.nid;
+						  objectArrayPropagandasDownload.pathDestino = pathDestino;
+						  objectArrayPropagandasDownload.type = "insert";
 						 
-						  arrayPropagandasDownloadInsert.push(objectArrayPropagandasDownloadInsert); 
+						  arrayPropagandasDownload.push(objectArrayPropagandasDownload); 
 					}
+				  
+				  if(key == data.length - 1){
+					  var typeImagen = "sleep-propagandas";
+					  
+					  var downloadsArquivosErro = false;
+					  var objectArquivosDownloadsErroRemover = {
+			    			  url:"",
+			    			  pathDestino:"",
+			    			  tx:"",
+			    			  titleIcone:"",
+			    			  typeImagen:"",
+			    			  produtosForm:"",
+			    			  titleLanguage:""
+			    			  }
+					  //Caso tiver arquivo para fazer download update
+					  if(arrayPropagandasDownload.length > 0){
+						  
+						  for(i=0;i<arrayPropagandasDownload.length;i++){
+							  
+							  downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
+							  
+						  }
+						  
+						  
+						  
+					  }else{
+						  tx.executeSql('DELETE FROM Propagandas where deletadoBanco = "true"');
+							
+							tx.executeSql('UPDATE Propagandas SET deletadoBanco="true"');
+					  }
+					  if(quantidadeRegistros == 0){
+						  successInsert();
+					  }
+				  }
 		      },errorCB)
 
 		  });
 		  
-          var typeImagen = "sleep-propagandas";
-		  
-		  var downloadsArquivosErro = false;
-		  var objectArquivosDownloadsErroRemover = {
-    			  url:"",
-    			  pathDestino:"",
-    			  tx:"",
-    			  titleIcone:"",
-    			  typeImagen:"",
-    			  produtosForm:"",
-    			  titleLanguage:""
-    			  }
-		  //Caso tiver arquivo para fazer download update
-		  if(arrayPropagandasDownloadUpdate.length > 0){
-			  
-			  for(i=0;i<arrayPropagandasDownloadUpdate.length;i++){
-				  
-				  downloadVideosImagesPropagandasUpdate()
-				  
-			  }
-			  
-			  
-			  
-		  }
-		  
-		  //Caso tiver arquivo para fazer download insert
-		  if(arrayPropagandasDownloadInsert.length > 0){
-			  
-		  }
-		  
-		  downloadVideosImagesPropagandas(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover); //faz donwload da imagen;
-
-
+    	},errorCB);
 		  
     });
 	
@@ -654,10 +667,41 @@ function getDrupalPropaganda(tx){
 		alert('error');
 	});
     
+    
+}
+
+function getDrupalAdicionais(tx){
+	var ajaxAdicionais = getAjax(urlViewAdicionais);
+
+	ajaxAdicionais.success(function(data) {
+		$.each(data, function(key, val) {
+
+			var adicionaisForm = {
+				title : "",
+				preco : "",
+				categoria : "",
+				nid : ""
+			};
+			adicionaisForm.title = val.node_title;
+			adicionaisForm.preco = val.preco_adicionais;
+			adicionaisForm.categoria = val.categoria_adicionais;
+			adicionaisForm.nid = val.nid;
+			arrayAdicionais.push(adicionaisForm);
+
+		});
+		quantidadeRegistros += arrayAdicionais.length;
+		insertTable("adicionais");
+
+	});
+
+	ajaxAdicionais.error(function(jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	});
 }
 
 function getDadosDrupal(tx){
-	show('modal_loading_atualizando_cardapio');
+	//show('modal_loading_atualizando_cardapio');
 	console.log(atualizaForm.configuracao);
 	console.log(atualizaForm.label);
 	console.log(atualizaForm.home);
@@ -694,6 +738,12 @@ function getDadosDrupal(tx){
 	if(atualizaForm.propaganda == 'true'){
 		getDrupalPropaganda(tx);
 	}
+	
+	//Adicionais
+	if(atualizaForm.adicionais == 'true'){
+		getDrupalAdicionais(tx);
+	}
+	
     
 }
 
@@ -737,76 +787,11 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
     	   })
 }
 
-/*
- * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
- */
-function downloadVideosImagesPropagandasInsert(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover){
-	var url = encodeURI(url);
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
-    	      var imagePath = fs.root.fullPath + pathDestino; // full file path
-    	      var fileTransfer = new FileTransfer();
-    	      fileTransfer.onprogress = function(progressEvent) {
-    	  		if (progressEvent.lengthComputable) {
-    	  			zerarInatividade();
-    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
-    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
-    	  			console.log(perc + "% loaded...");
-    	  		} else {
-    	  			if($('#loadingPercentual').innerHTML == "") {
-    	  				$('#loadingPercentual').innerHTML = "Loading";
-    	  			} else {
-    	  				$('#loadingPercentual').innerHTML += ".";
-    	  			}
-    	  		}
-    	  	};
-    	  	
-    	      fileTransfer.download(url, imagePath, function (entry) {
-    	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
-    	    	  if(downloadsArquivosErro == true){
-    	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
-    	    				return val != objectArquivosDownloadsErroRemover;
-    	    			});
-    	    	  }
-    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLanguage);
-    	      }, function (error) {
-    	    	  var ObjectArquivosDownloadsErro = {
-    	    			  url:"",
-    	    			  pathDestino:"",
-    	    			  tx:"",
-    	    			  titleIcone:"",
-    	    			  typeImagen:"",
-    	    			  produtosForm:"",
-    	    			  titleLanguage:""
-    	    			  }
-    	    	  
-    	    	  ObjectArquivosDownloadsErro.url = url;
-    	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
-    	    	  ObjectArquivosDownloadsErro.tx = tx;
-    	    	  ObjectArquivosDownloadsErro.titleIcone = titleIcone;
-    	    	  ObjectArquivosDownloadsErro.typeImagen = typeImagen;
-    	    	  ObjectArquivosDownloadsErro.produtosForm = produtosForm;
-    	    	  ObjectArquivosDownloadsErro.titleLanguage = titleLanguage;
-    	    	  
-    	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
-    	    	  
-    	    	  qtdPropagandas = qtdPropagandas -1;
-    	    	 
-    	    	  console.log("download error source " + error.source);
-                  console.log("download error target " + error.target);
-                  console.log("upload error code" + error.code);
-                  console.log("error respoinse:"+error.response);
-    	      },
-    	      false
-    	      );
-    	      
-    	   })
-}
 
 /*
  * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
  */
-function downloadVideosImagesPropagandasUpdate(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,titleLanguage,downloadsArquivosErro,objectArquivosDownloadsErroRemover){
+function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,objectPropagandasDownload){
 	var url = encodeURI(url);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
     	      var imagePath = fs.root.fullPath + pathDestino; // full file path
@@ -832,27 +817,21 @@ function downloadVideosImagesPropagandasUpdate(url,pathDestino,tx,titleIcone,typ
     	    	  if(downloadsArquivosErro == true){
     	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
     	    				return val != objectArquivosDownloadsErroRemover;
-    	    			});
+    	    		  });
     	    	  }
-    	    	  salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLanguage);
+    	    	  salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload);
     	      }, function (error) {
     	    	  var ObjectArquivosDownloadsErro = {
     	    			  url:"",
     	    			  pathDestino:"",
     	    			  tx:"",
-    	    			  titleIcone:"",
-    	    			  typeImagen:"",
-    	    			  produtosForm:"",
-    	    			  titleLanguage:""
+    	    			  objectPropagandasDownload:""
     	    			  }
     	    	  
     	    	  ObjectArquivosDownloadsErro.url = url;
     	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
     	    	  ObjectArquivosDownloadsErro.tx = tx;
-    	    	  ObjectArquivosDownloadsErro.titleIcone = titleIcone;
-    	    	  ObjectArquivosDownloadsErro.typeImagen = typeImagen;
-    	    	  ObjectArquivosDownloadsErro.produtosForm = produtosForm;
-    	    	  ObjectArquivosDownloadsErro.titleLanguage = titleLanguage;
+    	    	  ObjectArquivosDownloadsErro.objectPropagandasDownload = objectPropagandasDownload;
     	    	  
     	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
     	    	  
@@ -1019,6 +998,25 @@ function salvaPathImagenProdutos(tx,imagePath,qtdProdutos,indice){
 			downloadImagesProdutos(tx,qtdProdutos,indice)
 		}
 	
+}
+
+//Método que salva path da imagem no form
+function salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload){
+	
+	objectPropagandasDownload.image = imagePath;
+	arrayPropagandasDepoisDownload.push(objectPropagandasDownload);
+	if(arrayPropagandasDepoisDownload.length == qtdPropagandas){
+		if(arrayArquivosDownloadsErro.length > 0){
+			qtdPropagandas = qtdPropagandas + arrayArquivosDownloadsErro.length;
+			
+			for(i=0;i<arrayArquivosDownloadsErro.length;i++){
+				  
+				  downloadVideosImagesPropagandas(arrayArquivosDownloadsErro[i].url, arrayArquivosDownloadsErro[i].pathDestino, arrayArquivosDownloadsErro[i].tx, true, arrayArquivosDownloadsErro[i],arrayArquivosDownloadsErro[i].objectPropagandasDownload);
+			}
+		}else{
+			insertTable("sleep-propagandas");
+		}
+	} 
 }
 
 /*
@@ -1246,8 +1244,10 @@ function createTable(tx){
 	// Home
 	if(atualizaForm.propaganda == 'true'){
  
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, nid TEXT, duration TEXT, deletadoBanco TEXT, versao TEXT, ordenacao TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, nid TEXT, duration TEXT, deletadoBanco TEXT, versao TEXT, ordenacao INTEGER)');
 	}
+	
+	
 	
 	// Categoria
 	if(atualizaForm.categoria == 'true'){
@@ -1260,9 +1260,18 @@ function createTable(tx){
 	// Produtos
 	if(atualizaForm.produto == 'true'){
           ////////////////////////////////////////////Produtos//////////////////////////////////////
-		// Table Produtos
+		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Produtos');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT)');
+	}
+	
+	//Adicionais
+	
+	if(atualizaForm.adicionais == "true"){
+		   ////////////////////////////////////////////Produtos//////////////////////////////////////
+		  //Table Produtos
+		tx.executeSql('DROP TABLE IF EXISTS Adicionais');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT)');
 	}
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
@@ -1291,7 +1300,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, adicionais TEXT)');
 	
 }
 
@@ -1402,12 +1411,29 @@ function insertTable(nomeTable){
 		
 	}else if (nomeTable == "sleep-propagandas") {
 		db.transaction(function(tx) {
-			for(i=0;i<arrayPropagandas.length;i++){
-			console.log('INSERT INTO Propagandas(image) VALUES ("' + arrayPropagandas[i] + '")');
-			quantidadeRegistros = quantidadeRegistros - 1;
-            tx.executeSql('INSERT INTO Propagandas(image) VALUES ("' + arrayPropagandas[i] + '")');
+			for(i=0;i<arrayPropagandasDepoisDownload.length;i++){
+				quantidadeRegistros = quantidadeRegistros - 1;
+				if(arrayPropagandasDepoisDownload[i].type == "insert"){
+					console.log('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'")');
+					tx.executeSql('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'")');
+	
+				}else{
+					if(arrayPropagandasDepoisDownload[i].type == "update"){
+						tx.executeSql('SELECT * FROM Propagandas where nid = "'+arrayPropagandasDepoisDownload[i].nid+'"',[],function(tx,result){
+							if(result.rows.length > 0){
+								console.log('UPDATE Propagandas SET image="'+arrayPropagandasDepoisDownload[i].image+'", duration="'+arrayPropagandasDepoisDownload[i].duration+'", deletadoBanco="false", versao="'+arrayPropagandasDepoisDownload[i].versao+'", ordenacao="'+arrayPropagandasDepoisDownload[i].ordenacao+'" WHERE Id='+result.rows.item(0).id+'');
+	
+								tx.executeSql('UPDATE Propagandas SET image="'+arrayPropagandasDepoisDownload[i].image+'", duration="'+arrayPropagandasDepoisDownload[i].duration+'", deletadoBanco="false", versao="'+arrayPropagandasDepoisDownload[i].versao+'", ordenacao="'+arrayPropagandasDepoisDownload[i].ordenacao+'" WHERE Id='+result.rows.item(0).id+'');
+								
+							}
+						},errorCB);
+					}
+				}
 			}
-            },errorCB,successInsert);
+				tx.executeSql('DELETE FROM Propagandas where deletadoBanco = "true"');
+				
+				tx.executeSql('UPDATE Propagandas SET deletadoBanco="true"');
+         },errorCB,successInsert);
 		
 	}else if (nomeTable == "labels") {
 		db.transaction(function(tx) {
@@ -1415,6 +1441,14 @@ function insertTable(nomeTable){
 			quantidadeRegistros = quantidadeRegistros - 1;
 			console.log('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","'+ arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
             tx.executeSql('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","' + arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
+			}
+            },errorCB,successInsert);
+	}else if (nomeTable == "adicionais") {
+		db.transaction(function(tx) {
+			for(i=0;i<arrayAdicionais.length;i++){
+				quantidadeRegistros = quantidadeRegistros - 1;
+				console.log('INSERT INTO Adicionais(title,preco,categoria,nid) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '")');
+	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '")');
 			}
             },errorCB,successInsert);
 	}
@@ -1430,7 +1464,7 @@ function errorCB(err) {
 }
 
 //function will be called when process succeed
-function successCB(tx,result) {
+function successCB() {
   
 }
 
@@ -1438,10 +1472,10 @@ function successInsert(){
 	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('dentro success'+ quantidadeRegistros);
 	if(quantidadeRegistros < 1){
-		 hide('modal_loading_atualizando_cardapio');
+		 //hide('modal_loading_atualizando_cardapio');
 		db.transaction(montaHome,errorCB);
 		db.transaction(function(tx){
-		tx.executeSql('SELECT DISTINCT title_comum FROM Produtos',[],atualizaImageProdutosLanguage,errorCB);
+			tx.executeSql('SELECT DISTINCT title_comum FROM Produtos',[],atualizaImageProdutosLanguage,errorCB);
 		},errorCB);
 	}
 }
@@ -1726,6 +1760,14 @@ function setLabels(){
 		tx.executeSql('SELECT * FROM Labels where categoria_label = "btn_limpar_dados_da_mesa" and language="'+constLanguageSelected+'"',[],function(tx,result){
 			if(result.rows.length > 0){
 				ObjectLabels.btn_limpar_dados_da_mesa = result.rows.item(0).valor;
+			}
+		},errorCB);
+		
+		
+		// label_adicionais
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "label_adicionais" and language="'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				ObjectLabels.label_adicionais = result.rows.item(0).valor;
 			}
 		},errorCB);
 		

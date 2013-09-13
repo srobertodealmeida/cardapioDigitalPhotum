@@ -4,11 +4,14 @@ var arrayProdutos = new Array();
 
 var arrayPropagandas = new Array();
 
-var arrayPropagandasDownloadInsert = new Array();
+var arrayPropagandasDownload = new Array();
 
-var arrayPropagandasDownloadUpdate = new Array();
+var arrayPropagandasDepoisDownload = new Array();
 
 var arrayArquivosDownloadsErro = new Array();
+
+var arrayAdicionais = new Array();
+
 
 var categoriaSelecionado;
 
@@ -65,5 +68,6 @@ var ObjectLabels = {
 		alert_mesa_contem_pendentes:"",
 		label_aguardando_pagamento:"",
 		alert_sem_pedidos_no_momento:"",
-		label_mesa_home:""
+		label_mesa_home:"",
+		label_adicionais:""
  };

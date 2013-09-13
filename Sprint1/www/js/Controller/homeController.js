@@ -180,6 +180,7 @@ function  atualizar(){
 											atualizaForm.label = val.atualiza_label;
 											atualizaForm.produto = val.atualiza_produto;
 											atualizaForm.propaganda = val.atualiza_propaganda;
+											atualizaForm.adicionais = val.atualiza_adicionais;
 											init(val.versao);
 							    		 } else {
 							    			 versao = val.versao;
@@ -191,6 +192,7 @@ function  atualizar(){
 							    			atualizaForm.label = val.atualiza_label;
 							    			atualizaForm.produto = val.atualiza_produto;
 							    			atualizaForm.propaganda = val.atualiza_propaganda;
+							    			atualizaForm.adicionais = val.atualiza_adicionais;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
 							    		 }
 								    	 
@@ -328,7 +330,6 @@ $(document).ready(function(){
 		$('#propagandas').click(function(e){
 			zerarInatividade();
 			inatividade();
-			
 			$('#propagandas').hide();
 			$('#geral').show();
 			console.log("propagandasClick");
@@ -337,7 +338,6 @@ $(document).ready(function(){
 		$('#propagandas').bind('touchstart click', function(){
 			zerarInatividade();
 			inatividade();
-			
 			$('#propagandas').hide();
 			$('#geral').show();
 			console.log("propagandasClick");
