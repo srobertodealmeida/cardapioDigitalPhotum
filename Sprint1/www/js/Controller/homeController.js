@@ -161,15 +161,13 @@ function hide_preloader() { // DOM
 
 var versao;
 function  atualizar(){
-	
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-			 if(result.rows.length != 0){
-				 connectionWIFI = result.rows.item(0).connectionWIFI;
+		//tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
+			// if(result.rows.length != 0){
+				 connectionWIFI = "connectionTrue";
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
-							
 							 ajax.success(function (data) {
 								 $.each(data, function(key, val) {
 							    	 if(val.atualizar == 'true'){
@@ -194,6 +192,7 @@ function  atualizar(){
 							    			atualizaForm.propaganda = val.atualiza_propaganda;
 							    			atualizaForm.adicionais = val.atualiza_adicionais;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
+							    			alert('agora')
 							    		 }
 								    	 
 								     }
@@ -205,8 +204,8 @@ function  atualizar(){
 							db.transaction(montaHome, errorCB);
 						}
 					}
-			 }
-		   },errorCB);
+			// }
+		   //},errorCB);
 		},errorCB);
 	
 	 
@@ -241,6 +240,7 @@ function criarIdContaPrimeiraVez(){
 
 
 function pegarUltimaVersao(tx){
+	 alert('kiultimo')
 	console.log('pegarUltimaVersao');
 	tx.executeSql('SELECT versao, MAX(id) FROM Config',[],function(tx,result) {
 		  if(versao > parseInt(result.rows.item(0).versao)){// Caso versao for maior atualiza banco.
@@ -308,13 +308,11 @@ $(document).ready(function(){
 	
 	atualizar();
    // document.addEventListener("deviceready", checkConnection, false);
-	
     createTableMesa();
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
 	// db.transaction(populateDB, errorCB, successCB);
 	//quantidadeRegistros = 7;
 	 // Atualiza caso checbox no backend esteja setado como true;
-	
 	//init(5);
 	 //db.transaction(selectDados,errorCB);
 	 $('.div-button-config').click(function(){
@@ -324,7 +322,6 @@ $(document).ready(function(){
 	 $('.cancelarConfig').click(function(){
 		 $('.divConfig').hide();
 	 });
-	 
 	 inatividade();
 		
 		$('#propagandas').click(function(e){

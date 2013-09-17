@@ -642,7 +642,7 @@ function montaAdicionais(){
 		tx.executeSql('SELECT * FROM Adicionais where categoria = "'+categoriaSelecionado+'"',[],function(tx,result){
 			if(result.rows.length > 0){
 				for(i=0;i<result.rows.length;i++){
-					$("#id_modal_nome_pessoa .select-adicionais").append('<option value="'+result.rows.item(i).title+'">'+result.rows.item(i).title+'----------------------- R$: '+result.rows.item(i).preco+'</option>');
+					$("#id_modal_nome_pessoa .select-adicionais").append('<option value="'+result.rows.item(i).id+'">'+result.rows.item(i).title+'----------------------- R$: '+result.rows.item(i).preco+'</option>');
 				}
 				
 			}
@@ -921,19 +921,80 @@ function adicionarPedido(tx,result){
 				 var title = result.rows.item(0).title;
 				 var id = result.rows.item(0).id;
 				 var preco = result.rows.item(0).preco;
-				 if(constLanguageSelected != "Portuguese-Brazil"){
-					 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
-						 if(result.rows.length == 0){
-							 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","1","confirmacao","'+result.rows.item(0).title_comum+'","'+result.rows.item(0).categoria+'","'+result.rows.item(0).nid+'","'+adicionais+'")');
-						 }
-						 
-					 },errorCB);
+				 var title_comum = result.rows.item(0).title_comum;
+				 var categoria = result.rows.item(0).categoria;
+				 var nid = result.rows.item(0).nid;
+				 
+				 var preco_adicionais = "";
+				 var nid_adicionais = "";
+				 var title_adicionais = "";
+				 var contador = 0;
+				 
+				 //Prepara Adicionais
+				 if(adicionais != null){
+					 adicionais = adicionais.toString();
+					 var arrayIdAdicionais = adicionais.split(",");
+					
+					 
+					 for(i=0;i<arrayIdAdicionais.length;i++){
+						 tx.executeSql('SELECT * FROM Adicionais where id="'+arrayIdAdicionais[i]+'"',[],function(fx,result){
+							 if(result.rows.length > 0){
+								 if(contador==0){
+									 preco_adicionais =   result.rows.item(0).preco;
+									 nid_adicionais =   result.rows.item(0).nid;
+									 title_adicionais =   result.rows.item(0).title;
+									 contador = contador + 1;
+								 }else{
+									 preco_adicionais += "," +  result.rows.item(0).preco;
+									 nid_adicionais +=   ","  + result.rows.item(0).nid;
+									 title_adicionais += "," +  result.rows.item(0).title;
+									 contador = contador + 1;
+								 }
+							 }
+							 if(contador==arrayIdAdicionais.length){
+								 
+								 preco_adicionais = preco_adicionais.toString();
+								 var arrayPrecoAdicionais = preco_adicionais.split(",");
+								 var precoAdicionaisSomado = 0.00;
+								 for(l=0;l<arrayPrecoAdicionais.length;l++){
+									 precoAdicionaisSomado = precoAdicionaisSomado + parseFloat(arrayPrecoAdicionais[l]);
+								 }
+								 preco = parseFloat(preco)+precoAdicionaisSomado;
+								 if(constLanguageSelected != "Portuguese-Brazil"){
+									 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
+										 if(result.rows.length == 0){
+											 
+											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+										 }
+										 
+									 },errorCB);
+								 }else{
+									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+	
+								 }
+								 
+							     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+							 }
+							 
+						 },errorCB);
+					 }
 				 }else{
-					 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+result.rows.item(0).id+'","'+result.rows.item(0).title+'","'+result.rows.item(0).preco+'","1","confirmacao","'+result.rows.item(0).title_comum+'","'+result.rows.item(0).categoria+'","'+result.rows.item(0).nid+'","'+adicionais+'")');
+					 if(constLanguageSelected != "Portuguese-Brazil"){
+						 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
+							 if(result.rows.length == 0){
+								
+								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+							 }
+							 
+						 },errorCB);
+					 }else{
+						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
 
+					 }
+					 
+				     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 				 }
 				 
-			     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		   
 		 },errorCB,selectPedidos);
 		 
@@ -981,14 +1042,28 @@ function montaModalPedido(tx,result){
 	for(var i=0;i<result.rows.length;i++){
 		if(result.rows.item(i).status == 'confirmacao'){
 			pedidosPendentes = true;
-			var adicionais = result.rows.item(i).adicionais;
+			var adicionais = result.rows.item(i).title_adicionais;
 			if(adicionais == "null"){
 				adicionais = "";
+			}else{
+				
+				adicionais = adicionais.toString();
+				var arrayAdicionais = adicionais.split(",");
+				
+				var precos = result.rows.item(i).preco_adicionais;
+				precos = precos.toString();
+				var arrayPrecos = precos.split(",");
+				
+				
+				var stringAdicionaisComPreco="";
+				for(l=0;l<arrayAdicionais.length;l++){
+					stringAdicionaisComPreco += arrayAdicionais[l] +"---- R$ " + arrayPrecos[l] + ",";
+				}
 			}
 			
-			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento efeito-button" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >'+ObjectLabels.btn_editar+'</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+adicionais+'</p></div></div>');
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento efeito-button" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >'+ObjectLabels.btn_editar+'</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
 		}else{
-			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+adicionais+'</p></div></div>');
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div class="modal_pedido_preco_produto"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
 		}
 	}
 	

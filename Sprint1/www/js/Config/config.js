@@ -1,6 +1,6 @@
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -702,13 +702,7 @@ function getDrupalAdicionais(tx){
 
 function getDadosDrupal(tx){
 	//show('modal_loading_atualizando_cardapio');
-	console.log(atualizaForm.configuracao);
-	console.log(atualizaForm.label);
-	console.log(atualizaForm.home);
-	console.log(atualizaForm.categoria);
-	
-	console.log(atualizaForm.produto);
-	console.log(atualizaForm.propaganda);
+
 	// Categoria
 	if(atualizaForm.configuracao == 'true'){
 		getDrupalLanguages(tx);
@@ -1268,7 +1262,7 @@ function createTable(tx){
 	//Adicionais
 	
 	if(atualizaForm.adicionais == "true"){
-		   ////////////////////////////////////////////Produtos//////////////////////////////////////
+		   ////////////////////////////////////////////Adicionais//////////////////////////////////////
 		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Adicionais');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT)');
@@ -1300,7 +1294,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, adicionais TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT, preco_adicionais TEXT, nid_adicionais TEXT )');
 	
 }
 
