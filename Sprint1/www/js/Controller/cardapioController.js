@@ -644,6 +644,22 @@ function montaAdicionais(){
 				for(i=0;i<result.rows.length;i++){
 					$("#id_modal_nome_pessoa .select-adicionais").append('<option value="'+result.rows.item(i).id+'">'+result.rows.item(i).title+'----------------------- R$: '+result.rows.item(i).preco+'</option>');
 				}
+				if(editandoPedido){
+					tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
+						if(result.rows.length > 0){
+							var stringIdAdicionais =  result.rows.item(0).id_adicionais;
+							var arrayIdAdicionais = stringIdAdicionais.split(",");
+							for(l=0;l<arrayIdAdicionais.length;l++){
+								$( "#id_modal_nome_pessoa .select-adicionais option" ).each(function() {
+								     if($( this ).attr('value') == arrayIdAdicionais[l]){
+								    	 $( this ).attr('selected','selected');
+								     }
+								});
+							}
+						}
+						
+					},errorCB);
+				}
 				
 			}
 		},errorCB);
@@ -887,10 +903,69 @@ function selectProdutoPedido(){
 }
 
 function salvarEdicaoPedido(){
-	 var observacao =  $(".textarea-observacao-produto").val();
-	 db.transaction(function(tx) {
-	  tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'" WHERE id="'+idPedidoEditando+'"');
-      tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+	db.transaction(function(tx) { 
+	var observacao =  $(".textarea-observacao-produto").val();
+	 
+	 var adicionaisId =  $("#id_modal_nome_pessoa .select-adicionais").val();
+	 
+	 var preco_adicionais = "";
+	 var nid_adicionais = "";
+	 var title_adicionais = "";
+	 var contador = 0;
+	 tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
+		 var precoOriginal =  result.rows.item(0).preco_original_produto;
+		 var quantidadeProduto = result.rows.item(0).quantidade;
+		//Prepara Adicionais
+		 if(adicionaisId != null){
+			
+				 adicionaisId = adicionaisId.toString();
+				 var arrayIdAdicionais = adicionaisId.split(",");
+					if(result.rows.length > 0){
+						 for(i=0;i<arrayIdAdicionais.length;i++){
+							 tx.executeSql('SELECT * FROM Adicionais where id="'+arrayIdAdicionais[i]+'"',[],function(fx,result){
+								 if(result.rows.length > 0){
+									 if(contador==0){
+										 preco_adicionais =   result.rows.item(0).preco;
+										 nid_adicionais =   result.rows.item(0).nid;
+										 title_adicionais =   result.rows.item(0).title;
+										 contador = contador + 1;
+									 }else{
+										 preco_adicionais += "," +  result.rows.item(0).preco;
+										 nid_adicionais +=   ","  + result.rows.item(0).nid;
+										 title_adicionais += "," +  result.rows.item(0).title;
+										 contador = contador + 1;
+									 }
+								 }
+								 if(contador==arrayIdAdicionais.length){
+									 
+									 preco_adicionais = preco_adicionais.toString();
+									 var arrayPrecoAdicionais = preco_adicionais.split(",");
+									 var precoAdicionaisSomado = 0.00;
+									 for(l=0;l<arrayPrecoAdicionais.length;l++){
+										 precoAdicionaisSomado = precoAdicionaisSomado + parseFloat(arrayPrecoAdicionais[l]);
+									 }
+									 var precoFinal = parseFloat(precoOriginal) + precoAdicionaisSomado;
+									 precoFinal = parseFloat(precoFinal) * quantidadeProduto;
+									 precoFinal = precoFinal.toFixed(2);
+									
+									 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" WHERE id="'+idPedidoEditando+'"');
+								     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+								 }
+								 
+							 },errorCB);
+						 }
+					}
+					
+				
+			
+		 }else{
+			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
+			 precoFinal = precoFinal.toFixed(2);
+			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" WHERE id="'+idPedidoEditando+'"');
+		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+		 }
+	 
+	 },errorCB);
     },errorCB,selectPedidos);
 }
 
@@ -904,7 +979,7 @@ function selectProdutoMeuPedido(){
 function adicionarPedido(tx,result){
 	meuPedido = false;
     var observacao =  $(".textarea-observacao-produto").val();
-    var adicionais =  $("#id_modal_nome_pessoa .select-adicionais").val();
+    var adicionaisId =  $("#id_modal_nome_pessoa .select-adicionais").val();
 	if(result.rows.length > 0){
 	  if($(".pessoa_selecionado").size() > 0 ){
 		 db.transaction(function(tx) {
@@ -921,6 +996,7 @@ function adicionarPedido(tx,result){
 				 var title = result.rows.item(0).title;
 				 var id = result.rows.item(0).id;
 				 var preco = result.rows.item(0).preco;
+				 var preco_original = result.rows.item(0).preco;
 				 var title_comum = result.rows.item(0).title_comum;
 				 var categoria = result.rows.item(0).categoria;
 				 var nid = result.rows.item(0).nid;
@@ -931,9 +1007,9 @@ function adicionarPedido(tx,result){
 				 var contador = 0;
 				 
 				 //Prepara Adicionais
-				 if(adicionais != null){
-					 adicionais = adicionais.toString();
-					 var arrayIdAdicionais = adicionais.split(",");
+				 if(adicionaisId != null){
+					 adicionaisId = adicionaisId.toString();
+					 var arrayIdAdicionais = adicionaisId.split(",");
 					
 					 
 					 for(i=0;i<arrayIdAdicionais.length;i++){
@@ -964,12 +1040,12 @@ function adicionarPedido(tx,result){
 									 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 										 if(result.rows.length == 0){
 											 
-											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'")');
 										 }
 										 
 									 },errorCB);
 								 }else{
-									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'")');
 	
 								 }
 								 
@@ -983,12 +1059,12 @@ function adicionarPedido(tx,result){
 						 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 							 if(result.rows.length == 0){
 								
-								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'")');
 							 }
 							 
 						 },errorCB);
 					 }else{
-						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'")');
+						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'")');
 
 					 }
 					 
@@ -1060,9 +1136,9 @@ function montaModalPedido(tx,result){
 		if(result.rows.item(i).status == 'confirmacao'){
 			pedidosPendentes = true;
 			
-			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div id="id-modal-pedido-preco-produto-'+result.rows.item(i).id+'" class="modal_pedido_preco_produto" value="'+result.rows.item(i).preco_original_produto+'"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento efeito-button" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >'+ObjectLabels.btn_editar+'</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div id="id-modal-pedido-preco-produto-'+result.rows.item(i).id+'" class="modal_pedido_preco_produto" value="'+result.rows.item(i).preco_original_produto+'" name="'+result.rows.item(i).preco_adicionais+'"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><div id="quantidade-'+i+'" class="div-quantidade-somar-diminuir"><button class="btn-decremento efeito-button" name="'+result.rows.item(i).id+'">-</button><span class="modal_pedido_quantidade">'+result.rows.item(i).quantidade+'</span><button name="'+result.rows.item(i).id+'" class="btn-incremento">+</button><button name="'+result.rows.item(i).id+'" class="btn-excluir-pedido" >X</button><button value="'+result.rows.item(i).id+'" onclick="editarPedido(this)" class="btn-editar-pedido" >'+ObjectLabels.btn_editar+'</button></div><div class="mblListItemLabel " style="display: inline;"></div></li><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
 		}else{
-			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div id="id-modal-pedido-preco-produto-'+result.rows.item(i).id+'" class="modal_pedido_preco_produto" value="'+result.rows.item(i).preco_original_produto+'"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
+			$("#id-ul-modal-pedidos").append('<li id="id-pedido-da-mesa'+i+'" dojoType="dojox.mobile.ListItem" value="detalhe-pedido-'+i+'" class="mblListItem li_detalhe_pedido"><div class="div-incremento"> <span class="incremento mais">+</span> </div> <div class="modal_pedido_nome_pessoa"> <span>'+result.rows.item(i).pessoa+'</span></div><div class="modal_pedido_nome_produto"> <span>'+result.rows.item(i).nome_produto+'</span></div><div id="id-modal-pedido-preco-produto-'+result.rows.item(i).id+'" class="modal_pedido_preco_produto" value="'+result.rows.item(i).preco_original_produto+'" name="'+result.rows.item(i).preco_adicionais+'"><span>R$ '+result.rows.item(i).preco_produto+'</span></div><span class="modal_pedido_quantidade_pedido_efetuado">Qtde: '+result.rows.item(i).quantidade+'</span><span class="pedidoEfetuado aguardandoPagamento">'+ObjectLabels.label_pedido_efetuado+'</span></li></div><div id="detalhe-pedido-'+i+'" class="div-detalhe-pedido" style="display:none"><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_observacao+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+result.rows.item(i).observacao+'</p></div><p align="Left" class="div-detalhe-pedido-p">'+ObjectLabels.label_adicionais+'</p><div class="detalhe-pedido-observacao"><p align="Left">'+stringAdicionaisComPreco+'</p></div></div>');
 		}
 	}
 	
@@ -1080,6 +1156,16 @@ function montaModalPedido(tx,result){
 		 
 		 // Atualiza preço do produto conforme sua quantidade
 		 var precoOriginal = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('value'));
+		 
+		 var precosAdicionais = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('name'));
+		 precosAdicionais = precosAdicionais.toString();
+		 var arrayPrecosAdicionais = precosAdicionais.split(',');
+		 var precoFinalAdicionais = 0.00;
+		 for(i=0;i<arrayPrecosAdicionais.length;i++){
+			 precoFinalAdicionais = parseFloat(precoFinalAdicionais) + parseFloat(arrayPrecosAdicionais[i]);
+		 }
+		 precoOriginal = precoOriginal+precoFinalAdicionais;
+		 
 		 var precoAtualizado = precoOriginal * quantidade;
 		 precoAtualizado = precoAtualizado.toFixed(2);
 		 $('#id-modal-pedido-preco-produto-'+idProduto+' span').text("R$ "+precoAtualizado);
@@ -1099,6 +1185,15 @@ function montaModalPedido(tx,result){
 		 
 		// Atualiza preço do produto conforme sua quantidade
 		 var precoOriginal = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('value'));
+		 var precosAdicionais = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('name'));
+		 precosAdicionais = precosAdicionais.toString();
+		 var arrayPrecosAdicionais = precosAdicionais.split(',');
+		 var precoFinalAdicionais = 0.00;
+		 for(i=0;i<arrayPrecosAdicionais.length;i++){
+			 precoFinalAdicionais = parseFloat(precoFinalAdicionais) + parseFloat(arrayPrecosAdicionais[i]);
+		 }
+		 precoOriginal = precoOriginal+precoFinalAdicionais;
+		 
 		 var precoAtualizado = precoOriginal * quantidade;
 		 precoAtualizado = precoAtualizado.toFixed(2);
 		 $('#id-modal-pedido-preco-produto-'+idProduto+' span').text("R$ "+precoAtualizado);
