@@ -1,6 +1,6 @@
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -465,6 +465,7 @@ function getDrupalProduto(tx){
 					    nid:"",
 						title:"",
 						title_comum:"",
+						codigo:"",
 						previa_descricao:"",
 						preco:"",
 						descricao:"",
@@ -481,6 +482,7 @@ function getDrupalProduto(tx){
 			  };
 			  
 			  produtosForm.nid = val.nid;
+			  produtosForm.codigo = val.codigo_produto;
 			  produtosForm.title = escapeHtml(val.titulo);
 			  produtosForm.title_comum = escapeHtml(val.node_title);
 			  produtosForm.language = escapeHtml(val.language);
@@ -1256,7 +1258,7 @@ function createTable(tx){
           ////////////////////////////////////////////Produtos//////////////////////////////////////
 		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Produtos');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT , preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT ,codigo TEXT, preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT)');
 	}
 	
 	//Adicionais
@@ -1378,7 +1380,7 @@ function insertTable(nomeTable){
 				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
-										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid) VALUES ("'
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,codigo) VALUES ("'
 												+ arrayProdutos[i].title
 												+ '","'
 												+ arrayProdutos[i].previa_descricao
@@ -1397,7 +1399,9 @@ function insertTable(nomeTable){
 												+ '","'
 												+ arrayProdutos[i].language
 												+ '","'
-												+ arrayProdutos[i].nid +
+												+ arrayProdutos[i].nid
+												+ '","'
+												+ arrayProdutos[i].codigo +
 												'" )');
 								testeProdutoErro = "produtos" + arrayProdutos[i].title;
 			}
