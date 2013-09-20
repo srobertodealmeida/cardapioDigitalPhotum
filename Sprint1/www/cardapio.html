@@ -127,7 +127,7 @@
 				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button efeito-button">Chamar
 					Garçom</button>
 					
-					<button id="btn_chamarGarçon" onclick="show('id-modal-meio-a-meio')" class="button efeito-button">teste</button>
+					
 			</div>
 
 		</div>
@@ -161,15 +161,15 @@
 				
 				<div class="button-escolher-opcoes">
 				<button value="modal_nome_pessoa"
-						class="btn_adicionar_opcao_1 btn-tamanho-adicionar-pessoa"
-						onclick="selectProdutoPedido(this)">+ Opção 1</button>
+						class="btn_adicionar_opcao_1 "
+						onclick="selectProdutoPizzaMeioaMeio('1')">+ Opção 1</button>
 			     <button  value="descricao-categoria-1-1"
-						class="btn_adicionar_opcao_2 btn-tamanho-adicionar-pessoa "
-						onclick="hide('id-modal-meio-a-meio')">+ Opção 2</button>
+						class="btn_adicionar_opcao_2 "
+						onclick="selectProdutoPizzaMeioaMeio('2')">+ Opção 2</button>
 				</div>
 				<div class="opcoes-escolhidas">
-				   <div class="p-escolha-sua-opcao"><label class="label-monte-sua-pizza">Opção 1: </label><span>Salsicha - R$ 28.80</span></div>
-				   <div class="p-escolha-sua-opcao"><label class="label-monte-sua-pizza">Opção 2: </label><span>Salsicha2 - R$ 28.80</span></div>
+				   <div class="p-escolha-sua-opcao opcao1"><label class="label-monte-sua-pizza">Opção 1: </label><span>Salsicha - R$ 28.80</span></div>
+				   <div class="p-escolha-sua-opcao opcao2"><label class="label-monte-sua-pizza">Opção 2: </label><span>Salsicha2 - R$ 28.80</span></div>
 				   <div class="div-valor-pizza"><label class="label-monte-sua-pizza">Valor Pizza: </label><span>57.60</span></div>
 				</div>
 				
@@ -178,11 +178,7 @@
 				dojoType="dojox.mobile.ScrollableView"   data-dojo-props='threshold:100' onmousedown="zerarInatividade()" onclick="zerarInatividade()">
 					<div class="mblView mblScrollableView menu_produto_modal_pizza_meio_a_meio">
 							<ul  dojoType="dojox.mobile.EdgeToEdgeList" class="ul_modal_monta_sua_pizza">
-								<div class="divClicavel" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/salsichao.jpg"></div> <span class="nome_produto">Salsicha</span><p class="preco_produto">R$ 28.80</p><div class="previa_descricao_produto"><span>Provolone, Molho de Tomate, Orégano</span></div></div>
-				                <div class="divClicavel" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/salsichao.jpg"></div> <span class="nome_produto">Salsicha</span><p class="preco_produto">R$ 28.80</p><div class="previa_descricao_produto"><span>Provolone, Molho de Tomate, Orégano</span></div></div>
-				                <div class="divClicavel" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/salsichao.jpg"></div> <span class="nome_produto">Salsicha</span><p class="preco_produto">R$ 28.80</p><div class="previa_descricao_produto"><span>Provolone, Molho de Tomate, Orégano</span></div></div>
-				                <div class="divClicavel" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/salsichao.jpg"></div> <span class="nome_produto">Salsicha</span><p class="preco_produto">R$ 28.80</p><div class="previa_descricao_produto"><span>Provolone, Molho de Tomate, Orégano</span></div></div>
-				                <div class="divClicavel" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="img/salsichao.jpg"></div> <span class="nome_produto">Salsicha</span><p class="preco_produto">R$ 28.80</p><div class="previa_descricao_produto"><span>Provolone, Molho de Tomate, Orégano</span></div></div>
+							
 				            </ul>
 					</div>
 				

@@ -1764,6 +1764,10 @@ background-image: #4d4d4d !important;
      opacity: 0.18;
 }
 
+.btn_adicionar_pedido[disabled=disabled]{
+	opacity: 0.18;
+}
+
 .btn-confirmar-pagamento{
 	position: absolute;
 	right: 610;
@@ -2092,8 +2096,9 @@ opacity: 0.18;
 	-webkit-appearance: none;
 	margin: 10;
 	height: 10% !important;
-	font-size: 23;
-	width: 10%;
+	font-size: 18;
+	width: 14%;
+	opacity:0.80;
 }
 
 .btn_adicionar_opcao_2 {
@@ -2122,8 +2127,13 @@ opacity: 0.18;
 	-webkit-appearance: none;
 	margin: 10;
 	height: 10% !important;
-	font-size: 23;
-	width: 10%;
+	font-size: 18;
+	width: 14%;
+	opacity:0.80;
+}
+
+.opcaoSelecionado{
+	opacity:6.15;
 }
 
 .opcoes-escolhidas{
@@ -2158,4 +2168,28 @@ opacity: 0.18;
 .div-valor-pizza span{
 	color: black;
 }
-    
+
+.nome_produto_opcoes_pizza{
+	right: 200px;
+position: relative;
+font-size: 21px;
+color: white !important;
+}
+
+.preco_produto_opcoes_pizza{
+font-size: 23px;
+	height: 50%;
+	left: 40%;
+	position: relative;
+	top: -49px;
+	width: 88%;
+	color: white !important;
+}
+
+.previa_descricao_produto_opcoes_pizza{
+	height: 50% !important;
+	right: -65px !important;
+	position: relative !important;
+	top: -68px !important;
+	width: 58% !important;
+}
