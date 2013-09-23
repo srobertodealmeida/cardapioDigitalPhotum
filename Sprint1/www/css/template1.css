@@ -2171,13 +2171,13 @@ opacity: 0.18;
 
 .nome_produto_opcoes_pizza{
 	right: 200px;
-position: relative;
-font-size: 21px;
-color: white !important;
+	position: relative;
+	font-size: 21px;
+	color: white !important;
 }
 
 .preco_produto_opcoes_pizza{
-font-size: 23px;
+	font-size: 23px;
 	height: 50%;
 	left: 40%;
 	position: relative;
