@@ -127,6 +127,8 @@
 				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button efeito-button">Chamar
 					Garçom</button>
 					
+					<button id="btn_chamarGarçon" onclick="show('modal_cancelamento_pedido')" class="button efeito-button">teste</button>
+					
 					
 			</div>
 
@@ -393,6 +395,24 @@
 		</div>
 		<button class="btn_ok_mensagem_modal_confirmacao_pagamento efeito-button" onclick="validarSenhaConfirmacaoPagamento(this)" id="btn_ok_confirmacao_pagamento">OK</button>
 		<button class="btn_ok_cancelar_modal_confirmacao_pagamento efeito-button" onclick="hide('modal_confirmacao_pagamento')">Cancelar</button>
+	</div>
+	
+	<div id="modal_cancelamento_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span class="label">Cancelamento do Pedido:</span>
+		</br>
+		</br>
+		<div class="motivo_cancelamento">
+		  <label class="label label-motivo-cancelamento-pedido">Motivo Cancelamento:</label><br/>
+		  <textarea class="textarea-motivo-cancelamento-pedido"></textarea>
+		</div>
+		<div>
+			<label class="label label-senha-cancelamento-pedido">Senha:</label>
+			<input onkeypress="inputSenhaCancelamentoPedido(this)" class="inputSenha-cancelamento-pedido" type="password"></input>
+		</div>
+		</div>
+		<button class="btn_ok_cancelamento_pedido efeito-button" onclick="validarSenhaCancelamentoPedido(this)" >OK</button>
+		<button class="btn_ok_cancelar_cancelamento_pedido efeito-button" onclick="hide('modal_cancelamento_pedido')">Cancelar</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento_limpar_dados_mesa" dojoType="dojox.mobile.SimpleDialog" class="mensagem">

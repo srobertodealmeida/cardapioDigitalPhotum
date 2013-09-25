@@ -1,6 +1,6 @@
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.104/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -1296,7 +1296,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT )');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT)');
 	
 }
 
@@ -1796,11 +1796,6 @@ function getAjax(url) {
 
 function postAjax(url,data){
 
-	db.transaction(function(tx){
-	tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-		 if(result.rows.length != 0){
-			 connectionWIFI = result.rows.item(0).connectionWIFI;
-			 if (connectionWIFI != "") {
 					if (connectionWIFI == "connectionTrue") {
 						return $.ajax({
 							dataType:'json',
@@ -1815,25 +1810,46 @@ function postAjax(url,data){
 						            return value;
 						        }
 						    },
-						    success : function(data) {
-
-								console.log('postAjax Success');
-
-							},
+						    
 						    
 							error : function(jqXHR, textStatus, errorThrown) {
 								console.log(jqXHR);
 							}
 						});
 						
-					} else {
-						return null;
-					}
+					
 				}
-		 }
-	   },errorCB);
-	},errorCB);
+		
 	
+}
+
+function postAjaxSincrona(url,data){
+
+	if (connectionWIFI == "connectionTrue") {
+		return $.ajax({
+			dataType:'json',
+			url : url,
+			type : "post",
+			crossDomain: true,
+			data : data,
+			converters: {
+		        "text json": function(value) {
+		            console.log("pre-processing...");
+		            /* do stuff */
+		            return value;
+		        }
+		    },
+		    
+		    
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+			}
+		});
+		
+	
+}
+
+
 }
 
 function postAjaxSinc(url, data) {
