@@ -3,6 +3,7 @@ var arrayIconesForm = new Array();
 var arrayLanguagesForm = new Array();
 var arrayProdutosForm = new Array();
 var arrayPropagandasForm = new Array();
+var arrayCategoriasForm = new Array();
 
 var iconesForm = {
 		title:"",

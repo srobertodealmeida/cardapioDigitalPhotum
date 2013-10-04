@@ -382,50 +382,93 @@ function inputSenhaConfirmacaoPagamentoLimparMesa(){
 function validarSenhaCancelamentoPedido(btn){
 				 
 		if (connectionWIFI == "connectionTrue") {
-			var ajax = getAjax(urlViewConfig);
-
+			textMotivo = $('#modal_cancelamento_pedido .textarea-motivo-cancelamento-pedido').val();
+			if(textMotivo != "" && textMotivo != null){
+				var ajax = getAjax(urlViewConfig);
+				ajax.success(function (data) {
+			      $.each(data, function(key, val) {
+			    	  
+			    	if(val.senha_cancelamento_pedido != "-1"){
+					    if(val.senha_cancelamento_pedido == $('.inputSenha-cancelamento-pedido').val()){
+					    	
+					    	var idPedido = btn.name;
+					    	var nidPedido = btn.value;
+					    	
+					    	
+					    	updatePedidoDrupal('cancelado',nidPedido,idPedido,textMotivo);
+					    	
+					    	var urlUpdateConfiguracao = "" + ipServidorDrupal + "/node/"+val.nid;
+					    	var senha_cancelamento = {
+									"value" : "-1",
+							}
 							
-			ajax.success(function (data) {
-		      $.each(data, function(key, val) {
-			    if(val.senha_cancelamento_pedido == $('.inputSenha-cancelamento-pedido').val()){
-			    	
-			    	var idPedido = btn.name;
-			    	var nidPedido = btn.value;
-			    	db.transaction(function(tx){
-						
-			    		tx.executeSql('UPDATE Pedido SET status="cancelado" WHERE Id='+idPedido+'');
-			    		tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
-						
-					},errorCB);
-			    	
-			    	updatePedidoDrupal('cancelado',nidPedido);
-			    	
-				}else{
-					 	alert('Senha Inválida');
-					 }
-							    	
-			  });
-		    });
+							var dataCancelamento = {
+									"type" : "configura_o",
+									"field_senha_cancelamento_pedido[und][0]" : senha_cancelamento,
+									
+							};
+					    	
+					    	var putMeuAjax = putAjax(urlUpdateConfiguracao,dataCancelamento);
+					    	
+						}else{
+							 	alert('Senha Inválida');
+							 }
+			    	 }else{
+			    		 alert('Senha Vencida');
+			    	 }	    	
+				  });
+			    });
+		    }else{
+		    	alert('Favor Digitar o Motivo do Cancelamento');
+		    }
 		 } else {
 			 hide('modal_cancelamento_pedido');
 		 }
 }
 
-function updatePedidoDrupal(status,nid){
+function updatePedidoDrupal(status,nid,idPedido,textMotivo){
 	var url = "" + ipServidorDrupal + "/node/"+nid;
 	
 	var statusData = {
 			"value" : status,
+	}
+	
+	var motivoCancelamento ={
+			"value" : textMotivo,
+	}
+	
+	var precoPedido ={
+			"value" : "0.00",
 	}
 
 	
 	var data = {
 			"type" : "pedido",
 			"field_status[und][0]" : statusData,
+			"field_motivo_cancelamento[und][0]" : motivoCancelamento,
+			"field_preco_produto[und][0]" : precoPedido,
 	};
 	
 	var putMeuAjax = putAjax(url,data);
-}
+	
+	putMeuAjax.success(function (data) {
+		db.transaction(function(tx){
+			
+    		tx.executeSql('UPDATE Pedido SET status="cancelado" WHERE Id='+idPedido+'');
+    		selectProdutoMeuPedido();
+    		alert('Pedido Cancelado com Sucesso');
+    		hide('modal_cancelamento_pedido');
+			
+		},errorCB);
+		
+		
+	});
+	
+	putMeuAjax.error(function (data) {
+		alert('Erro Ao Cancelar Pedido');
+	});
+	
+}	
 
 function validarSenhaConfirmacaoPagamento(){
 	
@@ -610,6 +653,14 @@ function chamarProdutos(div){
 	
 	$("#UL-Produtos").html("");
 	
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Categorias where title_comum = "'+ categoriaSelecionado +'" ',[],function(tx,result){
+			if(result.rows.item(0).image != null || result.rows.item(0).image != ""){
+				$('body').css('background','url("'+result.rows.item(0).image+'") no-repeat scroll center bottom transparent');
+			}
+			
+		},errorCB);
+	 },errorCB);
 	db.transaction(selectDadosProdutos,errorCB);
 }
 
@@ -818,7 +869,7 @@ function montaAdicionais(){
 	$("#id_modal_nome_pessoa .select-adicionais option").remove();
 	$('.label-combo-adicionais').text(ObjectLabels.label_adicionais);
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Adicionais where categoria = "'+categoriaSelecionado+'"',[],function(tx,result){
+		tx.executeSql('SELECT * FROM Adicionais where categoria = "'+categoriaSelecionado+'" and language = "'+constLanguageSelected+'"',[],function(tx,result){
 			if(result.rows.length > 0){
 				$('.select-adicionais').show();
 				for(i=0;i<result.rows.length;i++){
@@ -1100,6 +1151,7 @@ function salvarEdicaoPedido(){
 	 var preco_adicionais = "";
 	 var nid_adicionais = "";
 	 var title_adicionais = "";
+	 var title_adicionais_portugues = "";
 	 var contador = 0;
 	 tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
 		 var precoOriginal =  result.rows.item(0).preco_original_produto;
@@ -1124,11 +1176,13 @@ function salvarEdicaoPedido(){
 										 preco_adicionais =   result.rows.item(0).preco;
 										 nid_adicionais =   result.rows.item(0).nid;
 										 title_adicionais =   result.rows.item(0).title;
+										 title_adicionais_portugues = result.rows.item(0).title_comum;
 										 contador = contador + 1;
 									 }else{
 										 preco_adicionais += "," +  result.rows.item(0).preco;
 										 nid_adicionais +=   ","  + result.rows.item(0).nid;
 										 title_adicionais += "," +  result.rows.item(0).title;
+										 title_adicionais_portugues += "," + result.rows.item(0).title_comum;
 										 contador = contador + 1;
 									 }
 								 }
@@ -1144,7 +1198,7 @@ function salvarEdicaoPedido(){
 									 precoFinal = parseFloat(precoFinal) * quantidadeProduto;
 									 precoFinal = precoFinal.toFixed(2);
 									
-									 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" WHERE id="'+idPedidoEditando+'"');
+									 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" ,title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id="'+idPedidoEditando+'"');
 								     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 								 }
 								 
@@ -1157,7 +1211,7 @@ function salvarEdicaoPedido(){
 		 }else{
 			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
 			 precoFinal = precoFinal.toFixed(2);
-			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" WHERE id="'+idPedidoEditando+'"');
+			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id="'+idPedidoEditando+'"');
 		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 		 }
 	 
@@ -1229,6 +1283,7 @@ function adicionarPedido(tx,result){
 				 var preco_adicionais = "";
 				 var nid_adicionais = "";
 				 var title_adicionais = "";
+				 var title_adicionais_portugues = "";
 				 var contador = 0;
 				 
 				 //Prepara Adicionais
@@ -1244,11 +1299,13 @@ function adicionarPedido(tx,result){
 									 preco_adicionais =   result.rows.item(0).preco;
 									 nid_adicionais =   result.rows.item(0).nid;
 									 title_adicionais =   result.rows.item(0).title;
+									 title_adicionais_portugues = result.rows.item(0).title_comum;
 									 contador = contador + 1;
 								 }else{
 									 preco_adicionais += "," +  result.rows.item(0).preco;
 									 nid_adicionais +=   ","  + result.rows.item(0).nid;
 									 title_adicionais += "," +  result.rows.item(0).title;
+									 title_adicionais_portugues += "," + result.rows.item(0).title_comum;
 									 contador = contador + 1;
 								 }
 							 }
@@ -1265,12 +1322,12 @@ function adicionarPedido(tx,result){
 									 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 										 if(result.rows.length > 0){
 											 	
-											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'")');
+											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'")');
 										 }
 										 
 									 },errorCB);
 								 }else{
-									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'")');
+									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'")');
 	
 								 }
 								 
@@ -1284,12 +1341,12 @@ function adicionarPedido(tx,result){
 						 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 							 if(result.rows.length > 0){
 								
-								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'")');
+								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'")');
 							 }
 							 
 						 },errorCB);
 					 }else{
-						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'")');
+						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'")');
 
 					 }
 					 
@@ -1327,7 +1384,8 @@ function preparaModalCancelamentoPedido(btn){
 	$('#modal_cancelamento_pedido .btn_ok_cancelamento_pedido').attr('name',name);
 	$('#modal_cancelamento_pedido .btn_ok_cancelamento_pedido').attr('value',value);
 	
-	
+	$('#modal_cancelamento_pedido .textarea-motivo-cancelamento-pedido').val('');
+	$('#modal_cancelamento_pedido .inputSenha-cancelamento-pedido').val('');
 	show('modal_cancelamento_pedido');
 }
 function montaModalPedido(tx,result){
@@ -1521,17 +1579,20 @@ function postPedidoDrupal(tx, result) {
 						for ( var i = 0; i < result.rows.length; i++) {
 
 							console.log(result.rows.item(i));
-							var observacao ="";
+							var observacao = result.rows.item(i).observacao;
 							var title = "";
 							
 							if(result.rows.item(i).flagPizzaMeioaMeio == "true"){
-								observacao = result.rows.item(i).observacao +"</br>"+ result.rows.item(i).observacao_opcaoPizza_portugues;
+								observacao = observacao +"</br>"+ result.rows.item(i).observacao_opcaoPizza_portugues;
 								title = result.rows.item(i).title_opcaoPizza_portugues;
 							}else{
 								observacao = result.rows.item(i).observacao;
 								title = result.rows.item(i).nome_produto_portugues;
 							}
 							 
+							if(result.rows.item(i).title_adicionais_portugues != ""){
+								observacao = observacao +"</br>"+ "Adicionais: " + result.rows.item(i).title_adicionais_portugues;
+							}
 							var observacaoReplacePulaLinha = observacao.replace("</br>", " tag-pular ");
 
 							var mesa = {
@@ -1579,6 +1640,10 @@ function postPedidoDrupal(tx, result) {
 							var id_pedido = {
 									"value" : "" + result.rows.item(i).id + "",
 							}
+							
+							var adicionais_pedido = {
+									"value" : "" + result.rows.item(i).title_adicionais_portugues + "",
+							}
 
 							var data = {
 								"type" : "pedido",
@@ -1593,6 +1658,7 @@ function postPedidoDrupal(tx, result) {
 								"field_categoria_produto_pedido[und][0]" : categoria_produto,
 								"field_nid_produto[und][0]" : nid_produto,
 								"field_id_pedido[und][0]" : id_pedido,
+								"field_adicionais_pedido[und][0]" : adicionais_pedido,
 								"title" : title,
 							};
 							
@@ -1811,7 +1877,8 @@ function chamarGarcon(){
 }
 
 $(document).ready(function(){
-	
+	console.log('seriooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo')
+	var text = $('.textarea-motivo-cancelamento-pedido').text();
 	setLanguage();
 	setLabels();
 	inatividade();

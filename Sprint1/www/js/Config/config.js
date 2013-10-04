@@ -1,6 +1,6 @@
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.106/drupal-7.20/?q=rest";
+var ipServidorDrupal = "http://192.168.0.102/PizzaCompany/?q=rest";
 var urlViewConfig = ipServidorDrupal + "/views/configuracao";
 var urlViewLabels = ipServidorDrupal + "/views/labels";
 var urlViewHome = ipServidorDrupal + "/views/view_home";
@@ -31,6 +31,7 @@ var qtdIcones = 0;
 var titleLanguage="";
 var qtdLanguages = 0;
 var qtdPropaganda = 0;
+var qtdCategorias = 0;
 var produtosFormVazio = {
 		title:"",
 		previa_descricao:"",
@@ -424,23 +425,55 @@ function getDrupalCategoria(tx) {
 	var ajaxCategoria = getAjax(urlViewCategoria);
 
 	ajaxCategoria.success(function(data) {
+		qtdCategorias = data.length;  
+		quantidadeRegistros += qtdCategorias;
 		$.each(data, function(key, val) {
 			console.log(val);
+			
+			
 			val.node_title = escapeHtml(val.node_title);
 
 			var categoriaForm = {
 				title : "",
 				title_comum : "",
-				language : ""
+				language : "",
+				image: ""
 			};
+			
+			var categoriasFinalDownloadForm = {
+					categoriaForm:categoriaForm,
+					url:"",
+					pathDestino:"",
+		    };
+			
 			categoriaForm.title = val.titulo;
 			categoriaForm.language = val.language;
 			categoriaForm.title_comum = val.node_title;
-			arrayCategorias.push(categoriaForm);
+			//categoriaForm.image = val.image_categoria
+			//arrayCategorias.push(categoriaForm);
+			
+			if(val.image_categoria != null){
+				  var url = $.parseHTML(val.image_categoria); //pega apenas href
+				  var urlString = url.toString();
+				  var extencao =  urlString.substr(urlString.length - 3);
+				  var pathDestino = pathAplicativo + "/home/categoria." + key  + "."+ extencao; // url onde será salvo a imagen
+				  }else{
+					  url = null;
+					  pathDestino = null;
+				  }
+			
+			 var typeImagen = "categorias";
+			  
+			 categoriasFinalDownloadForm.categoriaForm = categoriaForm;
+			 categoriasFinalDownloadForm.url = url;
+			 categoriasFinalDownloadForm.pathDestino = pathDestino;
+			  
+			 arrayCategoriasForm.push(categoriasFinalDownloadForm);
 
 		});
-		quantidadeRegistros += arrayCategorias.length;
-		insertTable("categorias");
+		downloadImagesCategorias(tx, qtdCategorias, 0)
+		//quantidadeRegistros += arrayCategorias.length;
+		//insertTable("categorias");
 
 	});
 
@@ -682,12 +715,16 @@ function getDrupalAdicionais(tx){
 				title : "",
 				preco : "",
 				categoria : "",
-				nid : ""
+				nid : "",
+				title_comum : "",
+				language : ""
 			};
 			adicionaisForm.title = val.node_title;
 			adicionaisForm.preco = val.preco_adicionais;
 			adicionaisForm.categoria = val.categoria_adicionais;
 			adicionaisForm.nid = val.nid;
+			adicionaisForm.title_comum = val.titulo_adicionais;
+			adicionaisForm.language = val.language;
 			arrayAdicionais.push(adicionaisForm);
 
 		});
@@ -896,6 +933,57 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 	}
 }
 
+//Método para fazer download de produtos, para fazer download de cada vez e nao em treads.
+function downloadImagesCategorias(tx,qtdCategorias,indice){
+     if (indice != qtdCategorias && arrayCategoriasForm[indice].pathDestino != null) {
+		var url = encodeURI(arrayCategoriasForm[indice].url);
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
+			var imagePath = fs.root.fullPath + arrayCategoriasForm[indice].pathDestino; // full file path
+			var fileTransfer = new FileTransfer();
+
+			 fileTransfer.onprogress = function(progressEvent) {
+	    	  		if (progressEvent.lengthComputable) {
+	    	  			zerarInatividade();
+	    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+	    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
+	    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+	    	  			console.log(perc + "% loaded...");
+	    	  		} else {
+	    	  			if($('#loadingPercentual').innerHTML == "") {
+	    	  				$('#loadingPercentual').innerHTML = "Loading";
+	    	  			} else {
+	    	  				$('#loadingPercentual').innerHTML += ".";
+	    	  			}
+	    	  		}
+	    	  	};
+			
+			
+			fileTransfer.download(url, imagePath, function(entry) {
+				console.log("download complete: " + entry.fullPath); // entry
+				 zerarInatividade();
+				 salvaPathImagenCategorias(tx,imagePath,qtdCategorias,indice);
+			}, function(error) {
+				downloadImagesCategorias(tx,qtdCategorias,indice);
+				sucessDadosDrupal = false;
+				console.log("download error source " + error.source);
+				console.log("download error target " + error.target);
+				console.log("upload error code" + error.code);
+				console.log("error respoinse:" + error.response);
+			}, false);
+
+		})
+	}else{// Caso a imagem for nula ou seja produto de outra language que não possui imagem é inserio no array.
+		arrayCategorias.push(arrayCategoriasForm[indice].categoriaForm);
+			console.log('length: '+arrayCategorias.length+"qtdProdutos: "+qtdCategorias);
+			if(arrayCategorias.length == qtdCategorias){
+				insertTable("categorias");
+			}else{
+				indice = indice + 1;
+				downloadImagesCategorias(tx,qtdCategorias,indice)
+			}
+	}
+}
+
 // Método que salva path da imagem no form
 function salvaPathImagen(typeImagen,imagePath,tx,titleIcone,produtosForm,titleLanguage){
 	console.log('nomeImage  : '+typeImagen);
@@ -992,6 +1080,21 @@ function salvaPathImagenProdutos(tx,imagePath,qtdProdutos,indice){
 		}else{
 			indice = indice + 1;
 			downloadImagesProdutos(tx,qtdProdutos,indice)
+		}
+	
+}
+
+//Método que salva path da imagem no form
+function salvaPathImagenCategorias(tx,imagePath,qtdCategorias,indice){
+		
+	    arrayCategoriasForm[indice].categoriaForm.image = imagePath;
+	    arrayCategorias.push(arrayCategoriasForm[indice].categoriaForm);
+		//console.log('length: '+arrayProdutos.length+"qtdProdutos: "+qtdCategorias);
+		if(arrayCategorias.length == qtdCategorias){
+			insertTable("categorias");
+		}else{
+			indice = indice + 1;
+			downloadImagesCategorias(tx,qtdCategorias,indice)
 		}
 	
 }
@@ -1250,7 +1353,7 @@ function createTable(tx){
          ////////////////////////////////////////////Categorias//////////////////////////////////////
 		// Table cATEGORIAS
 		tx.executeSql('DROP TABLE IF EXISTS Categorias');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT)');
 	}
 	
 	// Produtos
@@ -1267,7 +1370,7 @@ function createTable(tx){
 		   ////////////////////////////////////////////Adicionais//////////////////////////////////////
 		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Adicionais');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT, title_comum TEXT, language TEXT)');
 	}
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
@@ -1296,7 +1399,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT)');
 	
 }
 
@@ -1367,8 +1470,8 @@ function insertTable(nomeTable){
 			for(i=0;i<arrayCategorias.length;i++){
 				
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Categorias(title,language,title_comum) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'")');
-				tx.executeSql('INSERT INTO Categorias(title,language,title_comum) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'")');
+				console.log('INSERT INTO Categorias(title,language,title_comum,image) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'")');
+				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'")');
 			}
             },errorCB,successInsert);
 		
@@ -1445,8 +1548,8 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			for(i=0;i<arrayAdicionais.length;i++){
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Adicionais(title,preco,categoria,nid) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '")');
-	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '")');
+				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
+	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
 			}
             },errorCB,successInsert);
 	}
@@ -1876,7 +1979,7 @@ function postAjaxSinc(url, data) {
 }
 
 function putAjax(url,data){
-	$.ajax({
+	return $.ajax({
 		url : url,
 		type : "put",
 		data : data,
@@ -1893,15 +1996,10 @@ function putAjax(url,data){
 	    
 	    success : function(data) {
 
-			alert('sucess');
-
 		},
 		
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert('error');
-			alert(textStatus);
-			alert(errorThrown);
-			console.log(jqXHR);
+		
 		}
 	});
 

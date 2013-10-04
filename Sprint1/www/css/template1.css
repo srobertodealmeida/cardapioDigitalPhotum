@@ -968,6 +968,7 @@ body {
 	min-height: 100%;
 	background: url("../img/hamburguer-background.jpg") no-repeat scroll
 		center bottom transparent;
+		background-size: 112%; 
 }
 
 .label {
@@ -1997,7 +1998,7 @@ opacity: 0.18;
 }
 
 .label-combo-adicionais{
-	margin-left: 59%;
+	margin-left: 53%;
 	margin-top: 20px;
 	position: fixed;
 	
@@ -2226,7 +2227,7 @@ opacity: 0.18;
 }
 
 .textarea-motivo-cancelamento-pedido{
-	font-size: 40px;
+	font-size: 20px;
 	height: 90%;
 	width: 97%;
 	margin-left: 9px;
