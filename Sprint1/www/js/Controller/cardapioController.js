@@ -676,9 +676,28 @@ function montaProdutos(tx,result){
 		 
 		 $(".mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 		 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
-		 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
-		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+titleProduto+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
+		// var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
+		 if(result.rows.item(i).previa_descricao == null || result.rows.item(i).previa_descricao == "null"){
+			 var PreviadescricaoProduto = "";
+			 $('#UL-Produtos .minhaLI').addClass('minhali_sem_previa_descricao');
+		 }else{
+			 var PreviadescricaoProduto = result.rows.item(i).previa_descricao;
+		 }
+		 
+		 if(result.rows.item(i).image == "" || result.rows.item(i).image == null){
+			 var titleProduto = delimitadorFrase(result.rows.item(i).title, 36);
+			
+		 }else{
+			 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
+		 }
+		 
+		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+titleProduto+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+PreviadescricaoProduto+'</span></div></div>');
 		
+		 if(result.rows.item(i).image == "" || result.rows.item(i).image == null){
+			 $('#UL-Produtos .imagem_categoria img').hide();
+			 $('#UL-Produtos .nome_produto').css('left','30px');
+			 $('#UL-Produtos .previa_descricao_produto').addClass('previa_descricao_sem_image');
+		 }
 	}
 }
 

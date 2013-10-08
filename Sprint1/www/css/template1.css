@@ -1273,7 +1273,7 @@ background-image: #4d4d4d !important;
 	border: 2px solid #282828 !important;
 	background-image: -moz-linear-gradient(top, #0fff31, #000000) !important;
 	background-image: -webkit-linear-gradient(top, #0fff31, #000000)
-		!important;
+		!important;                      
 	background-image: linear-gradient(top, #0fff31, #000000) !important;
 	opacity: 0.42 !important;
 	
@@ -1281,6 +1281,7 @@ background-image: #4d4d4d !important;
 	height: 20%;
 }
 */
+
 .div_conjunto:active {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#306ea1),
 		to(#266093), color-stop(0.06, #4090d3), color-stop(0.5, #306ea1) );
@@ -2307,4 +2308,10 @@ opacity: 0.18;
 	background-image: -moz-linear-gradient(top, #ff2136, #100401);
 	background-image: -webkit-linear-gradient(top, #ff2136, #100401);
 	background-image: linear-gradient(top, #ff2136, #100401);
+}
+.previa_descricao_sem_image{
+	left: 30px !important;
+}
+.minhali_sem_previa_descricao{
+	margin: 17px 14px -210px !important;
 }
