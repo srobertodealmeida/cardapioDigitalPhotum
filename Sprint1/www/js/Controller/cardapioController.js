@@ -473,9 +473,7 @@ function updatePedidoDrupal(status,nid,idPedido,textMotivo){
 function validarSenhaConfirmacaoPagamento(){
 	
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-			 if(result.rows.length != 0){
-				 connectionWIFI = result.rows.item(0).connectionWIFI;
+	
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
@@ -500,8 +498,7 @@ function validarSenhaConfirmacaoPagamento(){
 				    		hide('modal_confirmacao_pagamento');
 						}
 					}
-			 }
-		   },errorCB);
+
 		},errorCB);
 	
 }
@@ -545,9 +542,7 @@ function voltaHome(){
 function validarSenhaConfirmacaoPagamentoLimparMesa(){
 	
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-			 if(result.rows.length != 0){
-				 connectionWIFI = result.rows.item(0).connectionWIFI;
+		
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
@@ -567,8 +562,7 @@ function validarSenhaConfirmacaoPagamentoLimparMesa(){
 							limparDadosMesa();
 						}
 					}
-			 }
-		   },errorCB);
+
 		},errorCB);
 
 }
@@ -691,7 +685,7 @@ function montaProdutos(tx,result){
 			 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
 		 }
 		 
-		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+titleProduto+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+PreviadescricaoProduto+'</span></div></div>');
+		 $("#UL-Produtos").append('<div class="divClicavel" name="'+ result.rows.item(i).id +'" id="produto-'+i+'" onclick="selectProduto(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto">'+titleProduto+'</span><p class="preco_produto">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto"><span>'+PreviadescricaoProduto+'</span></div></div>');
 		
 		 if(result.rows.item(i).image == "" || result.rows.item(i).image == null){
 			 $('#UL-Produtos .imagem_categoria img').hide();
@@ -724,7 +718,11 @@ function selectProdutoPizzaMeioaMeio(opcao){
 					 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 					 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
 					 $(".ul_modal_monta_sua_pizza").append('<div class="divClicavel" value="'+opcao+'" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="adicionarPizzaMeioaMeio(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto_opcoes_pizza">'+titleProduto+'</span><p class="preco_produto_opcoes_pizza">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto_opcoes_pizza"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
-					
+					 if(result.rows.item(i).image == "" || result.rows.item(i).image == null){
+						 $(".ul_modal_monta_sua_pizza .imagem_categoria img").hide();
+						 $(".ul_modal_monta_sua_pizza .nome_produto_opcoes_pizza").addClass('nome_produto_opcoes_pizza_sem_imagem');
+						 $(".ul_modal_monta_sua_pizza .previa_descricao_produto_opcoes_pizza").addClass('previa_descricao_produto_opcoes_pizza_sem_pizza');
+					 }
 				}
 			}
 		
@@ -836,6 +834,11 @@ function montaDescricao(tx,result){
 			console.log("imagem: "  + result.rows.item(0).image);
 			
 			$("#id-modal-descricao .modal_image").append('<img alt="" src="'+result.rows.item(0).image+'" class="img_modal">');
+			if(result.rows.item(0).image == "" || result.rows.item(0).image == null){
+				$("#id-modal-descricao .modal_image").hide();
+				$("#id-modal-descricao .modal_descricao").addClass('modal_descricao_sem_image');
+			}
+			
 			$("#id-modal-descricao .modal_descricao .title_modal").text(result.rows.item(0).title);
 			$("#id-modal-descricao .modal_descricao .title_descricao").text(result.rows.item(0).descricao);
 			$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
@@ -1931,6 +1934,94 @@ $(document).ready(function(){
 	
 	
 });
+
+function postTEste(){
+
+
+							var observacao = "teste";
+							var title = "ddddddddd";
+							
+						
+						
+
+							var mesa = {
+								"value" : "20",
+							}
+
+							var idContaDrupal = {
+								"value" : "6",
+							}
+
+							var pessoa = {
+								"value" : "sergio",
+							}
+
+							var observacao = {
+								"value" : "simsim",
+							}
+
+							var nome_produto = {
+								"value" : "nomeProduto",
+							}
+
+							var preco_produto = {
+								"value" : "10",
+							}
+
+							var quantidade_produto = {
+								"value" :"3",
+							}
+
+							var status = {
+								"value" : "confirmacao",
+							}
+							
+							var categoria_produto = {
+									"value" : "pizzas",
+							}
+							
+							var nid_produto = {
+									"value" : "20",
+							}
+							
+							var id_pedido = {
+									"value" : "2",
+							}
+							
+							var adicionais_pedido = {
+									"value" : "",
+							}
+
+							var data = {
+								"type" : "pedido",
+								"field_mesa[und][0]" : mesa,
+								"field_pessoa[und][0]" : pessoa,
+								"field_observacao[und][0]" : observacao,
+								"field_nome_produto[und][0]" : nome_produto,
+								"field_preco_produto[und][0]" : preco_produto,
+								"field_quantidade[und][0]" : quantidade_produto,
+								"field_status[und][0]" : status,
+								"field_id_conta[und][0]" : idContaDrupal,
+								"field_categoria_produto_pedido[und][0]" : categoria_produto,
+								"field_nid_produto[und][0]" : nid_produto,
+								"field_id_pedido[und][0]" : id_pedido,
+								"field_adicionais_pedido[und][0]" : adicionais_pedido,
+								"title" : title,
+							};
+							
+							
+							//arrayIdPedidosAEfetuar.push(result.rows.item(i).id);
+							var url = 'http://192.168.0.101/PizzaCompany/?q=rest/node';
+							// var ajaxPostDrupal = postAjax(url,data);
+							//var ajaxPostNid = postAjaxSincrona(url, data);
+							var ajax = getAjax('http://192.168.0.101/PizzaCompany/?q=rest/node');
+							ajax.success(function (data) {
+								
+								alert(data)
+								
+						    });
+							
+}
 
 function delimitadorFrase(frase,qdtCaracter){
 	if(frase.length > qdtCaracter){

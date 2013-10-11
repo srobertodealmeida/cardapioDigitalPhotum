@@ -80,6 +80,8 @@
 							value="1">Sincronizar Ipad</button></li>
 					<li class="li-configuracao"><a href="home.html"><button
 								value="1">Voltar Home</button></a></li>
+					<li class="li-configuracao"><button onclick="preparaMudarEnderecoServidor()"
+								value="1">Mudar Endereço Servidor</button></li>
 
 				</ul>
 			</div>
@@ -222,6 +224,20 @@
 					</div>
 					<button class="btn_ok_mensagem" onclick="sincronizarReceberDados()" id="btn-receber-dados">OK</button>
 					<button class="btn-cancelar-senha" onclick="hide('modal_sincronizacao_form_receber_dados')">Cancelar</button>
+				</form>
+			</div>
+		</div>
+		
+		<div id="modal_mudar_endereco_servidor" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div class="div-form-sincronizacao-receber-dados">
+				<form onsubmit=" return false;">
+					<div class="div-mensagem">
+						<label class="labelSenha">Endereco: </label> <input
+							onkeypress="focusOutInputMudarEnderecoServidor(this)" class="inputMudarEnderecoServidor"></input>
+					</div>
+					<button class="btn_ok_mensagem" onclick="mudarEnderecoServidor()" id="btn-mudar-endereco-servidor">OK</button>
+					<button class="btn-cancelar-senha" onclick="hide('modal_mudar_endereco_servidor')">Cancelar</button>
 				</form>
 			</div>
 		</div>

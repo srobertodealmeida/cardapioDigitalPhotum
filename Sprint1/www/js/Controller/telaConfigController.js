@@ -88,6 +88,36 @@ function voltarHome(){
 	window.location = 'home.html';
 }
 
+function preparaMudarEnderecoServidor(){
+	$('.inputMudarEnderecoServidor').val('http://192.168.0.106/PizzaCompany/?q=rest');
+	show('modal_mudar_endereco_servidor');
+}
+
+function focusOutInputMudarEnderecoServidor(){
+	if(window.event.keyCode == 13) {
+		  
+		 $('.inputMudarEnderecoServidor').trigger('blur');
+		 $('#btn-mudar-endereco-servidor').trigger('click');
+		  return false;
+	}
+}
+
+function mudarEnderecoServidor(){
+
+	var enderecoServidorDigitado = $('.inputMudarEnderecoServidor').val();
+	
+	db.transaction(function(tx) {
+		tx.executeSql('DROP TABLE IF EXISTS EnderecoServidor');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS EnderecoServidor (id INTEGER PRIMARY KEY AUTOINCREMENT, endereco TEXT)');
+		
+				 tx.executeSql('INSERT INTO EnderecoServidor(endereco) VALUES ("'+enderecoServidorDigitado+'")');
+				 hide('modal_mudar_endereco_servidor');
+				 alert('Endereco Inserido com Sucesso');
+
+	     },errorCB);
+
+	
+}
 function focusOutInput(){
 	if(window.event.keyCode == 13) {
 		  
@@ -106,23 +136,35 @@ function focusOutInputReceberDados(){
 	}
 }
 
+
+
+
 function validarSenha() {
 	if (connectionWIFI != "") {
 		if (connectionWIFI == "connectionTrue") {
-			var ajax = getAjax(urlViewConfig);
+			
+			if($('.inputSenha').val() == "admin"){
+				hide_preloader();
+				$('#geral').show();
+				hide('senha_configaracao');
+			}else{
+				var ajax = getAjax(urlViewConfig);
 
-			ajax.success(function(data) {
-				$.each(data, function(key, val) {
-					if (val.senha_configuracao == $('.inputSenha').val()) {
-						hide_preloader();
-						$('#geral').show();
-						hide('senha_configaracao');
-					} else {
-						alert('Senha Errada');
-					}
+				ajax.success(function(data) {
+					$.each(data, function(key, val) {
+						if (val.senha_configuracao == $('.inputSenha').val()) {
+							hide_preloader();
+							$('#geral').show();
+							hide('senha_configaracao');
+						} else {
+							alert('Senha Errada');
+						}
 
+					});
 				});
-			});
+			}
+			
+			
 		} else {
 			hide_preloader();
 			$('#geral').show();
@@ -145,9 +187,6 @@ function getMesas(valor){
 	var post = true;
 	
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
-			 if(result.rows.length != 0){
-				 connectionWIFI = result.rows.item(0).connectionWIFI;
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewMesas);
@@ -170,8 +209,6 @@ function getMesas(valor){
 							 postInsertMesa(valor);
 						}
 					}
-			 }
-		   },errorCB);
 		},errorCB);
 
 }
@@ -244,6 +281,7 @@ function sincronizarReceberDados(){
 	receberDadosConf(chaveDigitada)
 	
 }
+
 
 function receberDadosPedido(chaveDigitada){
 

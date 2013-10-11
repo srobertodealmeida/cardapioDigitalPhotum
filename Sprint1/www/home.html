@@ -84,7 +84,7 @@
 
 		<!-- Aperitivos -->
 		<div class="content" >
-
+<button style="display:none;" class="btn-mudar-endereceo-servidor" onclick="preparaMudarEnderecoServidor()">Mudar Servidor</button>
 			<div id="loadingPercentual"></div>
 			   <div id="div-icones">
 				<div id="content-carousel1" class="content-carousel1"
@@ -126,6 +126,20 @@
 				</div>
 			</div>
 			
+		</div>
+		
+		<div id="modal_mudar_endereco_servidor" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div class="div-form-sincronizacao-receber-dados">
+				<form onsubmit=" return false;">
+					<div class="div-mensagem">
+						<label class="labelSenha">Endereco: </label> <input
+							onkeypress="focusOutInputMudarEnderecoServidor(this)" class="inputMudarEnderecoServidor"></input>
+					</div>
+					<button class="btn_ok_mensagem" onclick="mudarEnderecoServidor()" id="btn-mudar-endereco-servidor">OK</button>
+					<button class="btn-cancelar-senha" onclick="hide('modal_mudar_endereco_servidor')">Cancelar</button>
+				</form>
+			</div>
 		</div>
 		
 		<div id="modal_loading_atualizando_cardapio" dojoType="dojox.mobile.SimpleDialog"

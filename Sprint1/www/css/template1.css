@@ -2315,3 +2315,14 @@ opacity: 0.18;
 .minhali_sem_previa_descricao{
 	margin: 17px 14px -210px !important;
 }
+
+.modal_descricao_sem_image{
+	width: 100% !important;
+}
+
+.nome_produto_opcoes_pizza_sem_imagem{
+	right: 0px !important;
+}
+.previa_descricao_produto_opcoes_pizza_sem_pizza{
+	width: 78% !important;
+}

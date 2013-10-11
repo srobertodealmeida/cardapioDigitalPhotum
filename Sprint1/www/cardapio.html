@@ -1,6 +1,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
+<meta http-equiv="Access-Control-Allow-Origin" content="*"> 
 <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -126,9 +128,6 @@
 				
 				<button id="btn_chamarGarçon" onclick="showChamarGarcom('modal_chamar_garcon')" class="button efeito-button">Chamar
 					Garçom</button>
-					
-					
-					
 					
 			</div>
 
@@ -432,6 +431,20 @@
 		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="limparDadosMesa(this)">Sim</button>
 		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_confirmacao_pagamento_limpar_mesa')">Não</button>
 	</div>
+	
+	<div id="modal_mudar_endereco_servidor" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div class="div-form-sincronizacao-receber-dados">
+				<form onsubmit=" return false;">
+					<div class="div-mensagem">
+						<label class="labelSenha">Endereco: </label> <input
+							onkeypress="focusOutInputMudarEnderecoServidor(this)" class="inputMudarEnderecoServidor"></input>
+					</div>
+					<button class="btn_ok_mensagem" onclick="mudarEnderecoServidor()" id="btn-mudar-endereco-servidor">OK</button>
+					<button class="btn-cancelar-senha" onclick="hide('modal_mudar_endereco_servidor')">Cancelar</button>
+				</form>
+			</div>
+		</div>
 		
 </div>	
 

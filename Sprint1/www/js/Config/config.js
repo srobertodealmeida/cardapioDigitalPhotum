@@ -1,17 +1,17 @@
 // Variaveis globais
 
-var ipServidorDrupal = "http://192.168.0.102/PizzaCompany/?q=rest";
-var urlViewConfig = ipServidorDrupal + "/views/configuracao";
-var urlViewLabels = ipServidorDrupal + "/views/labels";
-var urlViewHome = ipServidorDrupal + "/views/view_home";
-var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
-var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
-var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
-var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
-var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
-var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
-var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
-var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+var ipServidorDrupal = "null";
+					var urlViewConfig = ipServidorDrupal + "/views/configuracao";
+					var urlViewLabels = ipServidorDrupal + "/views/labels";
+					var urlViewHome = ipServidorDrupal + "/views/view_home";
+					var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
+					var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
+					var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+					var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
+					var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+					var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+					var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+					var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
 
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
@@ -1898,7 +1898,7 @@ function getAjax(url) {
 }
 
 function postAjax(url,data){
-
+	jQuery.support.cors = true;
 					if (connectionWIFI == "connectionTrue") {
 						return $.ajax({
 							dataType:'json',
@@ -1916,6 +1916,7 @@ function postAjax(url,data){
 						    
 						    
 							error : function(jqXHR, textStatus, errorThrown) {
+								alert(errorThrown)
 								console.log(jqXHR);
 							}
 						});
@@ -1927,7 +1928,6 @@ function postAjax(url,data){
 }
 
 function postAjaxSincrona(url,data){
-
 	if (connectionWIFI == "connectionTrue") {
 		return $.ajax({
 			dataType:'json',
@@ -1942,9 +1942,12 @@ function postAjaxSincrona(url,data){
 		            return value;
 		        }
 		    },
-		    
-		    
 			error : function(jqXHR, textStatus, errorThrown) {
+				alert(errorThrown);
+				alert(textStatus);
+				alert(jqXHR)
+				console.log(textStatus)
+				console.log(errorThrown)
 				console.log(jqXHR);
 			}
 		});
@@ -2058,9 +2061,42 @@ function zerarInatividade(){
 	console.log("zerarInatividade");
 	contador = 0;
 }
+function initVariaveis(){
+	
+db.transaction(function(tx){
+		
+		// btn_home
+		tx.executeSql('SELECT * FROM EnderecoServidor',[],function(tx,result){
+			 if(result.rows.length > 0){
+				 
+					 ipServidorDrupal = result.rows.item(0).endereco;
+					
+					urlViewConfig = ipServidorDrupal + "/views/configuracao";
+					 urlViewLabels = ipServidorDrupal + "/views/labels";
+					 urlViewHome = ipServidorDrupal + "/views/view_home";
+					 urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
+					 urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
+					 urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+					 urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
+					 urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+					 urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+					 urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+					 urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+			 }
+			
+		},errorGetEnderecoServidor);
+},errorCB);
+		
+	
+}
+function errorGetEnderecoServidor(){
+	document.addEventListener("deviceready", onDeviceReady, false);
+	$('.btn-mudar-endereceo-servidor').show();
+	
+}
 
 $(document).ready(function(){
-	
+	initVariaveis();
 });
 
 
