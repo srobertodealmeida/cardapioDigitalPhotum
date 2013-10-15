@@ -17,7 +17,8 @@ var atualizaForm = {
 		label:"",
 		produto:"",
 		propaganda:"",
-		adicionais:""
+		adicionais:"",
+		formaDePagamento:""
 };
 
 

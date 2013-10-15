@@ -19,6 +19,7 @@ var connectionWIFI = "connectionTrue";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
+var arrayFormasDePagamento = new Array();
 
 var rulFullImage = "" ;
 var nomeTable = "";
@@ -309,6 +310,45 @@ function getDrupalLabel(tx){
     });
 	
     ajaxLabels.error(function (jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	});
+	
+}
+
+function getDrupalFormasDePagamento(tx){
+   
+	
+	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
+	
+    var ajaxFormasDePagamento = getAjax(urlViewFormasDePagamento);
+	
+    ajaxFormasDePagamento.success(function (data) {
+		$.each(data, function(key, val) {
+			
+			var formaDePagamento = {
+					title__comum:"",
+					language:"",
+					title:""
+		      };
+			
+			// Conveter Encoding
+			formaDePagamento.title_comum = val.node_title;
+			formaDePagamento.language = val.language;
+			formaDePagamento.title = val.titulo_forma_pagamento;
+			
+			
+			arrayFormasDePagamento.push(formaDePagamento);
+			  
+		  });
+		
+		quantidadeRegistros += arrayFormasDePagamento.length;
+		
+		insertTable('formasDePagamento');
+		  
+    });
+	
+    ajaxFormasDePagamento.error(function (jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 		alert('error');
 	});
@@ -775,6 +815,11 @@ function getDadosDrupal(tx){
 	//Adicionais
 	if(atualizaForm.adicionais == 'true'){
 		getDrupalAdicionais(tx);
+	}
+	
+	//Formas de Pagamento
+	if(atualizaForm.formaDePagamento == 'true'){
+		getDrupalFormasDePagamento(tx);
 	}
 	
     
@@ -1373,6 +1418,15 @@ function createTable(tx){
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT, title_comum TEXT, language TEXT)');
 	}
 	
+	//Formas de Pagamento
+	
+	if(atualizaForm.formaDePagamento == "true"){
+		   ////////////////////////////////////////////Formas de Pagamento//////////////////////////////////////
+		  //Table formaDePagamento
+		tx.executeSql('DROP TABLE IF EXISTS FormasDePagamento');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS FormasDePagamento (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,title_comum TEXT, language TEXT)');
+	}
+	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
 	tx.executeSql('DROP TABLE IF EXISTS LanguageSelect');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS LanguageSelect (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)');
@@ -1550,6 +1604,14 @@ function insertTable(nomeTable){
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
 	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
+			}
+            },errorCB,successInsert);
+	}else if (nomeTable == "formasDePagamento") {
+		db.transaction(function(tx) {
+			for(i=0;i<arrayFormasDePagamento.length;i++){
+				quantidadeRegistros = quantidadeRegistros - 1;
+				console.log('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  + '")');
+	            tx.executeSql('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  +  '")');
 			}
             },errorCB,successInsert);
 	}
@@ -2074,6 +2136,7 @@ db.transaction(function(tx){
 					urlViewConfig = ipServidorDrupal + "/views/configuracao";
 					 urlViewLabels = ipServidorDrupal + "/views/labels";
 					 urlViewHome = ipServidorDrupal + "/views/view_home";
+					 urlViewFormasDePagamento = ipServidorDrupal + "/views/formas_de_pagamento";
 					 urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
 					 urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
 					 urlViewCategoria = ipServidorDrupal + "/views/categoria_all";

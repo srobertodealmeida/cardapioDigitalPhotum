@@ -123,6 +123,7 @@ require([
      showConfirmacaoFechamentoConta = function(id,value){
     	                                                
     	 hide('modal_sugestao_sobremesas');
+    	 montaFormasDePagamento();		  
     	 if($( "#id-ul-fechamento-conta .mostrarDetalhado").length != 0){
 		  $('#modal_fechar_conta p').text(ObjectLabels.alert_fechar_conta +' ' + value ) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',id) ;
@@ -171,6 +172,7 @@ require([
 	 }
      
      showConfirmacaoPedidoIndividualGarcom = function(dlg){
+    	 var formaDePagamento = $("#modal_fechar_conta .select-forma-de-pagamento").val();
 		 var post = false;
     	 var tipo;
     	 var fechamentoMesa = false;
@@ -197,6 +199,19 @@ require([
 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ dlg.title +'" and status="aguardando-pedido" ',[],function(tx,result){
 						for(i=0;i<result.rows.length;i++){
 						tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
+						var forma_de_pagamento_update  = {
+							     "value":""+formaDePagamento+"",
+						 }
+						
+						var data  = {
+							     "type":"pedido",
+							     "field_forma_de_pagamento[und][0]":forma_de_pagamento_update,
+					     };
+						
+						var urlUpdatePedido = "" + ipServidorDrupal + "/node/"+result.rows.item(i).nid;
+						 
+						 
+						putAjax(urlUpdatePedido,data);
 						}
 					},errorCB);
 					
@@ -241,8 +256,23 @@ require([
 		 						for(i=0;i<result.rows.length;i++){
 		 						  tx.executeSql('UPDATE Pedido SET status="aguardando-pagamento" WHERE Id='+result.rows.item(i).id+'');
 		 						  //limparDados(tx);
+		 						 
+		 						var forma_de_pagamento_update  = {
+		 							     "value":""+formaDePagamento+"",
+		 						 }
+		 						
+		 						var data  = {
+		 							     "type":"pedido",
+		 							     "field_forma_de_pagamento[und][0]":forma_de_pagamento_update,
+		 					     };
+		 						
+		 						var urlUpdatePedido = "" + ipServidorDrupal + "/node/"+result.rows.item(i).nid;
+		 						 
+		 						 
+		 						putAjax(urlUpdatePedido,data);
 		 						
 		 						}
+		 						
 		 					},errorCB);
 		 					
 		 					tx.executeSql('SELECT * FROM Pessoas where nome = "'+ nome +'"',[],function(tx,result){
@@ -257,6 +287,7 @@ require([
 		    	
 		 }
     	 
+
     	 var qtdTotal = $( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).length;
     	 var qtdAguardandoPagamento = $( "#id-ul-fechamento-conta .mostrarDetalhado .aguardandoPagamento" ).length;
     	 
@@ -281,6 +312,10 @@ require([
 			     "value":"pedido-fechamento",
 		 }
 		 
+		 var forma_de_pagamento  = {
+			     "value":""+formaDePagamento+"",
+		 }
+		 
 		 var fechamento_idConta  = {
 			     "value":idConta,
 		 }
@@ -292,8 +327,9 @@ require([
 			     "field_tipo[und][0]":tipo_field,
 			     "field_status_fechamento[und][0]":status_fechamento,
 			     "field_fechamento_id_conta[und][0]":fechamento_idConta,
+			     "field_forma_de_pagamento[und][0]":forma_de_pagamento,
 			     "title":"Fechamento: " + mesa,
-			};
+	     };
 		
 		 //"+ decodeURIComponent("212")+".json"
 		 var url=""+ipServidorDrupal+"/node";
@@ -318,6 +354,9 @@ require([
 	  
 });
 
+function updatePedidosDrupalFormaPagamento(){
+	
+}
 
 function mostrarSugestõesSobremesas(dlg){
 	db.transaction(function(tx){
@@ -668,8 +707,8 @@ function montaProdutos(tx,result){
 	 for(var i=0;i<result.rows.length;i++){
 		 console.log( "testantoselecProdutos" + result.rows.item(i).id);
 		 
-		 $(".mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
-		 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+		 $(".content .mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+		 $(".content .mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 		// var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
 		 if(result.rows.item(i).previa_descricao == null || result.rows.item(i).previa_descricao == "null"){
 			 var PreviadescricaoProduto = "";
@@ -714,8 +753,8 @@ function selectProdutoPizzaMeioaMeio(opcao){
 			if(result.rows.length>0){
 				for(var i=0;i<result.rows.length;i++){
 					 
-					 $(".mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
-					 $(".mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+					 $(".content .mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+					 $(".content .mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 					 var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
 					 $(".ul_modal_monta_sua_pizza").append('<div class="divClicavel" value="'+opcao+'" name="'+ result.rows.item(i).id +'" id="produto-'+categoriaSelecionado+'-'+i+'" onclick="adicionarPizzaMeioaMeio(this)"> <li dojoType="dojox.mobile.ListItem"  class="minhaLI"></li> <div class="imagem_categoria"> <img src="'+ result.rows.item(i).image+'"></div> <span class="nome_produto_opcoes_pizza">'+titleProduto+'</span><p class="preco_produto_opcoes_pizza">R$ '+result.rows.item(i).preco+'</p><div class="previa_descricao_produto_opcoes_pizza"><span>'+result.rows.item(i).previa_descricao+'</span></div></div>');
 					 if(result.rows.item(i).image == "" || result.rows.item(i).image == null){
@@ -917,6 +956,25 @@ function montaAdicionais(){
 			}else{
 				$('.label-combo-adicionais').text("");
 				$('.select-adicionais').hide();
+			}
+		},errorCB);
+		
+	},errorCB);
+}
+
+function montaFormasDePagamento(){
+	$("#modal_fechar_conta .select-forma-de-pagamento option").remove();
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM FormasDePagamento where language = "'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				$('.select-forma-de-pagamento').show();
+				for(i=0;i<result.rows.length;i++){
+					$("#modal_fechar_conta .select-forma-de-pagamento").append('<option value="'+result.rows.item(i).title_comum+'">'+result.rows.item(i).title+'</option>');
+				}
+				
+				
+			}else{
+				$('.select-forma-de-pagamento').hide();
 			}
 		},errorCB);
 		
@@ -1487,11 +1545,15 @@ function montaModalPedido(tx,result){
 		 var precoOriginal = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('value'));
 		 
 		 var precosAdicionais = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('name'));
+		 if(precosAdicionais != ""){
 		 precosAdicionais = precosAdicionais.toString();
 		 var arrayPrecosAdicionais = precosAdicionais.split(',');
 		 var precoFinalAdicionais = 0.00;
 		 for(i=0;i<arrayPrecosAdicionais.length;i++){
 			 precoFinalAdicionais = parseFloat(precoFinalAdicionais) + parseFloat(arrayPrecosAdicionais[i]);
+		 }
+		 }else{
+			 var precoFinalAdicionais = 0.00;
 		 }
 		 precoOriginal = precoOriginal+precoFinalAdicionais;
 		 
@@ -1515,11 +1577,15 @@ function montaModalPedido(tx,result){
 		// Atualiza preço do produto conforme sua quantidade
 		 var precoOriginal = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('value'));
 		 var precosAdicionais = parseFloat($('#id-modal-pedido-preco-produto-'+idProduto+'').attr('name'));
+		 if(precosAdicionais != ""){
 		 precosAdicionais = precosAdicionais.toString();
 		 var arrayPrecosAdicionais = precosAdicionais.split(',');
 		 var precoFinalAdicionais = 0.00;
 		 for(i=0;i<arrayPrecosAdicionais.length;i++){
 			 precoFinalAdicionais = parseFloat(precoFinalAdicionais) + parseFloat(arrayPrecosAdicionais[i]);
+		 }
+		 }else{
+			 var precoFinalAdicionais = 0.00;
 		 }
 		 precoOriginal = precoOriginal+precoFinalAdicionais;
 		 
@@ -1899,7 +1965,6 @@ function chamarGarcon(){
 }
 
 $(document).ready(function(){
-	console.log('seriooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo')
 	var text = $('.textarea-motivo-cancelamento-pedido').text();
 	setLanguage();
 	setLabels();

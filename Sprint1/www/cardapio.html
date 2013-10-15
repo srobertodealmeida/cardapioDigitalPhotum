@@ -339,6 +339,13 @@
 	
 	<div id="modal_fechar_conta" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao"></p>
+		<div class="div-formas-de-pagamento">
+			<label class="label-forma-de-pagamento label">Forma de Pagamento:</label>
+			<select style="display:none;" multiple class="select-forma-de-pagamento">
+			</select>
+		</div>
+				
+		
 		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
 		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_fechar_conta')">Não</button>
 	</div>

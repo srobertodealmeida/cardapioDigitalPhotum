@@ -179,6 +179,7 @@ function  atualizar(){
 											atualizaForm.produto = val.atualiza_produto;
 											atualizaForm.propaganda = val.atualiza_propaganda;
 											atualizaForm.adicionais = val.atualiza_adicionais;
+											atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
 											init(val.versao);
 							    		 } else {
 							    			 versao = val.versao;
@@ -191,6 +192,7 @@ function  atualizar(){
 							    			atualizaForm.produto = val.atualiza_produto;
 							    			atualizaForm.propaganda = val.atualiza_propaganda;
 							    			atualizaForm.adicionais = val.atualiza_adicionais;
+							    			atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
 							    			alert('agora')
 							    		 }
