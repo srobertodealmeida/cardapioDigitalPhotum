@@ -20,7 +20,6 @@ var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
 var arrayFormasDePagamento = new Array();
-
 var rulFullImage = "" ;
 var nomeTable = "";
 var logo = false;
@@ -43,6 +42,7 @@ var produtosFormVazio = {
 		image:""
 };
 var qtdProdutos = 0;
+var configPropaganda = 0;
 var qtdPropagandas = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
@@ -260,6 +260,32 @@ function getDrupalLanguages(tx){
 		  });
 		
 		
+		
+		  
+    });
+	
+    ajaxUrlViewConfig.error(function (jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	}); 
+	
+	
+}
+
+function getConfigPropaganda(tx){
+	
+	///////////////////////////////////////////////////////Languages///////////////////////////////////////////////////////////////////////////////
+    var ajaxUrlViewConfig = getAjax(urlViewConfig);
+	
+    ajaxUrlViewConfig.success(function (data) {
+
+    	$.each(data, function(key, val) {
+    	   
+			  configPropaganda = val.quantidade_variacao_propaganda_curiosidade;
+		 });
+    	quantidadeRegistros += 1;
+    	insertTable('config_propaganda');
+    	
 		
 		  
     });
@@ -614,17 +640,18 @@ function getDrupalPropaganda(txx){
 					     // Vericiar a versao do registro caso for maior, foi feito alteração é feito update senao apenas seta deletaBanco como falso e chama successInsert.
 						  if(val.versao_propaganda > result.rows.item(0).versao){
 							 //Caso campo atualizar_arquivo estiver ocmo true faz o download novamente do registro se nao apenas atualizaos dados.
-							 if(val.atualizar_arquivo == true){
+							 if(val.atualizar_arquivo == "true"){
 								 
 								 var objectArrayPropagandasDownload = {
 						    			  duration:"",
 						    			  versao:"",
-						    			  ordenacao:"",
+						    			  ordenacao:0,
 						    			  url:"",
 						    			  pathDestino:"",
 						    			  image:"",
 						    			  nid:"",
-						    			  type:""
+						    			  type:"",
+						    			  tipoPropaganda:""
 						    	 }
 								 
 								  //Prepara url
@@ -642,10 +669,11 @@ function getDrupalPropaganda(txx){
 								  objectArrayPropagandasDownload.duration = val.duracao_video;
 								  objectArrayPropagandasDownload.nid = val.nid
 								  objectArrayPropagandasDownload.versao = val.versao_propaganda;
-								  objectArrayPropagandasDownload.ordenacao = parserInt(val.ordem_propaganda);
+								  objectArrayPropagandasDownload.ordenacao = parseInt(val.ordem_propaganda);
 								  objectArrayPropagandasDownload.url = url;
 								  objectArrayPropagandasDownload.pathDestino = pathDestino;
 								  objectArrayPropagandasDownload.type = "update";
+								  objectArrayPropagandasDownload.tipoPropaganda = val.tipo_propaganda;
 								 
 								  arrayPropagandasDownload.push(objectArrayPropagandasDownload);
 								  
@@ -692,6 +720,7 @@ function getDrupalPropaganda(txx){
 						  objectArrayPropagandasDownload.nid = val.nid;
 						  objectArrayPropagandasDownload.pathDestino = pathDestino;
 						  objectArrayPropagandasDownload.type = "insert";
+						  objectArrayPropagandasDownload.tipoPropaganda = val.tipo_propaganda;
 						 
 						  arrayPropagandasDownload.push(objectArrayPropagandasDownload); 
 					}
@@ -757,7 +786,12 @@ function getDrupalAdicionais(tx){
 				categoria : "",
 				nid : "",
 				title_comum : "",
-				language : ""
+				language : "",
+				label_adicionais: "",
+				flag_preco: "",
+				flag_produto_especifico: "",
+				produto_especifico_adiconais: ""
+				
 			};
 			adicionaisForm.title = val.node_title;
 			adicionaisForm.preco = val.preco_adicionais;
@@ -765,6 +799,10 @@ function getDrupalAdicionais(tx){
 			adicionaisForm.nid = val.nid;
 			adicionaisForm.title_comum = val.titulo_adicionais;
 			adicionaisForm.language = val.language;
+			adicionaisForm.label_adicionais = val.label_adicionais;
+			adicionaisForm.flag_preco = val.flag_preco_adicionais;
+			adicionaisForm.flag_produto_especifico = val.flag_produto_especifico;
+			adicionaisForm.produto_especifico_adiconais = val.produto_especifico_adiconais;
 			arrayAdicionais.push(adicionaisForm);
 
 		});
@@ -821,6 +859,12 @@ function getDadosDrupal(tx){
 	if(atualizaForm.formaDePagamento == 'true'){
 		getDrupalFormasDePagamento(tx);
 	}
+	
+	//Configuracao Propaganda
+	if(atualizaForm.qtdeVariacaoCuriosidade == 'true'){
+		getConfigPropaganda(tx);
+	}
+	
 	
     
 }
@@ -1271,7 +1315,7 @@ function montaIcones(tx,result){
 					 
 					 if(result.rows.length > 0){
 						 titleIcone = result.rows.item(0).valor;
-							$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ titleIcone +"  </div></a></div>");
+							$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+image+"\" style=\"height: 130px;\"><div class=\"mblCarouselItemFooterText\">"+ titleIcone +"  </div></a></div>");
 
 					 }
 					 
@@ -1388,7 +1432,7 @@ function createTable(tx){
 	// Home
 	if(atualizaForm.propaganda == 'true'){
  
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, nid TEXT, duration TEXT, deletadoBanco TEXT, versao TEXT, ordenacao INTEGER)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Propagandas (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT NOT NULL, nid TEXT, duration TEXT, deletadoBanco TEXT, versao TEXT, ordenacao INTEGER, tipoPropaganda TEXT, flag_passou TEXT)');
 	}
 	
 	
@@ -1396,7 +1440,7 @@ function createTable(tx){
 	// Categoria
 	if(atualizaForm.categoria == 'true'){
          ////////////////////////////////////////////Categorias//////////////////////////////////////
-		// Table cATEGORIAS
+		// Table categorias
 		tx.executeSql('DROP TABLE IF EXISTS Categorias');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT)');
 	}
@@ -1415,7 +1459,7 @@ function createTable(tx){
 		   ////////////////////////////////////////////Adicionais//////////////////////////////////////
 		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Adicionais');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT, title_comum TEXT, language TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Adicionais (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , preco TEXT, categoria TEXT, nid TEXT, title_comum TEXT, language TEXT, label_adicionais TEXT, flag_preco TEXT, flag_produto_especifico TEXT, produto_especifico_adiconais TEXT)');
 	}
 	
 	//Formas de Pagamento
@@ -1425,6 +1469,16 @@ function createTable(tx){
 		  //Table formaDePagamento
 		tx.executeSql('DROP TABLE IF EXISTS FormasDePagamento');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FormasDePagamento (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,title_comum TEXT, language TEXT)');
+	}
+	
+	
+     //Variacao Propaganda Curiosidade
+	
+	if(atualizaForm.qtdeVariacaoCuriosidade == "true"){
+		  
+		 //Table Variacao Propaganda Curiosidade
+		tx.executeSql('DROP TABLE IF EXISTS configPropagandas');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS configPropagandas (id INTEGER PRIMARY KEY AUTOINCREMENT,variacao_curiosidade TEXT)');
 	}
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
@@ -1537,7 +1591,7 @@ function insertTable(nomeTable){
 				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
-										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,codigo) VALUES ("'
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,codigo,adicionais_especifico) VALUES ("'
 												+ arrayProdutos[i].title
 												+ '","'
 												+ arrayProdutos[i].previa_descricao
@@ -1569,16 +1623,26 @@ function insertTable(nomeTable){
 			for(i=0;i<arrayPropagandasDepoisDownload.length;i++){
 				quantidadeRegistros = quantidadeRegistros - 1;
 				if(arrayPropagandasDepoisDownload[i].type == "insert"){
-					console.log('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'")');
-					tx.executeSql('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'")');
+					console.log('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao,tipoPropaganda,flag_passou) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'","'+arrayPropagandasDepoisDownload[i].tipoPropaganda+'","false")');
+					tx.executeSql('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao,tipoPropaganda,flag_passou) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'","'+arrayPropagandasDepoisDownload[i].tipoPropaganda+'","false")');
 	
 				}else{
 					if(arrayPropagandasDepoisDownload[i].type == "update"){
-						tx.executeSql('SELECT * FROM Propagandas where nid = "'+arrayPropagandasDepoisDownload[i].nid+'"',[],function(tx,result){
-							if(result.rows.length > 0){
-								console.log('UPDATE Propagandas SET image="'+arrayPropagandasDepoisDownload[i].image+'", duration="'+arrayPropagandasDepoisDownload[i].duration+'", deletadoBanco="false", versao="'+arrayPropagandasDepoisDownload[i].versao+'", ordenacao="'+arrayPropagandasDepoisDownload[i].ordenacao+'" WHERE Id='+result.rows.item(0).id+'');
-	
-								tx.executeSql('UPDATE Propagandas SET image="'+arrayPropagandasDepoisDownload[i].image+'", duration="'+arrayPropagandasDepoisDownload[i].duration+'", deletadoBanco="false", versao="'+arrayPropagandasDepoisDownload[i].versao+'", ordenacao="'+arrayPropagandasDepoisDownload[i].ordenacao+'" WHERE Id='+result.rows.item(0).id+'');
+						
+						
+						var imagePropaganda = arrayPropagandasDepoisDownload[i].image;
+	                       var durationPropaganda = arrayPropagandasDepoisDownload[i].duration;
+	                       var versaoPropaganda = arrayPropagandasDepoisDownload[i].versao;
+	                       var ordenacaoPropaganda = arrayPropagandasDepoisDownload[i].ordenacao;
+	                       var tipoPropaganda = arrayPropagandasDepoisDownload[i].tipoPropaganda;
+							tx.executeSql('SELECT * FROM Propagandas where nid = "'+arrayPropagandasDepoisDownload[i].nid+'"',[],function(tx,result){
+								if(result.rows.length > 0){
+
+									console.log('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'" WHERE Id='+result.rows.item(0).id+'');
+		
+									tx.executeSql('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'" WHERE Id='+result.rows.item(0).id+'');
+
+						
 								
 							}
 						},errorCB);
@@ -1602,8 +1666,8 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			for(i=0;i<arrayAdicionais.length;i++){
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
-	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '")');
+				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
+	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
 			}
             },errorCB,successInsert);
 	}else if (nomeTable == "formasDePagamento") {
@@ -1614,8 +1678,13 @@ function insertTable(nomeTable){
 	            tx.executeSql('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  +  '")');
 			}
             },errorCB,successInsert);
+	}else if (nomeTable == "config_propaganda") {
+		db.transaction(function(tx) {
+				quantidadeRegistros = quantidadeRegistros - 1;
+				console.log('INSERT INTO configPropagandas(variacao_curiosidade) VALUES ("' + configPropaganda + '")');
+	            tx.executeSql('INSERT INTO configPropagandas(variacao_curiosidade) VALUES ("' + configPropaganda + '")');
+            },errorCB,successInsert);
 	}
-	
 }
 
 //Método de erro sqLite
@@ -2076,6 +2145,8 @@ function inatividade() {
 		//window.location = 'propagandas.html';
 			$('#propagandas').load('propagandas.html');
 			$('#geral').hide();
+			$('.mblSimpleDialog').addClass('class-sem-index');
+			$('.mblSimpleDialog').addClass('class-sem-index');
 			$('#propagandas').show();
 		
 	}

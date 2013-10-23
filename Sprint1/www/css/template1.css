@@ -47,7 +47,7 @@
 	height: 50% !important;
 	left: 155px !important;
 	position: relative !important;
-	top: -68px !important;
+	top: -110px !important;
 	width: 58% !important;
 }
 
@@ -968,7 +968,7 @@ body {
 	min-height: 100%;
 	background: url("../img/hamburguer-background.jpg") no-repeat scroll
 		center bottom transparent;
-		background-size: 112%; 
+		background-size: 100%; 
 }
 
 .label {
@@ -1322,6 +1322,7 @@ background-image: #4d4d4d !important;
 	top: -44px;
 	left: 20;
 	color: white !important;
+	white-space: pre-wrap;
 }
 
 .imagemMinha {
@@ -2311,6 +2312,7 @@ opacity: 0.18;
 }
 .previa_descricao_sem_image{
 	left: 30px !important;
+	width: 80% !important; 
 }
 .minhali_sem_previa_descricao{
 	margin: 17px 14px -210px !important;
@@ -2328,4 +2330,18 @@ opacity: 0.18;
 }
 .div-formas-de-pagamento{
 	
+}
+.divClicavel{
+	margin-bottom: 30px !important;
+}
+#UL-Produtos .divClicavel{
+	height: 140px;
+}
+
+.div-span-nome-categoria{
+	width: 180px;
+}
+
+.class-sem-index{
+	z-index: -1 !important;
 }

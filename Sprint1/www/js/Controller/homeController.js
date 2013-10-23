@@ -180,6 +180,7 @@ function  atualizar(){
 											atualizaForm.propaganda = val.atualiza_propaganda;
 											atualizaForm.adicionais = val.atualiza_adicionais;
 											atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
+											atualizaForm.qtdeVariacaoCuriosidade = val.atualiza_quantidade_variacao_qdte_curiosidade;
 											init(val.versao);
 							    		 } else {
 							    			 versao = val.versao;
@@ -193,6 +194,7 @@ function  atualizar(){
 							    			atualizaForm.propaganda = val.atualiza_propaganda;
 							    			atualizaForm.adicionais = val.atualiza_adicionais;
 							    			atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
+							    			atualizaForm.qtdeVariacaoCuriosidade = val.atualiza_quantidade_variacao_qdte_curiosidade;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
 							    			alert('agora')
 							    		 }
@@ -332,6 +334,8 @@ $(document).ready(function(){
 			$('#propagandas').hide();
 			$('#geral').show();
 			console.log("propagandasClick");
+			$('div#propagandas').html("");
+			propagandaAtiva = false;
 		});
 
 		$('#propagandas').bind('touchstart click', function(){
@@ -340,11 +344,15 @@ $(document).ready(function(){
 			$('#propagandas').hide();
 			$('#geral').show();
 			console.log("propagandasClick");
+			$('div#propagandas').html("");
+			propagandaAtiva = false;
 		});
 
 		$('#bodyTeste').bind('touchstart click', function(){
 			console.log('touchstart');
 			zerarInatividade();
+			$('div#propagandas').html("");
+			propagandaAtiva = false;
 		});
 	 
      // Carrosel propaganda

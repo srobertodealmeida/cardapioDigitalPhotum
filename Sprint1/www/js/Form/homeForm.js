@@ -18,7 +18,8 @@ var atualizaForm = {
 		produto:"",
 		propaganda:"",
 		adicionais:"",
-		formaDePagamento:""
+		formaDePagamento:"",
+		qtdeVariacaoCuriosidade:""
 };
 
 
