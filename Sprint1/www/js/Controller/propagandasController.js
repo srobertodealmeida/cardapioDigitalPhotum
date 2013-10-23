@@ -30,8 +30,9 @@ function selectPropagandas(){
 		// MOnta propagandas comuns e que ainda n tenha passado
 		tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
 			 if(result.rows.length > 0){
+                      alert("tamanho comum: "+result.rows.length)
 				 for(var i=0;i<result.rows.length;i++){
-
+                 alert("id comum: "+result.rows.item(i).id)
 					 var objectArrayPropagandasLoop = {
 			    			  image:"",
 			    			  duration:"",
@@ -79,7 +80,7 @@ function selectPropagandas(){
 			 qtdPropagandasLoop = 0;
 			 qtdPropagandasLoop = arrayPropagandasLoop.length;
 			 flagSelectPropagandaComum = true;
-			 montaPropagandaHtml(indice);
+			 montaPropagandaHtml(0);
 			 
 			  
 		 }
@@ -93,6 +94,7 @@ function selectPropagandasCuriosidade(){
 	// MOnta propagandas curiosidades e que ainda n tenha passado
 	tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Curiosidade"',[],function(fx,result){
 		 if(result.rows.length > 0){
+                  alert("tamanho curiosidade: "+result.rows.length)
 			 for(var i=0;i<result.rows.length;i++){
 
 				 var objectArrayPropagandasLoop = {
@@ -118,6 +120,7 @@ function selectPropagandasCuriosidade(){
 }
 
 function montaPropagandaHtml(indice){
+    alert("monta: "+indice)
 	if(propagandaAtiva == true){
 		// carrega dois arquivos
 		contadorVariacao = contadorVariacao + 1;
@@ -129,17 +132,23 @@ function montaPropagandaHtml(indice){
 			adicionarPropagandaHtml(indiceProximo);
 			
 		}else{
+            
+            
 			var duration = arrayPropagandasLoop[indice].duration;
+            
+            if(flagCuriosidade == true){
+				indice = indice-1;
+			}
 			mostrarPropaganda(indice,duration);
 			
-			if(indice == 0){
+			
+           
+            if(indice == 0){
 				var indiceAnterior = qtdPropagandasLoop-1;
 			}else{
 				var indiceAnterior = indice -1;
 			}
-			if(flagCuriosidade == true){
-				indice = indice-1;
-			}
+			
 			
 			if(indice == qtdPropagandasLoop-1){
 				var indiceProximo = 0;
@@ -152,6 +161,7 @@ function montaPropagandaHtml(indice){
 			}
 			flagCuriosidade = false;
 			flagSelectPropagandaComum = false;
+          alert("chamando remove")
 			removerPropagandaHtml(indiceAnterior);
 			adicionarPropagandaHtml(indiceProximo);
 			
@@ -161,8 +171,10 @@ function montaPropagandaHtml(indice){
 }
 
 function mostrarPropaganda(indice,duration){
+    alert("mostra: "+indice);
 	if(propagandaAtiva == true){
     
+        
 	var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
 	if(tipoPropaganda == "curiosidade"){
 		idElemento = 'player-curiosidade'+indice+'';
@@ -170,7 +182,8 @@ function mostrarPropaganda(indice,duration){
 		idElemento = 'player-cumum'+indice+'';
 	}	
 	
-	var tag = $('#'+idElemento).prop("tagName");
+	//var tag = $('#'+idElemento).prop("tagName");
+        var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
 	if (tag == "VIDEO") {
 		 
 		     $('#'+idElemento).show(4000);
@@ -178,7 +191,9 @@ function mostrarPropaganda(indice,duration){
 			 video.play();	
 		 
 	}else{
-		$('#'+idElemento).show();
+		//$('#'+idElemento).show();
+       
+        $('.elemento-propaganda:nth-child(2)').show();
 	}
 	
 	duration = parseInt(duration) + 2000;
@@ -187,10 +202,14 @@ function mostrarPropaganda(indice,duration){
 		 if(propagandaAtiva == false){
 			 clearTimeout(this);
 		 }
-		 $('#'+idElemento).hide(4000);
+                       
+		 //$('#'+idElemento).hide(4000);
+                       
+                       $('.elemento-propaganda:first-child').hide(400);
 		 primeiraVezLoopPropaganda = false;
 		 
 		 if(indice == qtdPropagandasLoop-1){
+                      
 			 //var indiceProximo = 0;
 			 db.transaction(function(tx) {
 					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
@@ -198,6 +217,7 @@ function mostrarPropaganda(indice,duration){
 				},errorCB,successCB);
 			 
 		 }else{
+                     
 			 var indiceProximo = indice +1;
 			 montaPropagandaHtml(indiceProximo);
 		 }
@@ -207,6 +227,7 @@ function mostrarPropaganda(indice,duration){
 }
 
 function adicionarPropagandaHtml(indice){
+    alert("adicionar: "+indice)
 	if(propagandaAtiva == true){
 	
 	if(contadorVariacao == qtdVariacao){
@@ -252,18 +273,26 @@ function adicionarPropagandaHtml(indice){
 }
 
 function removerPropagandaHtml(indice){
+    alert("remover: "+indice);
 	if(propagandaAtiva == true){
+        /**
 		var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
+        alert("tipo:"+tipoPropaganda)
 		if(tipoPropaganda == "curiosidade"){
+            indice = indice +1;
 			idElemento = 'player-curiosidade'+indice+'';
 		}else{
 			idElemento = 'player-cumum'+indice+'';
 		}	
-		
+		alert(idElemento)
 		var id = $('#'+idElemento).attr('name');
 		$('#'+idElemento).remove();
-		
-		
+		*/
+        
+		var id = $('.elemento-propaganda:first-child').attr('name')
+        
+        $('.elemento-propaganda:first-child').remove();
+        
 		db.transaction(function(tx) {
 		tx.executeSql('UPDATE Propagandas SET flag_passou="true" WHERE Id='+id+'');
 		 },errorCB,successCB);
