@@ -9,13 +9,13 @@ var contadorVariacao = 0;
 var indicePropCuriosidade = 0;
 var timeOut;
 var indiceAntigoComum = 0;
+var indiceComum = 0;
 var flagCuriosidade = false;
 var flagSelectPropagandaComum = false;
 
 function selectPropagandas(){
-	
 	db.transaction(function(tx) {
-		 
+		
 		// pega qtde de variacao da propaganda curiosidade
 		tx.executeSql('SELECT * FROM configPropagandas ',[],function(fx,result){
 			 if(result.rows.length > 0){
@@ -25,10 +25,15 @@ function selectPropagandas(){
 			 }
 			 
 		 },errorCB);
-		
-		
+                                        
+                    
+                   
+                   
 		// MOnta propagandas comuns e que ainda n tenha passado
 		tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
+                     
+                      //alert("aki")
+                      //alert("tamanho antes ne pq "+result.rows.length)
 			 if(result.rows.length > 0){
                       alert("tamanho comum: "+result.rows.length)
 				 for(var i=0;i<result.rows.length;i++){
@@ -46,6 +51,7 @@ function selectPropagandas(){
 				  }
 				 qtdPropagandasLoop = arrayPropagandasLoop.length;
 				 primeiraVezLoopPropaganda = true;
+				 indiceComum = 0;
 				 montaPropagandaHtml(0); 
 				  
 			 }
@@ -60,11 +66,12 @@ function selectPropagandas(){
 }
  function selectPropagandasComuns(indice){
 	 db.transaction(function(tx) {
-		 var arrayPropagandasLoop = new Array();
+	arrayPropagandasLoop = new Array();
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
 		 if(result.rows.length > 0){
+			 alert('motnando array denovo: '+result.rows.length)
 			 for(var i=0;i<result.rows.length;i++){
-
+                alert('id denovo: '+result.rows.item(i).id);
 				 var objectArrayPropagandasLoop = {
 		    			  image:"",
 		    			  duration:"",
@@ -80,6 +87,7 @@ function selectPropagandas(){
 			 qtdPropagandasLoop = 0;
 			 qtdPropagandasLoop = arrayPropagandasLoop.length;
 			 flagSelectPropagandaComum = true;
+			 indiceComum = 0;
 			 montaPropagandaHtml(0);
 			 
 			  
@@ -120,36 +128,56 @@ function selectPropagandasCuriosidade(){
 }
 
 function montaPropagandaHtml(indice){
-    alert("monta: "+indice)
+    alert("monta: "+indiceComum)
 	if(propagandaAtiva == true){
 		// carrega dois arquivos
 		contadorVariacao = contadorVariacao + 1;
-		if(indice == 0 && primeiraVezLoopPropaganda == true){
-			adicionarPropagandaHtml(indice);
-			var indiceProximo = indice + 1;
-			var duration = arrayPropagandasLoop[indice].duration;
-			mostrarPropaganda(indice,duration);
-			adicionarPropagandaHtml(indiceProximo);
+		if(indiceComum == 0 && primeiraVezLoopPropaganda == true){
+			adicionarPropagandaHtml(indiceComum);
+			var indiceProximo = indiceComum + 1;
+			//var duration = arrayPropagandasLoop[indiceComum].duration;
+			mostrarPropaganda(indiceComum);
+            
+            if(qtdPropagandasLoop != 1){
+            indiceComum = indiceComum+1;
+            }
+            
+			adicionarPropagandaHtml(indiceComum);
 			
 		}else{
-            
-            
-			var duration = arrayPropagandasLoop[indice].duration;
-            
-            if(flagCuriosidade == true){
-				indice = indice-1;
-			}
-			mostrarPropaganda(indice,duration);
-			
-			
            
+            
+			//var duration = arrayPropagandasLoop[indiceComum].duration;
+           // alert("antes")
+            alert("flagCuriosidade: "+flagCuriosidade+"flagSelectPropagandaComum"+flagSelectPropagandaComum)
+           /**
+            if(flagCuriosidade == true && flagSelectPropagandaComum == false){
+                alert("flagcuriosidade e nao propaganda comum: "+indiceComum)
+            	indiceComum = indiceComum-1;
+                flagCuriosidade = false;
+                //alert("depois e nao propaganda comum: "+indiceComum)
+            */
+			//}else{
+                if(flagSelectPropagandaComum == true){
+					 indiceComum = 0;
+                    flagSelectPropagandaComum = false;
+				}else{
+                indiceComum = indiceComum+1;
+                }
+                
+			//}
+            // alert("depois")
+			mostrarPropaganda(indiceComum);
+			
+			
+           /**
             if(indice == 0){
 				var indiceAnterior = qtdPropagandasLoop-1;
 			}else{
 				var indiceAnterior = indice -1;
 			}
-			
-			
+			*/
+			/**
 			if(indice == qtdPropagandasLoop-1){
 				var indiceProximo = 0;
 			}else{
@@ -159,35 +187,33 @@ function montaPropagandaHtml(indice){
 				var indiceProximo = indice + 1;
 				}
 			}
-			flagCuriosidade = false;
-			flagSelectPropagandaComum = false;
-          alert("chamando remove")
-			removerPropagandaHtml(indiceAnterior);
-			adicionarPropagandaHtml(indiceProximo);
+			*/
+			
+           
+           // alert("chamando remove")
+			removerPropagandaHtml();
+			adicionarPropagandaHtml(indiceComum);
 			
 		}
 	}
 	
 }
 
-function mostrarPropaganda(indice,duration){
-    alert("mostra: "+indice);
+function mostrarPropaganda(indice){
+    
 	if(propagandaAtiva == true){
     
         
-	var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
-	if(tipoPropaganda == "curiosidade"){
-		idElemento = 'player-curiosidade'+indice+'';
-	}else{
-		idElemento = 'player-cumum'+indice+'';
-	}	
+	//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
+	
 	
 	//var tag = $('#'+idElemento).prop("tagName");
         var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
 	if (tag == "VIDEO") {
 		 
-		     $('#'+idElemento).show(4000);
-			 var video = document.getElementById("player" + indice);
+		     $('.elemento-propaganda:nth-child(2)').show(4000);
+             var idVideo = $('.elemento-propaganda:nth-child(2)').attr("id")
+			 var video = document.getElementById(idVideo);
 			 video.play();	
 		 
 	}else{
@@ -195,7 +221,7 @@ function mostrarPropaganda(indice,duration){
        
         $('.elemento-propaganda:nth-child(2)').show();
 	}
-	
+	var duration = $('.elemento-propaganda:nth-child(2)').attr('value');
 	duration = parseInt(duration) + 2000;
 	
 	 window.setTimeout(function() {
@@ -207,8 +233,8 @@ function mostrarPropaganda(indice,duration){
                        
                        $('.elemento-propaganda:first-child').hide(400);
 		 primeiraVezLoopPropaganda = false;
-		 
-		 if(indice == qtdPropagandasLoop-1){
+		 alert("indice comum: "+indiceComum+" qtdPropagandasLoop: "+qtdPropagandasLoop)
+		 if(indiceComum == qtdPropagandasLoop-1){
                       
 			 //var indiceProximo = 0;
 			 db.transaction(function(tx) {
@@ -227,17 +253,22 @@ function mostrarPropaganda(indice,duration){
 }
 
 function adicionarPropagandaHtml(indice){
-    alert("adicionar: "+indice)
+    alert("adicionar: "+indiceComum)
 	if(propagandaAtiva == true){
 	
 	if(contadorVariacao == qtdVariacao){
 		var url = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
 		var image = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
+        var duration = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].duration;
 		var extencao =  url.substr(url.length - 3);
 		var idPropaganda = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].idPropaganda;
 		var typePropaganda = "curiosidade";
 		var idElemento = 'player-curiosidade'+indice+'';
-		indicePropCuriosidade = indicePropCuriosidade +1;
+		
+        alert("aqui adicionar indice: "+indice+"qtdeprop: "+qtdPropagandasLoop-1)
+        if(indice <= qtdPropagandasLoop-1){
+            indiceComum = indiceComum-1;
+        }
 		if(indicePropCuriosidade == qtdPropagandasCuriosidadesLoop-1){
 			indicePropCuriosidade = 0;
 			arrayPropagandasCuriosidadesLoop = new Array();
@@ -248,14 +279,16 @@ function adicionarPropagandaHtml(indice){
 			},errorCB,successCB);
 			
 		}
-		contadorVariacao = 0;
+        indicePropCuriosidade = indicePropCuriosidade +1;
+		contadorVariacao = -1;
 		flagCuriosidade = true;
 		indiceAntigoComum = indice;
 	}else{
 		var url = arrayPropagandasLoop[indice].image;
-		var image = arrayPropagandasLoop[indice].image
+		var image = arrayPropagandasLoop[indice].image;
 		var extencao =  url.substr(url.length - 3);
 		var idPropaganda = arrayPropagandasLoop[indice].idPropaganda;
+         var duration = arrayPropagandasLoop[indice].duration;
 		var typePropaganda = "comum";
 		var idElemento = 'player-cumum'+indice+'';
 		if(indice == qtdPropagandasCuriosidadesLoop-1){
@@ -265,15 +298,14 @@ function adicionarPropagandaHtml(indice){
 	
 	
 	if(extencao != "mp4"){
-		$("#foo").append('<img id="'+idElemento+'" value="'+typePropaganda+'" name="'+idPropaganda+'" src="'+image+'" class="img-propagandas elemento-propaganda"/ style> ');
+		$("#foo").append('<img id="'+idElemento+'" value="'+duration+'" name="'+idPropaganda+'" src="'+image+'" class="img-propagandas elemento-propaganda"/ style> ');
 	}else{
-		$("#foo").append('<video id="'+idElemento+'" value="'+typePropaganda+'" name="'+idPropaganda+'" width="1100px" height="700px"  class="elemento-propaganda" ><source id="source-player'+indice+'" src="'+image+'" type="video/mp4"></video>');
+		$("#foo").append('<video id="'+idElemento+'" value="'+duration+'" name="'+idPropaganda+'" width="1100px" height="700px"  class="elemento-propaganda" ><source id="source-player'+indice+'" src="'+image+'" type="video/mp4"></video>');
 	}
 	}
 }
 
-function removerPropagandaHtml(indice){
-    alert("remover: "+indice);
+function removerPropagandaHtml(){
 	if(propagandaAtiva == true){
         /**
 		var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
