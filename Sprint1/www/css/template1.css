@@ -196,9 +196,9 @@
 }
 
 #botoes {
-	left: 16%;
+	left: 12%;
 	position: relative;
-	top: -83%;
+	top: -90%;
 }
 
 .panel-trasnparente-content {
@@ -966,7 +966,7 @@ body {
 	height: auto;
 	margin: 0;
 	min-height: 100%;
-	background: url("../img/hamburguer-background.jpg") no-repeat scroll
+	background: url("../img/home-cardapio.jpg") no-repeat scroll
 		center bottom transparent;
 		background-size: 100%; 
 }
@@ -1320,7 +1320,7 @@ background-image: #4d4d4d !important;
 .nome_categoria {
 	position: relative;
 	top: -44px;
-	left: 20;
+	left: 17;
 	color: white !important;
 	white-space: pre-wrap;
 }
@@ -2344,4 +2344,8 @@ opacity: 0.18;
 
 .class-sem-index{
 	z-index: -1 !important;
+}
+
+.class-hide-SimpleDialogCover{
+	display: none;
 }

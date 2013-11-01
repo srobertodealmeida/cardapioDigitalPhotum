@@ -609,6 +609,16 @@ function finalizaMandaDadosSincronizacao(){
 		$('.div-buttons-sincronizacao').hide();
 		$('.div-frase-sincronizacao').show();
 		$('.div-buttons-depois-mandar-sincronizacao').show();
+	}else{
+		$('.preloader_image').hide();
+		$('.mensagem-confirmacao').hide();
+		if(flagMandarPedidoSincronizacao == false){
+			$('.frase-loading').text('Sem pedidos para enviar');
+		}else{
+			$('.frase-loading').text('Erro ao Enviar Dados');
+		}
+		
+		$('.frase-loading').show();
 	}
 }
 

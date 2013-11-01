@@ -168,6 +168,7 @@ function  atualizar(){
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
+							alert('antes')
 							 ajax.success(function (data) {
 								 $.each(data, function(key, val) {
 							    	 if(val.atualizar == 'true'){
@@ -196,13 +197,13 @@ function  atualizar(){
 							    			atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
 							    			atualizaForm.qtdeVariacaoCuriosidade = val.atualiza_quantidade_variacao_qdte_curiosidade;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
-							    			alert('agora')
 							    		 }
 								    	 
 								     }
 							    	
 							       });
 						     });
+							
 							
 						} else {
 							db.transaction(montaHome, errorCB);

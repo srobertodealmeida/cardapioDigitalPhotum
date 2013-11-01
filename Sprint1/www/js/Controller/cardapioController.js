@@ -626,7 +626,7 @@ function montaCardapio(tx){
 		 idConta = result.rows.item(0).idConta;
 	 }, errorCB);
 	 
-	tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'"',[],montaCategoria,errorCB);
+	tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" order by ordem',[],montaCategoria,errorCB);
 	montaBotoesCardapio();
 }
 
@@ -688,7 +688,7 @@ function chamarProdutos(div){
 	$("#UL-Produtos").html("");
 	
 	db.transaction(function(tx){
-		tx.executeSql('SELECT * FROM Categorias where title_comum = "'+ categoriaSelecionado +'" ',[],function(tx,result){
+		tx.executeSql('SELECT * FROM Categorias where title_comum = "'+ categoriaSelecionado +'" and language = "Portuguese-Brazil" ',[],function(tx,result){
 			if(result.rows.item(0).image != null || result.rows.item(0).image != ""){
 				$('body').css('background','url("'+result.rows.item(0).image+'") no-repeat scroll center bottom transparent');
 			}
@@ -701,7 +701,7 @@ function chamarProdutos(div){
 function selectDadosProdutos(tx){
 	console.log("selectDadosProdutos: " + categoriaSelecionado);
 	console.log('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" ');
-	tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" and language = "'+constLanguageSelected+'" ',[],montaProdutos,errorCB);
+	tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" and language = "'+constLanguageSelected+'" order by ordem',[],montaProdutos,errorCB);
 }
 
 function montaProdutos(tx,result){
@@ -1947,21 +1947,34 @@ function montaModalPreviaPedido(tx,result){
 	}
 	
 	var totalMesa = 0.00;
+	
 	$( "#id-ul-fechamento-conta .mostrarDetalhado" ).each(function( index ) {
-   	 var total = 0.00;
+   	 
+	 var total = 0.00;
    	 
    	 var numeroId = this.id.replace('pedido-fechamento-conta-','');
-     	$( "#pedido_detalhado-"+numeroId+" .modal_pedido_preco_produto_detalhado span" ).each(function( index ) {
+       $( "#pedido_detalhado-"+numeroId+" .modal_pedido_preco_produto_detalhado span" ).each(function( index ) {
      		
    	   var valor = $(this).text().replace('R$ ', '');
-   	   total += parseFloat(valor);
+   	   	total += parseFloat(valor);
        });
-     	$( "#pedido-fechamento-conta-"+numeroId+" .modal_previa_preco_produto span" ).text("Total: R$ " + total.toFixed(2));
-     	totalMesa += total;
+       
+       // calculo porcetagem
+       var porcentagemCalculado = 0.00;
+       var porcentagem = 10 / 100;
+       porcentagemCalculado = total * porcentagem;
+       total = total + porcentagemCalculado;
+       
+       $("#pedido_detalhado-"+numeroId+" .minhaUL-modal-nome-pessoa")
+	    .append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span> 10% do Garçom</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+porcentagemCalculado.toFixed(2)+'</span> </div>  </li> ');
+       // fim porcetagem
+       
+       $("#pedido-fechamento-conta-"+numeroId+" .modal_previa_preco_produto span").text("Total: R$ " + total.toFixed(2));
+       totalMesa += total;
      	
     });
-	$("#total-mesa").text(ObjectLabels.label_total_mesa+': '+ totalMesa.toFixed(2));
 	
+	$("#total-mesa").text(ObjectLabels.label_total_mesa+': '+ totalMesa.toFixed(2));
 	$(".mostrarDetalhado").add('.btn_fechar_conta_individual').click(handler);
 	$(".mostrarDetalhado").click(function(e){
 		var divDetalhado = $(this).next('.pedido_detalhado').attr('id');
@@ -1992,6 +2005,10 @@ function montaModalPreviaPedido(tx,result){
 		}  
 	 });
 	
+	
+}
+
+function aplicar10porcentoGarçon(){
 	
 }
 
@@ -2037,6 +2054,7 @@ $(document).ready(function(){
 			$('#geral').show();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
+			$('.mblSimpleDialogCover').removeClass('class-hide-SimpleDialogCover');
 			$('#propagandas').html("");
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
@@ -2049,16 +2067,27 @@ $(document).ready(function(){
 			$('#propagandas').hide();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
+			$('.mblSimpleDialogCover').removeClass('class-hide-SimpleDialogCover');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
 			propagandaAtiva = false;
+			return false;
 		});
+                  
+       $('#video-desenvolvido-por').bind('touchstart click', function(){
+	       $('#video-desenvolvido-por').hide();
+	       $('.div-video-desenvolvido-por').hide();
+	       var video = document.getElementById('video-desenvolvido-por');
+	       video.pause();
+	       return false;
+       });
 
 		$('#bodyTeste').bind('touchstart click', function(){
 			console.log('touchstart');
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
+			$('.mblSimpleDialogCover').removeClass('class-hide-SimpleDialogCover');
 			zerarInatividade();
 			$('div#propagandas').html("");
 			propagandaAtiva = false;
@@ -2072,6 +2101,17 @@ $(document).ready(function(){
 	
 	
 });
+
+function showVideoDesenvolvidoPor(){
+	
+    $('.div-video-desenvolvido-por').show();
+    $('#video-desenvolvido-por').show();
+    var video = document.getElementById('video-desenvolvido-por');
+    video.load();
+    video.play();
+  
+	
+}
 
 function postTEste(){
 

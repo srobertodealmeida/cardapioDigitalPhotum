@@ -194,26 +194,28 @@ body {
 
 
 .mblCarouselItemImage{
-	left: 0;
+	left: 180px;
 	margin: 0;
 	max-height: 100%;
 	max-width: 100%;
-	width: 180px;
+	width: 140px;
 	z-index: -1;
 	border: 1px solid white;
 	border-radius: 3 3 3 3 ;
 	border-radius: 15px;
 	box-shadow: 0px 0px 20px #000000 !important;
+	position: relative;
+	top:46px;
 }
 
 .mblCarouselItemFooterText{
 background-color: #171717;
-height: 13%;
+height: 10%;
 position: relative;
-top: -27;
+top: 18px;
 border-radius: 11 11 2 2 ;
-width: 97.7%;
-left: 2.2;
+width: 94.7%;
+left: 184.2;
 box-shadow: 0px 0px 20px #000000;
 padding-top: 8px;
 
@@ -223,7 +225,7 @@ padding-top: 8px;
     width: 100%; height: 95%;
     position:absolute;
     z-index: -2;
-    bottom: 20; right: 0;
+    bottom: -10px; right: -180px;
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
     border-radius: 50px;
@@ -479,8 +481,9 @@ height:50px;
 
 .span-label-config{
 position: fixed;
-left: 4.6%;
-font-size:30px;
+left: 4.3%;
+font-size:25px;
+top:20px;
 }
 
 .span-button-config{
@@ -491,7 +494,7 @@ top: 29px;
 	margin-right:25px;
 	margin-top:15px;
 	color: black;
-    font-size:60px;
+    font-size:40px;
     font-family: helvetica;
     letter-spacing: -2px !important;
     font-weight: bold;
@@ -524,7 +527,7 @@ top: 61.7px !important;
 .img-language-escolhido{
 	height: 50px;
 	width: 50px;
-	right:10px;
+	right:20px;
 	position: fixed;
 }
 
@@ -547,5 +550,5 @@ right: 10;
 .div-icon-arrow{
 position: fixed;
 right: 5px;
-top:-5px;
+top:5px;
 }

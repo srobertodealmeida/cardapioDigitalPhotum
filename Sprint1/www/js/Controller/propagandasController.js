@@ -13,7 +13,8 @@ var indiceComum = 0;
 var flagCuriosidade = false;
 var flagSelectPropagandaComum = false;
 
-function selectPropagandas(){
+function selectPropagandas(flagCuriosidade){
+   
 	db.transaction(function(tx) {
 		
 		// pega qtde de variacao da propaganda curiosidade
@@ -26,18 +27,16 @@ function selectPropagandas(){
 			 
 		 },errorCB);
                                         
-                    
-                   
-                   
+               
 		// MOnta propagandas comuns e que ainda n tenha passado
 		tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
                      
                       //alert("aki")
                       //alert("tamanho antes ne pq "+result.rows.length)
 			 if(result.rows.length > 0){
-                      alert("tamanho comum: "+result.rows.length)
+                      
 				 for(var i=0;i<result.rows.length;i++){
-                 alert("id comum: "+result.rows.item(i).id)
+                 
 					 var objectArrayPropagandasLoop = {
 			    			  image:"",
 			    			  duration:"",
@@ -54,12 +53,15 @@ function selectPropagandas(){
 				 indiceComum = 0;
 				 montaPropagandaHtml(0); 
 				  
-			 }
+                      }else{
+                      tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
+                      selectPropagandas(false);
+                      }
 			 
 		 },errorCB);
-		
-		selectPropagandasCuriosidade();
-		
+                   if(flagCuriosidade == true){
+                        selectPropagandasCuriosidade();
+                   }
         },errorCB,successCB);
 	
 	
@@ -69,9 +71,9 @@ function selectPropagandas(){
 	arrayPropagandasLoop = new Array();
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
 		 if(result.rows.length > 0){
-			 alert('motnando array denovo: '+result.rows.length)
+			
 			 for(var i=0;i<result.rows.length;i++){
-                alert('id denovo: '+result.rows.item(i).id);
+                
 				 var objectArrayPropagandasLoop = {
 		    			  image:"",
 		    			  duration:"",
@@ -101,8 +103,9 @@ function selectPropagandasCuriosidade(){
 	db.transaction(function(tx) {
 	// MOnta propagandas curiosidades e que ainda n tenha passado
 	tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Curiosidade"',[],function(fx,result){
+                 
 		 if(result.rows.length > 0){
-                  alert("tamanho curiosidade: "+result.rows.length)
+                 
 			 for(var i=0;i<result.rows.length;i++){
 
 				 var objectArrayPropagandasLoop = {
@@ -128,7 +131,7 @@ function selectPropagandasCuriosidade(){
 }
 
 function montaPropagandaHtml(indice){
-    alert("monta: "+indiceComum)
+   
 	if(propagandaAtiva == true){
 		// carrega dois arquivos
 		contadorVariacao = contadorVariacao + 1;
@@ -149,7 +152,7 @@ function montaPropagandaHtml(indice){
             
 			//var duration = arrayPropagandasLoop[indiceComum].duration;
            // alert("antes")
-            alert("flagCuriosidade: "+flagCuriosidade+"flagSelectPropagandaComum"+flagSelectPropagandaComum)
+           
            /**
             if(flagCuriosidade == true && flagSelectPropagandaComum == false){
                 alert("flagcuriosidade e nao propaganda comum: "+indiceComum)
@@ -233,7 +236,7 @@ function mostrarPropaganda(indice){
                        
                        $('.elemento-propaganda:first-child').hide(400);
 		 primeiraVezLoopPropaganda = false;
-		 alert("indice comum: "+indiceComum+" qtdPropagandasLoop: "+qtdPropagandasLoop)
+		 
 		 if(indiceComum == qtdPropagandasLoop-1){
                       
 			 //var indiceProximo = 0;
@@ -253,7 +256,7 @@ function mostrarPropaganda(indice){
 }
 
 function adicionarPropagandaHtml(indice){
-    alert("adicionar: "+indiceComum)
+   
 	if(propagandaAtiva == true){
 	
 	if(contadorVariacao == qtdVariacao){
@@ -265,7 +268,7 @@ function adicionarPropagandaHtml(indice){
 		var typePropaganda = "curiosidade";
 		var idElemento = 'player-curiosidade'+indice+'';
 		
-        alert("aqui adicionar indice: "+indice+"qtdeprop: "+qtdPropagandasLoop-1)
+        
         if(indice <= qtdPropagandasLoop-1){
             indiceComum = indiceComum-1;
         }
@@ -472,7 +475,7 @@ $(document).ready(function(){
 	$('.elemento-propaganda').remove();
 	onLoad();
 	propagandaAtiva = true;
-	selectPropagandas();
+	selectPropagandas(true);
 	//montaPropagandasMock();
 	
 });

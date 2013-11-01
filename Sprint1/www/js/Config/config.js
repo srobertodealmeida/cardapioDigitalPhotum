@@ -138,7 +138,7 @@ function onLoad() {
 }
 
 function onDeviceReady() {
-	$("#preloader").fadeOut(1000);
+	
 	
 	if(connectionWIFI == "connectionTrue"){
 		window.addEventListener("batterystatus", onBatteryStatus, false);
@@ -503,7 +503,8 @@ function getDrupalCategoria(tx) {
 				title : "",
 				title_comum : "",
 				language : "",
-				image: ""
+				image: "",
+				ordem:0
 			};
 			
 			var categoriasFinalDownloadForm = {
@@ -515,6 +516,7 @@ function getDrupalCategoria(tx) {
 			categoriaForm.title = val.titulo;
 			categoriaForm.language = val.language;
 			categoriaForm.title_comum = val.node_title;
+			categoriaForm.ordem = parseInt(val.ordem_categoria);
 			//categoriaForm.image = val.image_categoria
 			//arrayCategorias.push(categoriaForm);
 			
@@ -571,7 +573,8 @@ function getDrupalProduto(tx){
 						descricao_saiba_mais:"",
 						categoria:"",
 						image:"",
-						language:""
+						language:"",
+						ordem:0
 			  };
 			  
 			  var produtosFinalDownloadForm = {
@@ -590,6 +593,7 @@ function getDrupalProduto(tx){
 			  produtosForm.descricao = escapeHtml(val.descricao);
 			  produtosForm.descricao_saiba_mais = escapeHtml(val.descricao_saiba_mais);
 			  produtosForm.categoria = escapeHtml(val.categoria);
+			  produtosForm.ordem = parseInt(val.ordem_produto);
 			  
 			  if(val.imagem != null){
 			  var url = $.parseHTML(val.imagem); //pega apenas href
@@ -1223,7 +1227,7 @@ function montaHome(tx){
 	tx.executeSql('SELECT * FROM Languages',[],montaBanderaLanguage,errorCB); 	
 	tx.executeSql('SELECT * FROM Home',[],montaBackgroundLogo,errorCB);
 	tx.executeSql('SELECT * FROM Icones',[],montaIcones,errorCB);
-	tx.executeSql('SELECT * FROM Labels where categoria_label = "label_mesa_home" and language="'+constLanguageSelected+'"',[],montaLabelMesa,errorCB);
+	
 	
 	//tx.executeSql('SELECT * FROM Propaganda',[],montaPropaganda,errorCB);
 	  tx.executeSql('SELECT * FROM Languages',[],montaLanguages,errorCB);
@@ -1269,6 +1273,7 @@ function montaBanderaLanguage(tx,result){
 	tx.executeSql('SELECT * FROM LanguageSelect',[],function(tx,result){
 		if(result.rows.length > 0){
 		constLanguageSelected = result.rows.item(0).nome;
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "label_mesa_home" and language="'+constLanguageSelected+'"',[],montaLabelMesa,errorCB);
 		// Bandeira idioma
 	    tx.executeSql('SELECT * FROM Languages where nome="'+constLanguageSelected+'"',[],function(fx,result){
 			 if(result.rows.length > 0){
@@ -1315,7 +1320,7 @@ function montaIcones(tx,result){
 					 
 					 if(result.rows.length > 0){
 						 titleIcone = result.rows.item(0).valor;
-							$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+image+"\" style=\"height: 130px;\"><div class=\"mblCarouselItemFooterText\">"+ titleIcone +"  </div></a></div>");
+							$("#SwapView-icones").html("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+image+"\" style=\"height: 103px;\"><div class=\"mblCarouselItemFooterText\">"+ titleIcone +"  </div></a></div>");
 
 					 }
 					 
@@ -1325,7 +1330,7 @@ function montaIcones(tx,result){
 
 		}else{
 			var idAnterior = i-1;
-			$("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 96px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"</div></a></div>").insertAfter('#itemIcones-'+ idAnterior);
+			$("<div id=\"itemIcones-" + i + "\" class=\""+valtitleIcone+" mblCarouselItem itemCarrosel mblCarouselSlot\"><a href=\"cardapio.html\" ><div class=\"sh_bottom\"></div><div class=\"mblCarouselItemHeaderText\"></div><img class=\"mblCarouselItemImage\" src=\""+result.rows.item(i).image+"\" style=\"height: 110px;\"><div class=\"mblCarouselItemFooterText\">"+ result.rows.item(i).title +"</div></a></div>").insertAfter('#itemIcones-'+ idAnterior);
 		}
 		
     	console.log(result.rows.item(i));
@@ -1442,7 +1447,7 @@ function createTable(tx){
          ////////////////////////////////////////////Categorias//////////////////////////////////////
 		// Table categorias
 		tx.executeSql('DROP TABLE IF EXISTS Categorias');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT, ordem INTEGER)');
 	}
 	
 	// Produtos
@@ -1450,7 +1455,7 @@ function createTable(tx){
           ////////////////////////////////////////////Produtos//////////////////////////////////////
 		  //Table Produtos
 		tx.executeSql('DROP TABLE IF EXISTS Produtos');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT ,codigo TEXT, preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT , previa_descricao TEXT ,codigo TEXT, preco TEXT , descricao TEXT , descricao_saiba_mais TEXT ,  categoria TEXT , image TEXT , title_comum TEXT, language TEXT, nid TEXT, ordem INTEGER)');
 	}
 	
 	//Adicionais
@@ -1578,8 +1583,8 @@ function insertTable(nomeTable){
 			for(i=0;i<arrayCategorias.length;i++){
 				
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Categorias(title,language,title_comum,image) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'")');
-				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'")');
+				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'")');
+				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'")');
 			}
             },errorCB,successInsert);
 		
@@ -1591,7 +1596,7 @@ function insertTable(nomeTable){
 				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
 				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
-										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,codigo,adicionais_especifico) VALUES ("'
+										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,ordem,codigo) VALUES ("'
 												+ arrayProdutos[i].title
 												+ '","'
 												+ arrayProdutos[i].previa_descricao
@@ -1604,13 +1609,15 @@ function insertTable(nomeTable){
 												+ '","'
 												+ arrayProdutos[i].categoria
 												+ '","'
-												+ arrayProdutos[i].image 
+												+ arrayProdutos[i].image
 												+ '","'
 												+ arrayProdutos[i].title_comum 
 												+ '","'
 												+ arrayProdutos[i].language
 												+ '","'
 												+ arrayProdutos[i].nid
+												+ '","'
+												+ arrayProdutos[i].ordem 
 												+ '","'
 												+ arrayProdutos[i].codigo +
 												'" )');
@@ -1629,8 +1636,7 @@ function insertTable(nomeTable){
 				}else{
 					if(arrayPropagandasDepoisDownload[i].type == "update"){
 						
-						
-						var imagePropaganda = arrayPropagandasDepoisDownload[i].image;
+						   var imagePropaganda = arrayPropagandasDepoisDownload[i].image;
 	                       var durationPropaganda = arrayPropagandasDepoisDownload[i].duration;
 	                       var versaoPropaganda = arrayPropagandasDepoisDownload[i].versao;
 	                       var ordenacaoPropaganda = arrayPropagandasDepoisDownload[i].ordenacao;
@@ -1638,11 +1644,9 @@ function insertTable(nomeTable){
 							tx.executeSql('SELECT * FROM Propagandas where nid = "'+arrayPropagandasDepoisDownload[i].nid+'"',[],function(tx,result){
 								if(result.rows.length > 0){
 
-									console.log('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'" WHERE Id='+result.rows.item(0).id+'');
+									console.log('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'", flag_passou="false" WHERE Id='+result.rows.item(0).id+'');
 		
-									tx.executeSql('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'" WHERE Id='+result.rows.item(0).id+'');
-
-						
+									tx.executeSql('UPDATE Propagandas SET image="'+imagePropaganda+'", duration="'+durationPropaganda+'", deletadoBanco="false", versao="'+versaoPropaganda+'", ordenacao="'+ordenacaoPropaganda+'", tipoPropaganda="'+tipoPropaganda+'", flag_passou="false" WHERE Id='+result.rows.item(0).id+'');
 								
 							}
 						},errorCB);
@@ -2147,6 +2151,7 @@ function inatividade() {
 			$('#geral').hide();
 			$('.mblSimpleDialog').addClass('class-sem-index');
 			$('.mblSimpleDialog').addClass('class-sem-index');
+			$('.mblSimpleDialogCover').addClass('class-hide-SimpleDialogCover');
 			$('#propagandas').show();
 		
 	}
@@ -2168,22 +2173,39 @@ function limparDadosMesa(btn){
 }
 
 function createIdConta(){
-	db.transaction(function(tx) {
-		tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
-		 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
-			 if(result.rows.length == 0){
-			   tx.executeSql('INSERT INTO IdConta(idConta) VALUES ("1")'); 
-			 }else{
-			 
-			   idAtual = result.rows.item(0).idConta;
-			   idAtual = parseInt(idAtual);
-			   idAtual += 1;
-			   tx.executeSql('UPDATE IdConta SET idConta="'+idAtual+'" WHERE Id='+result.rows.item(0).id+'');
-			 }
-			 confirmacaoFechamentoMesa();
-		 },errorCB);
-   },errorCB);
+	
+		
+		var data = {
+				"type" : "idconta",
+
+				"title" : "Conta",
+			};
+			var url = "" + ipServidorDrupal + "/node";
+			var ajaxIdConta = postAjaxSinc(url,data);
+			
+			ajaxIdConta.success(function (data) {
+				var positionchaveInicial = data.search('{');
+				var positionchaveFinal = data.search('}');
+				var dataConvertida = data.substring(positionchaveInicial, positionchaveFinal+1);
+				var dataConvertida2 = $.parseJSON(dataConvertida)
+				var idConta = dataConvertida2.nid;
+				
+				db.transaction(function(tx) {
+					tx.executeSql('CREATE TABLE IF NOT EXISTS IdConta (id INTEGER PRIMARY KEY AUTOINCREMENT, idConta TEXT NOT NULL)');
+					 tx.executeSql('SELECT * FROM IdConta ',[],function(tx,result){
+						 if(result.rows.length == 0){
+						   tx.executeSql('INSERT INTO IdConta(idConta) VALUES ('+idConta+')'); 
+						 }else{
+						 
+						   tx.executeSql('UPDATE IdConta SET idConta="'+idConta+'" WHERE Id='+result.rows.item(0).id+'');
+						 }
+						 confirmacaoFechamentoMesa();
+					 },errorCB);
+				 },errorCB);
+			});
+
 }
+
 
 function confirmacaoFechamentoMesa(){
 	window.location = 'home.html';
