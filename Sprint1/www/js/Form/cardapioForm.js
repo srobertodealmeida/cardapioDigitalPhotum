@@ -16,6 +16,8 @@ var arrayAdicionais = new Array();
 
 var categoriaSelecionado;
 
+var displayCozinhaSelecionado;
+
 var buttons = {
 		cancelar:"",
 		previa_descricao:"",

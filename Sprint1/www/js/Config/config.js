@@ -1,21 +1,20 @@
 // Variaveis globais
 
 var ipServidorDrupal = "null";
-					var urlViewConfig = ipServidorDrupal + "/views/configuracao";
-					var urlViewLabels = ipServidorDrupal + "/views/labels";
-					var urlViewHome = ipServidorDrupal + "/views/view_home";
-					var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
-					var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
-					var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
-					var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
-					var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
-					var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
-					var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
-					var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
-
+var urlViewConfig = ipServidorDrupal + "/views/configuracao";
+var urlViewLabels = ipServidorDrupal + "/views/labels";
+var urlViewHome = ipServidorDrupal + "/views/view_home";
+var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
+var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
+var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
+var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
-var connectionWIFI = "connectionTrue";
+var connectionWIFI = "connectionFalse";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
@@ -504,7 +503,8 @@ function getDrupalCategoria(tx) {
 				title_comum : "",
 				language : "",
 				image: "",
-				ordem:0
+				ordem:0,
+				display_cozinha : ""
 			};
 			
 			var categoriasFinalDownloadForm = {
@@ -517,6 +517,7 @@ function getDrupalCategoria(tx) {
 			categoriaForm.language = val.language;
 			categoriaForm.title_comum = val.node_title;
 			categoriaForm.ordem = parseInt(val.ordem_categoria);
+			categoriaForm.display_cozinha = val.display-cozinha;
 			//categoriaForm.image = val.image_categoria
 			//arrayCategorias.push(categoriaForm);
 			
@@ -1447,7 +1448,7 @@ function createTable(tx){
          ////////////////////////////////////////////Categorias//////////////////////////////////////
 		// Table categorias
 		tx.executeSql('DROP TABLE IF EXISTS Categorias');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT, ordem INTEGER)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT, ordem INTEGER, display_cozinha TEXT)');
 	}
 	
 	// Produtos
@@ -1512,7 +1513,7 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
 	
 }
 
@@ -1583,8 +1584,8 @@ function insertTable(nomeTable){
 			for(i=0;i<arrayCategorias.length;i++){
 				
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'")');
-				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'")');
+				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
+				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
 			}
             },errorCB,successInsert);
 		
@@ -2029,7 +2030,6 @@ function getAjax(url) {
 			console.log('erro ajax: ' + url);
 		}
 	});
-
 }
 
 function postAjax(url,data){
@@ -2049,7 +2049,6 @@ function postAjax(url,data){
 						        }
 						    },
 						    
-						    
 							error : function(jqXHR, textStatus, errorThrown) {
 								alert(errorThrown)
 								console.log(jqXHR);
@@ -2058,8 +2057,6 @@ function postAjax(url,data){
 						
 					
 				}
-		
-	
 }
 
 function postAjaxSincrona(url,data){
@@ -2298,8 +2295,6 @@ function Mock(){
         },errorCB, successInsert);
 	//db.transaction(montaHome,errorCB);
 	//db.transaction(testeSelect,errorCB);
-	
-	
 	
 }
 
