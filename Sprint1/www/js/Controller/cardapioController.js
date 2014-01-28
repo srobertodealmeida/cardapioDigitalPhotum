@@ -246,7 +246,7 @@ require([
 			   			
 			   		}
 		    		
-		    	});
+		    	 });
 			   
 			    totalPagamento = "Total: R$ " + totalPagamento.toFixed(2);
 		    	$( "#id-ul-fechamento-conta .mostrarDetalhado .btn_fechar_conta_individual" ).each(function( index ) {
@@ -359,6 +359,10 @@ function updatePedidosDrupalFormaPagamento(){
 	
 }
 
+function showLocalConfirmacaoPedido(dlg){
+	showConfirmacaoPedido(dlg);
+}
+
 function mostrarSugestõesSobremesas(dlg){
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM Categorias where title_comum="SOBREMESAS"',[],function(tx,result){
@@ -417,7 +421,6 @@ function inputSenhaConfirmacaoPagamentoLimparMesa(){
 		  return false;
 	}
 }
-
 
 function validarSenhaCancelamentoPedido(btn){
 				 
@@ -625,6 +628,7 @@ function montaCardapio(tx){
 	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
 		 idConta = result.rows.item(0).idConta;
 	 }, errorCB);
+	 
 	tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" order by ordem',[],montaCategoria,errorCB);
 	montaBotoesCardapio();
 }
@@ -632,6 +636,7 @@ function montaCardapio(tx){
 function montaCategoria(tx,result){
     console.log(result.rows);
     for(var i=0;i<result.rows.length;i++){
+    	
     	$("#ul-categorias").append('<div class="divClicavel" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria">'+result.rows.item(i).title+'</span></div></div>')
 		console.log(result.rows.item(i));
     	console.log(result.rows.item(i));
@@ -645,7 +650,8 @@ function montaBotoesCardapio(){
 	$('#btn_fecharConta').text(ObjectLabels.btn_fechar_conta);
 	$('#btn_meuPedido').text(ObjectLabels.btn_meu_pedido);
 	$('#btn_chamarGarçon').text(ObjectLabels.btn_chamar_garcom);
-	/**
+	
+    /**
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM Labels where categoria_label = "btn_home" and language="'+constLanguageSelected+'"',[],function(tx,result){
 			if(result.rows.length > 0){
@@ -676,7 +682,8 @@ function montaBotoesCardapio(){
 }
 
 function chamarProdutos(div){
-	$(".selecionado").removeClass("selecionado");
+	
+    $(".selecionado").removeClass("selecionado");
 	$("#"+ div.id + " li").addClass("selecionado");
 	console.log(div);
 
@@ -706,10 +713,9 @@ function selectDadosProdutos(tx){
 function montaProdutos(tx,result){
 	 for(var i=0;i<result.rows.length;i++){
 		 console.log( "testantoselecProdutos" + result.rows.item(i).id);
-		 
 		 $(".content .mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 		 $(".content .mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
-		// var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
+		 // var titleProduto = delimitadorFrase(result.rows.item(i).title, 26);
 		 if(result.rows.item(i).previa_descricao == null || result.rows.item(i).previa_descricao == "null"){
 			 var PreviadescricaoProduto = "";
 			 $('#UL-Produtos .minhaLI').addClass('minhali_sem_previa_descricao');
@@ -732,6 +738,10 @@ function montaProdutos(tx,result){
 			 $('#UL-Produtos .previa_descricao_produto').addClass('previa_descricao_sem_image');
 		 }
 	}
+    $("#UL-Produtos").hide();
+    $("#UL-Produtos").show();
+    
+   
 }
 
 function selectProduto(produto){
@@ -772,7 +782,6 @@ function selectProdutoPizzaMeioaMeio(opcao){
 function adicionarPizzaMeioaMeio(li){
 	var nomeProduto = "";
 	var idProduto = $('#'+li.id).attr('name');
-
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM Produtos where id = "'+ idProduto +'"',[],function(tx,result){
 			if(result.rows.length>0){
@@ -856,7 +865,6 @@ function montaDescricao(tx,result){
 		editandoPedido = false;
 		editandoPessoa = false;
 		show('id-modal-meio-a-meio');
-		
 	
 	}else{
 		console.log("MOntaDescricaoaisimeimResult: "  + result.rows.item(0).image);
@@ -887,8 +895,17 @@ function montaDescricao(tx,result){
 			 }
 			$("#id-modal-descricao .modal_descricao .title_descricao").text(descricaoProduto);
 			$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
-			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido efeito-button-descricao" onclick="selectPessoa('+result.rows.item(0).id+')">'+ObjectLabels.btn_adicionar+'</button>');
-			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido efeito-button-descricao" onclick="hide(\'id-modal-descricao\')">'+ObjectLabels.btn_cancelar+'</button>');
+			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido efeito-button-descricao" >'+ObjectLabels.btn_adicionar+'</button>');
+			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido efeito-button-descricao" onclick="hide(\'id-modal-descricao\')" >'+ObjectLabels.btn_cancelar+'</button>');
+			
+			//Binds
+			$('#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_adicionar_pedido').bind('touchstart click', function(){
+				selectPessoa(result.rows.item(0).id);
+		    });
+			
+		//	$('#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_cancelar_pedido').bind('touchstart click', function(){
+			//	hide('id-modal-descricao');
+		   // });
 			
 			editandoPedido = false;
 			editandoPessoa = false;
@@ -1016,12 +1033,12 @@ function montaFormasDePagamento(){
 }
 
 function montaAdicionarPessoa(tx,result){
-	console.log("numeroPessoasMEsa: " + result.rows.length)
 	
-	
+    console.log("numeroPessoasMEsa: " + result.rows.length)
 	//Limpa li.
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
-	$("#id_ul_modal_nome_pessoa .inputNome").remove();
+	
+    $("#id_ul_modal_nome_pessoa .inputNome").remove();
 	
 	if(!editandoPessoa && !editandoPedido){
 		$(".textarea-observacao-produto").val('');
@@ -1233,6 +1250,7 @@ function salvarPessoa(input){
 
 function editarPessoa(btn){
 	console.log("editando");
+   
 	$("#"+ btn.value).removeClass('naoEditavel');
 	$("#"+ btn.value).addClass('editando');
 	$("#" + btn.value).attr('onClick','mostrarImput(this)');
@@ -1258,7 +1276,10 @@ function selectProdutoPedido(){
 }
 
 function salvarEdicaoPedido(){
-	db.transaction(function(tx) { 
+    var testeProdutoErro = "semnada";
+   
+	db.transaction(function(tx) {
+                   testeProdutoErro = "transaction";
 	var observacao =  $(".textarea-observacao-produto").val();
 	
 	 
@@ -1269,12 +1290,16 @@ function salvarEdicaoPedido(){
 	 var title_adicionais = "";
 	 var title_adicionais_portugues = "";
 	 var contador = 0;
+                   
 	 tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
+                    testeProdutoErro = 'SELECT * FROM Pedido where id = '+idPedidoEditando+'';
 		 var precoOriginal =  result.rows.item(0).preco_original_produto;
+                   
 		 var quantidadeProduto = result.rows.item(0).quantidade;
 		 var title_comum =  result.rows.item(0).title_comum;
 		 nomePrimeiraOpcao = result.rows.item(0).nomePrimeiraOpcaoPizza;
 		 nomeSegundaOpcao = result.rows.item(0).nomeSegundaOpcaoPizza;
+                   
 		 if(flagPizzaMeioaMeio == true){
 			 
 			 
@@ -1332,15 +1357,29 @@ function salvarEdicaoPedido(){
 				
 			
 		 }else{
+                  
 			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
 			 precoFinal = precoFinal.toFixed(2);
-			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id="'+idPedidoEditando+'"');
+                  
+			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'", title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id='+idPedidoEditando+'');
+                   
+                    testeProdutoErro = 'UPDATE Pedido SET pessoa';
+                   
+               
+                  
+                   testeProdutoErro = 'UPDATE Pedido SET pessoa2';
+                   
+                  
 		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
+                   
+                    testeProdutoErro = 'UPDATE Pessoas SET associado_pedido';
 		 }
-	 
+	
 	 },errorCB);
+                  
     },errorCB,selectPedidos);
 }
+
 
 function selectProdutoMeuPedido(){
 	meuPedido = true;
@@ -1502,6 +1541,7 @@ function adicionarPedido(tx,result){
 }
 
 function selectPedidos(){
+   
 	db.transaction(function(tx) {
 		 tx.executeSql('SELECT * FROM Pedido where status = "confirmacao"',[],montaModalPedido,errorCB);
     },errorCB);
@@ -1520,6 +1560,7 @@ function preparaModalCancelamentoPedido(btn){
 	show('modal_cancelamento_pedido');
 }
 function montaModalPedido(tx,result){
+   
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
 	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
 	$('#id-efetuar-pedido').removeAttr("disabled");
@@ -1686,15 +1727,21 @@ function montaModalPedido(tx,result){
 }
 
 function editarPedido(li){
+   
 	db.transaction(function(tx) {
+                  
 		 tx.executeSql('SELECT * FROM Pedido where id = '+li.value+'',[],function(tx,result){
 			 hide('modal_pedido');
+                    
 			 idPedidoEditando = result.rows.item(0).id;
 			 $(".textarea-observacao-produto").val(result.rows.item(0).observacao);
+                    
 			 console.log('editando');
 			 editandoPedido = true;
+                      
 			 categoriaSelecionado = result.rows.item(0).categoria_produto;
 			 nomePessoaEditando =  result.rows.item(0).pessoa;
+                      
 			 selectPessoa(result.rows.item(0).id_produto);
 			 
 		 },errorCB);
@@ -1818,6 +1865,7 @@ function postPedidoDrupal(tx, result) {
 							//arrayIdPedidosAEfetuar.push(result.rows.item(i).id);
 							var url = "" + ipServidorDrupal + "/node";
 							// var ajaxPostDrupal = postAjax(url,data);
+                        if(connectionWIFI == "connectionTrue"){
 							var ajaxPostNid = postAjaxSincrona (url, data);
 							ajaxPostNid.success(function (data) {
 								
@@ -1829,7 +1877,7 @@ function postPedidoDrupal(tx, result) {
 								
 								var urlNode = "" + ipServidorDrupal + "/node/"+nidRetorno;
 								
-								
+                                
 								var ajaxPedidos = getAjax(urlNode);
 								
 								ajaxPedidos.success(function (data) {
@@ -1839,6 +1887,7 @@ function postPedidoDrupal(tx, result) {
 											tx
 											.executeSql('UPDATE Pedido SET  nid="'+data.nid+'"  WHERE id="'
 													+ data.field_id_pedido.und[0].value+ '"');
+											
 										}, errorCB);
 										  
 									
@@ -1848,8 +1897,12 @@ function postPedidoDrupal(tx, result) {
 									
 									alert('error getajax pedido');
 								});
-				    	
+								
+								
+							 
+						    	
 						    });
+                          }
  						
 							/**
 							var url2 = "" + ipServidorDrupal + "/node/2550";
@@ -1867,6 +1920,7 @@ function postPedidoDrupal(tx, result) {
 							var putMeuAjax = putAjax(url2,data2);
                             */
 							// putAjax(url,data);
+                         
 							tx
 							.executeSql('UPDATE Pedido SET status="aguardando-pedido" WHERE id="'
 									+ result.rows.item(i).id+ '"');
@@ -2046,6 +2100,7 @@ $(document).ready(function(){
 	setLanguage();
 	setLabels();
 	inatividade();
+	bindsButtons();
 		
 		$('#propagandas').click(function(e){
 			zerarInatividade();
@@ -2080,7 +2135,7 @@ $(document).ready(function(){
 	       $('.div-video-desenvolvido-por').hide();
 	       var video = document.getElementById('video-desenvolvido-por');
 	       video.pause();
-	       $('#geral').show();
+                                         $('#geral').show();
 	       return false;
        });
 
@@ -2093,6 +2148,15 @@ $(document).ready(function(){
 			$('div#propagandas').html("");
 			propagandaAtiva = false;
 		});
+        
+		/*
+		
+        $('#modal_pedido .btn_adicionar_pedido').bind('touchstart click', function(){
+                                                      showConfirmacaoPedido(this);
+        });
+        */
+        
+        bindTouchstart('#modal_pedido .btn_adicionar_pedido',showLocalConfirmacaoPedido);
 	
 	//document.addEventListener("deviceready", yourCallbackReady, false);
 	
@@ -2196,10 +2260,40 @@ function postTEste(){
 							var ajax = getAjax('http://192.168.0.101/PizzaCompany/?q=rest/node');
 							ajax.success(function (data) {
 								
-								alert(data)
+                            
 								
 						    });
 							
+}
+
+function bindsButtons(){
+	
+	///////////////////////////////////Barra lateral buttons Home,etc..
+	
+	//Fechar Conta
+	$('#btn_fecharConta').bind('touchstart click', function(){
+		montaPreviaPedido();
+    });
+	
+	//Meu Pedido
+	$('#btn_meuPedido').bind('touchstart click', function(){
+		selectProdutoMeuPedido();
+    });
+	
+	//Chamar Garçom
+	$('#btn_chamarGarçon').bind('touchstart click', function(){
+		showChamarGarcom('modal_chamar_garcon');
+    });
+	
+	//Photum Menu
+	$('#btn_photum_menu').bind('touchstart click', function(){
+		showVideoDesenvolvidoPor('modal_chamar_garcon');
+    });
+	
+    ///////////////////////////////////Janela descricao produto
+	
+	
+	
 }
 
 function delimitadorFrase(frase,qdtCaracter){

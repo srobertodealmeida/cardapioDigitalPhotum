@@ -1,17 +1,18 @@
 // Variaveis globais
 
 var ipServidorDrupal = "null";
-var urlViewConfig = ipServidorDrupal + "/views/configuracao";
-var urlViewLabels = ipServidorDrupal + "/views/labels";
-var urlViewHome = ipServidorDrupal + "/views/view_home";
-var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
-var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
-var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
-var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
-var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
-var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
-var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
-var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+					var urlViewConfig = ipServidorDrupal + "/views/configuracao";
+					var urlViewLabels = ipServidorDrupal + "/views/labels";
+					var urlViewHome = ipServidorDrupal + "/views/view_home";
+					var urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
+					var urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
+					var urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+					var urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
+					var urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+					var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+					var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+					var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
 var connectionWIFI = "connectionFalse";
@@ -513,11 +514,13 @@ function getDrupalCategoria(tx) {
 					pathDestino:"",
 		    };
 			
+               
 			categoriaForm.title = val.titulo;
 			categoriaForm.language = val.language;
 			categoriaForm.title_comum = val.node_title;
 			categoriaForm.ordem = parseInt(val.ordem_categoria);
-			categoriaForm.display_cozinha = val.display-cozinha;
+			categoriaForm.display_cozinha = val.display_cozinha;
+               
 			//categoriaForm.image = val.image_categoria
 			//arrayCategorias.push(categoriaForm);
 			
@@ -553,7 +556,7 @@ function getDrupalCategoria(tx) {
 }
 
 function getDrupalProduto(tx){
-//////////////////////////////////////////////////////////////////Produtos/////////////////////////////////////
+    //////////////////////////////////////////////////////////////////Produtos/////////////////////////////////////
 	
     var ajaxProdutos = getAjax(urlViewProdutos);
 	
@@ -1513,8 +1516,8 @@ function createTablesdoCardapio(tx){
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
+
 	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
-	
 }
 
 /*
@@ -2030,6 +2033,7 @@ function getAjax(url) {
 			console.log('erro ajax: ' + url);
 		}
 	});
+
 }
 
 function postAjax(url,data){
@@ -2049,6 +2053,7 @@ function postAjax(url,data){
 						        }
 						    },
 						    
+						    
 							error : function(jqXHR, textStatus, errorThrown) {
 								alert(errorThrown)
 								console.log(jqXHR);
@@ -2057,6 +2062,8 @@ function postAjax(url,data){
 						
 					
 				}
+		
+	
 }
 
 function postAjaxSincrona(url,data){
@@ -2223,7 +2230,7 @@ db.transaction(function(tx){
 				 
 					 ipServidorDrupal = result.rows.item(0).endereco;
 					
-					urlViewConfig = ipServidorDrupal + "/views/configuracao";
+					 urlViewConfig = ipServidorDrupal + "/views/configuracao";
 					 urlViewLabels = ipServidorDrupal + "/views/labels";
 					 urlViewHome = ipServidorDrupal + "/views/view_home";
 					 urlViewFormasDePagamento = ipServidorDrupal + "/views/formas_de_pagamento";
@@ -2242,14 +2249,45 @@ db.transaction(function(tx){
 		
 	
 }
+
+function bindTouchstart(botao,funcao){
+	 alert(botao);
+	 alert(funcao);
+	 if(typeof(funcao)=="function"){
+		
+		
+		 $(''+botao).bind('touchstart click', function(){
+				 alert('aki foi eim');
+				 funcao.call();
+		});
+	 }
+}
+
 function errorGetEnderecoServidor(){
+    
+    ipServidorDrupal = "http://192.168.0.107/PizzaCompany/?q=rest";
+    
+    urlViewConfig = ipServidorDrupal + "/views/configuracao";
+    urlViewLabels = ipServidorDrupal + "/views/labels";
+    urlViewHome = ipServidorDrupal + "/views/view_home";
+    urlViewFormasDePagamento = ipServidorDrupal + "/views/formas_de_pagamento";
+    urlViewAdicionais = ipServidorDrupal + "/views/adicionais";
+    urlViewPropagandas = ipServidorDrupal + "/views/propagandas";
+    urlViewCategoria = ipServidorDrupal + "/views/categoria_all";
+    urlViewProdutos = ipServidorDrupal + "/views/produtos_all";
+    urlViewMesas = ipServidorDrupal + "/views/mesa_all";
+    urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
+    urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
+    urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
 	document.addEventListener("deviceready", onDeviceReady, false);
 	$('.btn-mudar-endereceo-servidor').show();
 	
 }
 
 $(document).ready(function(){
+                  
 	initVariaveis();
+                 
 });
 
 
@@ -2295,6 +2333,8 @@ function Mock(){
         },errorCB, successInsert);
 	//db.transaction(montaHome,errorCB);
 	//db.transaction(testeSelect,errorCB);
+	
+	
 	
 }
 
