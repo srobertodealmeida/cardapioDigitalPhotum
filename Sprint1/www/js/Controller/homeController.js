@@ -108,7 +108,7 @@ function atualizaLabelsHome(){
 			 
 		 },errorCB);
 		    
-	   // Title Idioma
+	      //Title Idioma
 		    
 		    tx.executeSql('SELECT * FROM Labels where categoria_label="title_idioma" and language="'+constLanguageSelected+'"',[],function(fx,result){
 				 if(result.rows.length > 0){
@@ -118,7 +118,7 @@ function atualizaLabelsHome(){
 		    },errorCB);
 		    
 		    
-	  // Bandeira idioma
+	     //Bandeira idioma
 		    
 		    tx.executeSql('SELECT * FROM Languages where nome="'+constLanguageSelected+'"',[],function(fx,result){
 				 if(result.rows.length > 0){
