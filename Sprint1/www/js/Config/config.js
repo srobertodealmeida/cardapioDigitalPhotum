@@ -943,6 +943,7 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
     	  	};
     	  	
     	      fileTransfer.download(url, imagePath, function (entry) {
+    	    	  zerarInatividade();
     	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
     	    	  if(downloadsArquivosErro == true){
     	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
@@ -957,7 +958,7 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
     	    			  tx:"",
     	    			  objectPropagandasDownload:""
     	    			  }
-    	    	  
+    	    	  zerarInatividade();
     	    	  ObjectArquivosDownloadsErro.url = url;
     	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
     	    	  ObjectArquivosDownloadsErro.tx = tx;
