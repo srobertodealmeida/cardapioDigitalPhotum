@@ -13,8 +13,11 @@ var indiceComum = 0;
 var flagCuriosidade = false;
 var flagSelectPropagandaComum = false;
 
+var mostra = 0;
+var adiciona = 0;
+
 function selectPropagandas(flagCuriosidade){
-   
+  
 	db.transaction(function(tx) {
 		
 		// pega qtde de variacao da propaganda curiosidade
@@ -51,7 +54,7 @@ function selectPropagandas(flagCuriosidade){
 				 qtdPropagandasLoop = arrayPropagandasLoop.length;
 				 primeiraVezLoopPropaganda = true;
 				 indiceComum = 0;
-				 montaPropagandaHtml(0); 
+				 montaPropagandaHtml(0,0,0); 
 				  
                       }else{
                       tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
@@ -66,7 +69,9 @@ function selectPropagandas(flagCuriosidade){
 	
 	
 }
- function selectPropagandasComuns(indice){
+ function selectPropagandasComuns(indice,mostra){
+  
+    
 	 db.transaction(function(tx) {
 	arrayPropagandasLoop = new Array();
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
@@ -90,7 +95,7 @@ function selectPropagandas(flagCuriosidade){
 			 qtdPropagandasLoop = arrayPropagandasLoop.length;
 			 flagSelectPropagandaComum = true;
 			 indiceComum = 0;
-			 montaPropagandaHtml(0);
+			 montaPropagandaHtml(0,mostra,0);
 			 
 			  
 		 }
@@ -100,6 +105,7 @@ function selectPropagandas(flagCuriosidade){
  }
 
 function selectPropagandasCuriosidade(){
+    
 	db.transaction(function(tx) {
 	// MOnta propagandas curiosidades e que ainda n tenha passado
 	tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Curiosidade"',[],function(fx,result){
@@ -130,26 +136,29 @@ function selectPropagandasCuriosidade(){
 	  },errorCB,successCB);
 }
 
-function montaPropagandaHtml(indice){
-   
+function montaPropagandaHtml(indice,mostra,idPropagandaRemover){
+    
 	if(propagandaAtiva == true){
 		// carrega dois arquivos
 		contadorVariacao = contadorVariacao + 1;
 		if(indiceComum == 0 && primeiraVezLoopPropaganda == true){
-			adicionarPropagandaHtml(indiceComum);
+			//Adiciona Primeira Tag
+			adiciona = 1;
+			adicionarPropagandaHtml(indiceComum,adiciona);
 			var indiceProximo = indiceComum + 1;
 			//var duration = arrayPropagandasLoop[indiceComum].duration;
-			mostrarPropaganda(indiceComum);
+			mostra = 1;
+			mostrarPropaganda(indiceComum,mostra);
             
             if(qtdPropagandasLoop != 1){
             indiceComum = indiceComum+1;
             }
             
-			adicionarPropagandaHtml(indiceComum);
+          //Adiciona Segunda Tag
+            adiciona = 2;
+			adicionarPropagandaHtml(indiceComum,adiciona);
 			
 		}else{
-           
-            
 			//var duration = arrayPropagandasLoop[indiceComum].duration;
            // alert("antes")
            
@@ -170,9 +179,14 @@ function montaPropagandaHtml(indice){
                 
 			//}
             // alert("depois")
-			mostrarPropaganda(indiceComum);
-			
-			
+                var proximoMostrar;
+                if(mostra == 1){
+                	proximoMostrar = 2;
+                }else{
+                	proximoMostrar = 1;
+                }
+                
+			mostrarPropaganda(indiceComum,proximoMostrar);
            /**
             if(indice == 0){
 				var indiceAnterior = qtdPropagandasLoop-1;
@@ -194,39 +208,50 @@ function montaPropagandaHtml(indice){
 			
            
            // alert("chamando remove")
-			removerPropagandaHtml();
-			adicionarPropagandaHtml(indiceComum);
+			removerPropagandaHtml(idPropagandaRemover);
+			adicionarPropagandaHtml(indiceComum,mostra);
 			
 		}
 	}
 	
 }
 
-function mostrarPropaganda(indice){
+function mostrarPropaganda(indice,mostra){
     
 	if(propagandaAtiva == true){
     
+		
+		var ativo = $("#video"+mostra).attr('value');
         
 	//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
 	
-	
+	var idElementoParaMostrar = "";
 	//var tag = $('#'+idElemento).prop("tagName");
-        var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
-	if (tag == "VIDEO") {
-		 
-		     $('.elemento-propaganda:nth-child(2)').show(4000);
-             var idVideo = $('.elemento-propaganda:nth-child(2)').attr("id")
+        //var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
+        
+	if (ativo != "false") {
+        
+		idElementoParaMostrar = "video"+mostra;
+       
+		    $('#'+idElementoParaMostrar).show(4000);
+        
+             var idVideo = $('#'+idElementoParaMostrar).attr("id")
+        
+        
 			 var video = document.getElementById(idVideo);
+       
+              video.load()
 			 video.play();	
 		 
 	}else{
+        
 		//$('#'+idElemento).show();
-       
-        $('.elemento-propaganda:nth-child(2)').show();
+		idElementoParaMostrar= "img"+mostra;
+		$('#'+idElementoParaMostrar).show();
 	}
-	var duration = $('.elemento-propaganda:nth-child(2)').attr('value');
+	var duration = $('#'+idElementoParaMostrar).attr('value');
 	duration = parseInt(duration) + 2000;
-	
+	 
 	 window.setTimeout(function() {
 		 if(propagandaAtiva == false){
 			 clearTimeout(this);
@@ -234,28 +259,30 @@ function mostrarPropaganda(indice){
                        
 		 //$('#'+idElemento).hide(4000);
                        
-                       $('.elemento-propaganda:first-child').hide(400);
+		 $('#'+idElementoParaMostrar).hide(400);
 		 primeiraVezLoopPropaganda = false;
 		 
 		 if(indiceComum == qtdPropagandasLoop-1){
-                      
+                       
 			 //var indiceProximo = 0;
 			 db.transaction(function(tx) {
 					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
-					selectPropagandasComuns(indice);
+					selectPropagandasComuns(indice,mostra);
 				},errorCB,successCB);
 			 
 		 }else{
-                     
+                       
 			 var indiceProximo = indice +1;
-			 montaPropagandaHtml(indiceProximo);
+			 var idPropagandaRemover = $('#'+idElementoParaMostrar).attr('name');
+			 montaPropagandaHtml(indiceProximo,mostra,idPropagandaRemover);
 		 }
-		 
+		  
 	 }, duration);
 	}
+    
 }
 
-function adicionarPropagandaHtml(indice){
+function adicionarPropagandaHtml(indice,adiciona){
    
 	if(propagandaAtiva == true){
 	
@@ -291,7 +318,7 @@ function adicionarPropagandaHtml(indice){
 		var image = arrayPropagandasLoop[indice].image;
 		var extencao =  url.substr(url.length - 3);
 		var idPropaganda = arrayPropagandasLoop[indice].idPropaganda;
-         var duration = arrayPropagandasLoop[indice].duration;
+        var duration = arrayPropagandasLoop[indice].duration;
 		var typePropaganda = "comum";
 		var idElemento = 'player-cumum'+indice+'';
 		if(indice == qtdPropagandasCuriosidadesLoop-1){
@@ -301,14 +328,32 @@ function adicionarPropagandaHtml(indice){
 	
 	
 	if(extencao != "mp4"){
-		$("#foo").append('<img id="'+idElemento+'" value="'+duration+'" name="'+idPropaganda+'" src="'+image+'" class="img-propagandas elemento-propaganda"/ style> ');
+		//$("#img"+adiciona).attr('id',idElemento);
+       
+		$("#img"+adiciona).attr('value',duration);
+		$("#img"+adiciona).attr('name',idPropaganda);
+		$("#img"+adiciona).attr('src',image);
+		
+		//Se for imagem deixa o video inativo:
+		$("#video"+adiciona).attr('value','false');
+		$("#source-player"+adiciona).attr('src','');
 	}else{
-		$("#foo").append('<video id="'+idElemento+'" value="'+duration+'" name="'+idPropaganda+'" width="1100px" height="700px"  class="elemento-propaganda" ><source id="source-player'+indice+'" src="'+image+'" type="video/mp4"></video>');
+        
+		//$("#video"+adiciona).attr('id',idElemento);
+		$("#video"+adiciona).attr('value',duration);
+		$("#video"+adiciona).attr('name',idPropaganda);
+		
+		$("#source-player"+adiciona).attr('src',image);
+		
+		$("#img"+adiciona).attr('value','false');
+		$("#img"+adiciona).attr('src','');
+		
 	}
 	}
 }
 
-function removerPropagandaHtml(){
+function removerPropagandaHtml(idPropagandaRemover){
+    
 	if(propagandaAtiva == true){
         /**
 		var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
@@ -324,12 +369,12 @@ function removerPropagandaHtml(){
 		$('#'+idElemento).remove();
 		*/
         
-		var id = $('.elemento-propaganda:first-child').attr('name')
+		//var id = $('.elemento-propaganda:first-child').attr('name')
         
-        $('.elemento-propaganda:first-child').remove();
+        //$('.elemento-propaganda:first-child').remove();
         
 		db.transaction(function(tx) {
-		tx.executeSql('UPDATE Propagandas SET flag_passou="true" WHERE Id='+id+'');
+		tx.executeSql('UPDATE Propagandas SET flag_passou="true" WHERE Id='+idPropagandaRemover+'');
 		 },errorCB,successCB);
 	}
 }
@@ -472,7 +517,8 @@ function randomicarArray(el){
 }
 
 $(document).ready(function(){
-	$('.elemento-propaganda').remove();
+                
+	//$('.elemento-propaganda').remove();
 	onLoad();
 	propagandaAtiva = true;
 	selectPropagandas(true);
