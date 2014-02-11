@@ -271,7 +271,7 @@ require([
 		 						 
 		 						 
 		 						putAjax(urlUpdatePedido,data);
-		 						
+		 					
 		 						}
 		 						
 		 					},errorCB);
@@ -636,10 +636,12 @@ function montaCardapio(tx){
 function montaCategoria(tx,result){
     console.log(result.rows);
     for(var i=0;i<result.rows.length;i++){
-    	
-    	$("#ul-categorias").append('<div class="divClicavel" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria">'+result.rows.item(i).title+'</span></div></div>')
-		console.log(result.rows.item(i));
-    	console.log(result.rows.item(i));
+    	var classeCategoriaDuasLinhas = "";
+    	if(result.rows.item(i).title.length > 17){
+    		classeCategoriaDuasLinhas = "categoria_duas_linhas";
+    	}
+    	$("#ul-categorias").append('<div class="divClicavel" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria '+classeCategoriaDuasLinhas+'">'+result.rows.item(i).title+'</span></div></div>')
+		
     }
 }
 
@@ -1954,7 +1956,6 @@ function montaModalPreviaPedido(tx,result){
 	
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
-	
 	$('#modal_previa_pedido .title_modal_nome_pessoa').text(ObjectLabels.title_total);
 	$('#modal_previa_pedido .btn-confirmar-pagamento').text(ObjectLabels.btn_confirmar_pagamento);
 	$('#modal_previa_pedido .btn_cancelar_pedido').text(ObjectLabels.btn_cancelar);
