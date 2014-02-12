@@ -1,12 +1,19 @@
 var arrayPropagandasLoop = new Array();
+var arrayPropagandasRestauranteLoop = new Array();
 var arrayPropagandasCuriosidadesLoop = new Array();
 var qtdPropagandasLoop = 0;
+var qtdPropagandasRestauranteLoop = 0;
 var qtdPropagandasCuriosidadesLoop = 0;
 var primeiraVezLoopPropaganda = false;
 var propagandaAtiva = false;
 var qtdVariacao = 0;
 var contadorVariacao = 0;
+
+var contadorVariacaoPropRestaurante = -1;
+var qtdeVariacaoPropRestaurante = 0;
+
 var indicePropCuriosidade = 0;
+var indicePropRestaurante = 0;
 var timeOut;
 var indiceAntigoComum = 0;
 var indiceComum = 0;
@@ -25,6 +32,8 @@ function selectPropagandas(flagCuriosidade){
 			 if(result.rows.length > 0){
 					
 				 qtdVariacao =result.rows.item(0).variacao_curiosidade;
+				 
+				 qtdeVariacaoPropRestaurante = result.rows.item(0).variacao_pro_restaurante;
 
 			 }
 			 
@@ -45,7 +54,7 @@ function selectPropagandas(flagCuriosidade){
 			    			  duration:"",
 			    			  idPropaganda:0
 			    	 }
-					 
+                     
 					 objectArrayPropagandasLoop.image = result.rows.item(i).image;
 					 objectArrayPropagandasLoop.duration = result.rows.item(i).duration;
 					 objectArrayPropagandasLoop.idPropaganda = result.rows.item(i).id;
@@ -54,7 +63,8 @@ function selectPropagandas(flagCuriosidade){
 				 qtdPropagandasLoop = arrayPropagandasLoop.length;
 				 primeiraVezLoopPropaganda = true;
 				 indiceComum = 0;
-				 montaPropagandaHtml(0,0,0); 
+				 montaPropagandaHtml(0,0,0);
+				 selectPropagandasRestaurante();
 				  
                       }else{
                       tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
@@ -65,6 +75,9 @@ function selectPropagandas(flagCuriosidade){
                    if(flagCuriosidade == true){
                         selectPropagandasCuriosidade();
                    }
+                   
+                   
+                  
         },errorCB,successCB);
 	
 	
@@ -73,7 +86,7 @@ function selectPropagandas(flagCuriosidade){
   
     
 	 db.transaction(function(tx) {
-	arrayPropagandasLoop = new Array();
+     arrayPropagandasLoop = new Array();
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
 		 if(result.rows.length > 0){
 			
@@ -98,6 +111,39 @@ function selectPropagandas(flagCuriosidade){
 			 montaPropagandaHtml(0,mostra,0);
 			 
 			  
+		 }
+		 
+	 },errorCB);
+	 },errorCB,successCB);
+ }
+ 
+ function selectPropagandasRestaurante(){
+	  
+	 db.transaction(function(tx) {
+		 objectArrayPropagandasRestauranteLoop = new Array();
+	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Restaurante" order by ordenacao',[],function(fx,result){
+		 if(result.rows.length > 0){
+			
+			 for(var i=0;i<result.rows.length;i++){
+                
+				 var objectArrayPropagandasRestauranteLoop = {
+		    			  image:"",
+		    			  duration:"",
+		    			  idPropaganda:0
+		    	 }
+				 
+				 objectArrayPropagandasRestauranteLoop.image = result.rows.item(i).image;
+				 objectArrayPropagandasRestauranteLoop.duration = result.rows.item(i).duration;
+				 objectArrayPropagandasRestauranteLoop.idPropaganda = result.rows.item(i).id;
+				 arrayPropagandasRestauranteLoop.push(objectArrayPropagandasRestauranteLoop);
+			  }
+			
+			 qtdPropagandasRestauranteLoop = 0;
+			 qtdPropagandasRestauranteLoop = arrayPropagandasRestauranteLoop.length;
+			  
+		 }else{
+			 tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Restaurante"');
+			 selectPropagandasRestaurante();
 		 }
 		 
 	 },errorCB);
@@ -141,6 +187,7 @@ function montaPropagandaHtml(indice,mostra,idPropagandaRemover){
 	if(propagandaAtiva == true){
 		// carrega dois arquivos
 		contadorVariacao = contadorVariacao + 1;
+		
 		if(indiceComum == 0 && primeiraVezLoopPropaganda == true){
 			//Adiciona Primeira Tag
 			adiciona = 1;
@@ -220,72 +267,73 @@ function mostrarPropaganda(indice,mostra){
     
 	if(propagandaAtiva == true){
     
+	    var ativo = $("#video"+mostra).attr('value');
+	        
+		//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
 		
-		var ativo = $("#video"+mostra).attr('value');
-        
-	//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
-	
-	var idElementoParaMostrar = "";
-	//var tag = $('#'+idElemento).prop("tagName");
-        //var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
-        
-	if (ativo != "false") {
-        
-		idElementoParaMostrar = "video"+mostra;
-       
-		    $('#'+idElementoParaMostrar).show(4000);
-        
-             var idVideo = $('#'+idElementoParaMostrar).attr("id")
-        
-        
-			 var video = document.getElementById(idVideo);
-       
-              video.load()
-			 video.play();	
-		 
-	}else{
-        
-		//$('#'+idElemento).show();
-		idElementoParaMostrar= "img"+mostra;
-		$('#'+idElementoParaMostrar).show();
-	}
-	var duration = $('#'+idElementoParaMostrar).attr('value');
-	duration = parseInt(duration) + 2000;
-	 
-	 window.setTimeout(function() {
-		 if(propagandaAtiva == false){
-			 clearTimeout(this);
-		 }
-                       
-		 //$('#'+idElemento).hide(4000);
-                       
-		 $('#'+idElementoParaMostrar).hide(400);
-		 primeiraVezLoopPropaganda = false;
-		 
-		 if(indiceComum == qtdPropagandasLoop-1){
-                       
-			 //var indiceProximo = 0;
-			 db.transaction(function(tx) {
-					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
-					selectPropagandasComuns(indice,mostra);
-				},errorCB,successCB);
+		var idElementoParaMostrar = "";
+		//var tag = $('#'+idElemento).prop("tagName");
+	        //var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
+	      
+		if (ativo != "false") {
+	        
+			idElementoParaMostrar = "video"+mostra;
+	       
+			    $('#'+idElementoParaMostrar).show(4000);
+	        
+	             var idVideo = $('#'+idElementoParaMostrar).attr("id")
+	        
+	        
+				 var video = document.getElementById(idVideo);
+	       
+	              video.load()
+				  video.play();
 			 
-		 }else{
-                       
-			 var indiceProximo = indice +1;
-			 var idPropagandaRemover = $('#'+idElementoParaMostrar).attr('name');
-			 montaPropagandaHtml(indiceProximo,mostra,idPropagandaRemover);
-		 }
-		  
-	 }, duration);
+		}else{
+	        
+			//$('#'+idElemento).show();
+			idElementoParaMostrar= "img"+mostra;
+	        
+			$('#'+idElementoParaMostrar).show();
+		}
+	        
+		var duration = $('#'+idElementoParaMostrar).attr('value');
+		duration = parseInt(duration) + 2000;
+		 
+		 window.setTimeout(function() {
+			 if(propagandaAtiva == false){
+				 clearTimeout(this);
+			 }
+	                       
+			 //$('#'+idElemento).hide(4000);
+	                       
+			 $('#'+idElementoParaMostrar).hide(400);
+			 primeiraVezLoopPropaganda = false;
+			 
+			 if(indiceComum == qtdPropagandasLoop-1){
+	                       
+				 //var indiceProximo = 0;
+				 db.transaction(function(tx) {
+						tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
+						selectPropagandasComuns(indice,mostra);
+					},errorCB,successCB);
+				 
+			 }else{
+	                       
+				 var indiceProximo = indice +1;
+				 var idPropagandaRemover = $('#'+idElementoParaMostrar).attr('name');
+				 montaPropagandaHtml(indiceProximo,mostra,idPropagandaRemover);
+			 }
+			  
+		 }, duration);
 	}
     
 }
 
 function adicionarPropagandaHtml(indice,adiciona){
-   
-	if(propagandaAtiva == true){
 	
+	if(propagandaAtiva == true){
+		contadorVariacaoPropRestaurante = contadorVariacaoPropRestaurante +1;
 	if(contadorVariacao == qtdVariacao){
 		var url = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
 		var image = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
@@ -314,16 +362,48 @@ function adicionarPropagandaHtml(indice,adiciona){
 		flagCuriosidade = true;
 		indiceAntigoComum = indice;
 	}else{
-		var url = arrayPropagandasLoop[indice].image;
-		var image = arrayPropagandasLoop[indice].image;
-		var extencao =  url.substr(url.length - 3);
-		var idPropaganda = arrayPropagandasLoop[indice].idPropaganda;
-        var duration = arrayPropagandasLoop[indice].duration;
-		var typePropaganda = "comum";
-		var idElemento = 'player-cumum'+indice+'';
-		if(indice == qtdPropagandasCuriosidadesLoop-1){
+		
+		if(contadorVariacaoPropRestaurante == qtdeVariacaoPropRestaurante){
+			
+			var url = arrayPropagandasRestauranteLoop[indicePropRestaurante].image;
+			var image = arrayPropagandasRestauranteLoop[indicePropRestaurante].image;
+	        var duration = arrayPropagandasRestauranteLoop[indicePropRestaurante].duration;
+			var extencao =  url.substr(url.length - 3);
+			var idPropaganda = arrayPropagandasRestauranteLoop[indicePropRestaurante].idPropaganda;
+			var idElemento = 'player-restaurante'+indice+'';
+			
+			if(indice <= qtdPropagandasLoop-1){
+	            indiceComum = indiceComum-1;
+	        }
+			
+			if(indicePropRestaurante == qtdPropagandasRestauranteLoop-1){
+				indicePropRestaurante = 0;
+				arrayPropagandasRestauranteLoop = new Array();
+				qtdPropagandasRestauranteLoop = 0;
+				db.transaction(function(tx) {
+					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Restaurante"');
+					selectPropagandasRestaurante();
+				},errorCB,successCB);
+				
+			}
+			
+			indicePropRestaurante = indicePropRestaurante +1;
+			contadorVariacaoPropRestaurante = -1;
+		}else{
+			var url = arrayPropagandasLoop[indice].image;
+			var image = arrayPropagandasLoop[indice].image;
+			var extencao =  url.substr(url.length - 3);
+			var idPropaganda = arrayPropagandasLoop[indice].idPropaganda;
+	        var duration = arrayPropagandasLoop[indice].duration;
+			var typePropaganda = "comum";
+			var idElemento = 'player-cumum'+indice+'';
+			if(indice == qtdPropagandasCuriosidadesLoop-1){
+				
+			}
 			
 		}
+		
+		
 	}
 	
 	
