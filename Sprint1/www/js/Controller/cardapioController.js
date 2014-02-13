@@ -18,6 +18,8 @@ var nomeSegundaOpcaoPizza = "";
 var nomeSegundaOpcaoPizza_portugues = "";
 var flagPizzaMeioaMeio = false;
 var propagandaAtiva = false;
+var flagObrigatorioOpcionais = false;
+
 
 require([
 "dojo/dom",
@@ -271,7 +273,7 @@ require([
 		 						 
 		 						 
 		 						putAjax(urlUpdatePedido,data);
-		 					
+		 						
 		 						}
 		 						
 		 					},errorCB);
@@ -467,11 +469,12 @@ function validarSenhaCancelamentoPedido(btn){
 		 } else {
 			 hide('modal_cancelamento_pedido');
 		 }
+		
 }
 
 function updatePedidoDrupal(status,nid,idPedido,textMotivo){
 	var url = "" + ipServidorDrupal + "/node/"+nid;
-	
+	alert(url)
 	var statusData = {
 			"value" : status,
 	}
@@ -636,12 +639,15 @@ function montaCardapio(tx){
 function montaCategoria(tx,result){
     console.log(result.rows);
     for(var i=0;i<result.rows.length;i++){
-    	var classeCategoriaDuasLinhas = "";
-    	if(result.rows.item(i).title.length > 17){
-    		classeCategoriaDuasLinhas = "categoria_duas_linhas";
-    	}
+        
+        var classeCategoriaDuasLinhas = "";
+        if(result.rows.item(i).title.length > 17){
+           classeCategoriaDuasLinhas = "categoria_duas_linhas";
+        }
+        
     	$("#ul-categorias").append('<div class="divClicavel" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria '+classeCategoriaDuasLinhas+'">'+result.rows.item(i).title+'</span></div></div>')
-		
+		console.log(result.rows.item(i));
+    	console.log(result.rows.item(i));
     }
 }
 
@@ -898,16 +904,16 @@ function montaDescricao(tx,result){
 			$("#id-modal-descricao .modal_descricao .title_descricao").text(descricaoProduto);
 			$("#id-modal-descricao .modal_descricao .title_preco").text('R$ ' + result.rows.item(0).preco);
 			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_adicionar_pedido efeito-button-descricao" >'+ObjectLabels.btn_adicionar+'</button>');
-			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido efeito-button-descricao" onclick="hide(\'id-modal-descricao\')" >'+ObjectLabels.btn_cancelar+'</button>');
+			$("#id-modal-descricao .btn_adicionar_pedido_descricao_pedido").append('<button  value="descricao-categoria-1-2" class="btn_cancelar_pedido efeito-button-descricao" onclick="hide(\'id-modal-descricao\')">'+ObjectLabels.btn_cancelar+'</button>');
 			
 			//Binds
 			$('#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_adicionar_pedido').bind('touchstart click', function(){
 				selectPessoa(result.rows.item(0).id);
 		    });
 			
-		//	$('#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_cancelar_pedido').bind('touchstart click', function(){
-			//	hide('id-modal-descricao');
-		   // });
+			//$('#id-modal-descricao .btn_adicionar_pedido_descricao_pedido .btn_cancelar_pedido').bind('touchstart click', function(){
+				//hide('id-modal-descricao');
+		  //  });
 			
 			editandoPedido = false;
 			editandoPessoa = false;
@@ -915,6 +921,7 @@ function montaDescricao(tx,result){
 		}
 		
 		db.transaction(function(tx){
+			
 			console.log("nameProdutoTentativa: "+ name);
 			
 			tx.executeSql('SELECT * FROM Pessoas',[],function(tx,result){
@@ -944,7 +951,7 @@ function selectPessoa(idProduto){
 		hide('id-modal-meio-a-meio');
 	}
 	db.transaction(function(tx){
-		console.log("nameProdutoTentativa: "+ name);
+	
 		tx.executeSql('SELECT * FROM Pessoas where ativo = "true"',[],montaAdicionarPessoa,errorCB);
 		
 	},errorCB);
@@ -959,6 +966,7 @@ function montaAdicionais(nomeProdutoAtual){
 			if(result.rows.length > 0){
 				
 				$('.select-adicionais').show();
+				var flagTemPRoduto = false;
 				for(i=0;i<result.rows.length;i++){
 					
 					if(result.rows.item(i).flag_preco == "true"){
@@ -969,7 +977,6 @@ function montaAdicionais(nomeProdutoAtual){
 					if(result.rows.item(i).flag_produto_especifico == "true"){
 						var produtosEspecificos = result.rows.item(i).produto_especifico_adiconais;
 						var arrayProdutosEspecificos = produtosEspecificos.split(", ");
-						var flagTemPRoduto = false;
 						for(k=0;k<arrayProdutosEspecificos.length;k++){
 							
 							if(arrayProdutosEspecificos[k] == nomeProdutoAtual){
@@ -979,15 +986,19 @@ function montaAdicionais(nomeProdutoAtual){
 							}
 							
 						}
-						if(flagTemPRoduto == false){
-							$('.label-combo-adicionais').text("");
-							$('.select-adicionais').hide();
-						}
+						
 					}else{
 						$("#id_modal_nome_pessoa .select-adicionais").append('<option value="'+result.rows.item(i).id+'">'+result.rows.item(i).title + precoAdicionais+'</option>');
 						$('.label-combo-adicionais').text(result.rows.item(i).label_adicionais);
+						flagTemPRoduto = true;
 					}
 					
+					
+				}
+				
+				if(flagTemPRoduto == false){
+					$('.label-combo-adicionais').text("");
+					$('.select-adicionais').hide();
 				}
 				if(editandoPedido){
 					tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
@@ -1278,6 +1289,7 @@ function selectProdutoPedido(){
 }
 
 function salvarEdicaoPedido(){
+   
     var testeProdutoErro = "semnada";
    
 	db.transaction(function(tx) {
@@ -1292,7 +1304,7 @@ function salvarEdicaoPedido(){
 	 var title_adicionais = "";
 	 var title_adicionais_portugues = "";
 	 var contador = 0;
-                   
+                 
 	 tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
                     testeProdutoErro = 'SELECT * FROM Pedido where id = '+idPedidoEditando+'';
 		 var precoOriginal =  result.rows.item(0).preco_original_produto;
@@ -1359,22 +1371,21 @@ function salvarEdicaoPedido(){
 				
 			
 		 }else{
-                  
+            
 			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
 			 precoFinal = precoFinal.toFixed(2);
+              
                   
+                   
 			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'", title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id='+idPedidoEditando+'');
-                   
-                    testeProdutoErro = 'UPDATE Pedido SET pessoa';
-                   
-               
                   
-                   testeProdutoErro = 'UPDATE Pedido SET pessoa2';
+                   
                    
                   
 		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
                    
-                    testeProdutoErro = 'UPDATE Pessoas SET associado_pedido';
+                   
+                  
 		 }
 	
 	 },errorCB);
@@ -1398,6 +1409,7 @@ function adicionarPedido(tx,result){
     var adicionaisId =  $("#id_modal_nome_pessoa .select-adicionais").val();
 	if(result.rows.length > 0){
 	  if($(".pessoa_selecionado").size() > 0 ){
+		  if()
 		 db.transaction(function(tx) {
 			 
 				 tx.executeSql('SELECT * FROM Pessoas where nome="'+ObjectLabels.label_conta_conjunto+'"',[],function(fx,result){
@@ -1562,7 +1574,7 @@ function preparaModalCancelamentoPedido(btn){
 	show('modal_cancelamento_pedido');
 }
 function montaModalPedido(tx,result){
-   
+    
 	$("#id-ul-modal-pedidos .li_detalhe_pedido").remove();
 	$("#id-ul-modal-pedidos .div-detalhe-pedido").remove();
 	$('#id-efetuar-pedido').removeAttr("disabled");
@@ -1731,10 +1743,10 @@ function montaModalPedido(tx,result){
 function editarPedido(li){
    
 	db.transaction(function(tx) {
-                  
+                
 		 tx.executeSql('SELECT * FROM Pedido where id = '+li.value+'',[],function(tx,result){
 			 hide('modal_pedido');
-                    
+                   
 			 idPedidoEditando = result.rows.item(0).id;
 			 $(".textarea-observacao-produto").val(result.rows.item(0).observacao);
                     
@@ -1956,6 +1968,7 @@ function montaModalPreviaPedido(tx,result){
 	
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
+	
 	$('#modal_previa_pedido .title_modal_nome_pessoa').text(ObjectLabels.title_total);
 	$('#modal_previa_pedido .btn-confirmar-pagamento').text(ObjectLabels.btn_confirmar_pagamento);
 	$('#modal_previa_pedido .btn_cancelar_pedido').text(ObjectLabels.btn_cancelar);
