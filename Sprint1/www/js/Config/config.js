@@ -15,7 +15,7 @@ var ipServidorDrupal = "null";
 
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
-var connectionWIFI = "connectionFalse";
+var connectionWIFI = "connectionTrue";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
@@ -43,6 +43,7 @@ var produtosFormVazio = {
 };
 var qtdProdutos = 0;
 var configPropaganda = 0;
+var configQtdeVariacaoPropagandaRestaurante = 0;
 var qtdPropagandas = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
@@ -282,6 +283,7 @@ function getConfigPropaganda(tx){
     	$.each(data, function(key, val) {
     	   
 			  configPropaganda = val.quantidade_variacao_propaganda_curiosidade;
+			  configQtdeVariacaoPropagandaRestaurante = val.quantidade_variacao_propaganda_restaurante;
 		 });
     	quantidadeRegistros += 1;
     	insertTable('config_propaganda');
@@ -297,6 +299,7 @@ function getConfigPropaganda(tx){
 	
 	
 }
+
 
 function getDrupalLabel(tx){
    
@@ -801,11 +804,11 @@ function getDrupalAdicionais(tx){
 				produto_especifico_adiconais: ""
 				
 			};
-			adicionaisForm.title = val.node_title;
+			adicionaisForm.title = val.titulo_adicionais ;
 			adicionaisForm.preco = val.preco_adicionais;
 			adicionaisForm.categoria = val.categoria_adicionais;
 			adicionaisForm.nid = val.nid;
-			adicionaisForm.title_comum = val.titulo_adicionais;
+			adicionaisForm.title_comum = val.node_title;
 			adicionaisForm.language = val.language;
 			adicionaisForm.label_adicionais = val.label_adicionais;
 			adicionaisForm.flag_preco = val.flag_preco_adicionais;
@@ -872,6 +875,14 @@ function getDadosDrupal(tx){
 	if(atualizaForm.qtdeVariacaoCuriosidade == 'true'){
 		getConfigPropaganda(tx);
 	}
+	
+	//Configuracao Propaganda Restaurante
+	if(atualizaForm.qtdeVariacaoPropRestaurante == 'true'){
+		getConfigPropaganda(tx);
+	}
+	
+	
+	
 	
 	
     
@@ -1484,11 +1495,11 @@ function createTable(tx){
 	
      //Variacao Propaganda Curiosidade
 	
-	if(atualizaForm.qtdeVariacaoCuriosidade == "true"){
+	if(atualizaForm.qtdeVariacaoCuriosidade == "true" || atualizaForm.qtdeVariacaoPropRestaurante == "true" ){
 		  
 		 //Table Variacao Propaganda Curiosidade
 		tx.executeSql('DROP TABLE IF EXISTS configPropagandas');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS configPropagandas (id INTEGER PRIMARY KEY AUTOINCREMENT,variacao_curiosidade TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS configPropagandas (id INTEGER PRIMARY KEY AUTOINCREMENT,variacao_curiosidade TEXT,variacao_pro_restaurante TEXT)');
 	}
 	
 	 ////////////////////////////////////////////Language//////////////////////////////////////
@@ -1691,7 +1702,14 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO configPropagandas(variacao_curiosidade) VALUES ("' + configPropaganda + '")');
-	            tx.executeSql('INSERT INTO configPropagandas(variacao_curiosidade) VALUES ("' + configPropaganda + '")');
+	
+					tx.executeSql('INSERT INTO configPropagandas(variacao_curiosidade,variacao_pro_restaurante) VALUES ("' + configPropaganda + '","'+configQtdeVariacaoPropagandaRestaurante+'")');
+			
+				}
+				
+				
+	            
+	            
             },errorCB,successInsert);
 	}
 }
@@ -2012,6 +2030,13 @@ function setLabels(){
 			}
 		},errorCB);
 		
+		//Favor selecionar uma opção.
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "alert_favor_selecionar_opcao" and language="'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				ObjectLabels.alert_favor_selecionar_opcao = result.rows.item(0).valor;
+			}
+		},errorCB);
+		
 	},errorCB);
 }
 
@@ -2158,6 +2183,7 @@ function inatividade() {
 			$('.mblSimpleDialog').addClass('class-sem-index');
 			$('.mblSimpleDialogCover').addClass('class-hide-SimpleDialogCover');
 			$('#propagandas').show();
+			$('#view1').addClass('background_black_propaganda');
 		
 	}
 	if (contador != 50){
@@ -2252,13 +2278,12 @@ db.transaction(function(tx){
 }
 
 function bindTouchstart(botao,funcao){
-	 alert(botao);
-	 alert(funcao);
+	
 	 if(typeof(funcao)=="function"){
 		
 		
 		 $(''+botao).bind('touchstart click', function(){
-				 alert('aki foi eim');
+				
 				 funcao.call();
 		});
 	 }

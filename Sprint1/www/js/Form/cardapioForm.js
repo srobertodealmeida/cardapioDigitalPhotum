@@ -72,5 +72,6 @@ var ObjectLabels = {
 		label_aguardando_pagamento:"",
 		alert_sem_pedidos_no_momento:"",
 		label_mesa_home:"",
-		label_adicionais:""
+		label_adicionais:"",
+		alert_favor_selecionar_opcao:""
  };

@@ -19,7 +19,8 @@ var atualizaForm = {
 		propaganda:"",
 		adicionais:"",
 		formaDePagamento:"",
-		qtdeVariacaoCuriosidade:""
+		qtdeVariacaoCuriosidade:"",
+		qtdeVariacaoPropRestaurante:""
 };
 
 

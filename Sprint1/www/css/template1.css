@@ -1320,7 +1320,7 @@ background-image: #4d4d4d !important;
 .nome_categoria {
 	position: relative;
 	top: -44px;
-	left: 17;
+	left: 15;
 	color: white !important;
 	white-space: pre-wrap;
 }
@@ -1997,13 +1997,13 @@ opacity: 0.18;
 	height: 32px;
 	margin-top: 3%;
 	margin-right: 2%;
+	width: 22%;
 }
 
 .label-combo-adicionais{
-	margin-left: 53%;
+	margin-left: 11%;
 	margin-top: 20px;
 	position: fixed;
-	
 }
 
 .modal_monte_sua_pizza {
@@ -2348,4 +2348,11 @@ opacity: 0.18;
 
 .class-hide-SimpleDialogCover{
 	display: none;
+}
+.categoria_duas_linhas{
+	top: -55px;
+}
+.background_black_propaganda{
+	height: 100%;
+	background-color: black;
 }

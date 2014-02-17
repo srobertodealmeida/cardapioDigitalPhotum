@@ -18,7 +18,7 @@ var nomeSegundaOpcaoPizza = "";
 var nomeSegundaOpcaoPizza_portugues = "";
 var flagPizzaMeioaMeio = false;
 var propagandaAtiva = false;
-var flagObrigatorioOpcionais = false;
+var flagOpicionalObrigatorio = false;
 
 
 require([
@@ -92,6 +92,12 @@ require([
 	  
 	  hide = function(dlg){
 		    registry.byId(dlg).hide();
+	  }
+	  
+	  hide_modal_favor_selecionar_opcao = function(dlg){
+		    registry.byId(dlg).hide();
+		    
+		    $("#id_modal_nome_pessoa .select-adicionais").click();
 	  }
 	  
 	  showConfirmacaoPessoa = function(dlg,btn){
@@ -469,12 +475,11 @@ function validarSenhaCancelamentoPedido(btn){
 		 } else {
 			 hide('modal_cancelamento_pedido');
 		 }
-		
 }
 
 function updatePedidoDrupal(status,nid,idPedido,textMotivo){
 	var url = "" + ipServidorDrupal + "/node/"+nid;
-	alert(url)
+
 	var statusData = {
 			"value" : status,
 	}
@@ -921,7 +926,6 @@ function montaDescricao(tx,result){
 		}
 		
 		db.transaction(function(tx){
-			
 			console.log("nameProdutoTentativa: "+ name);
 			
 			tx.executeSql('SELECT * FROM Pessoas',[],function(tx,result){
@@ -966,17 +970,19 @@ function montaAdicionais(nomeProdutoAtual){
 			if(result.rows.length > 0){
 				
 				$('.select-adicionais').show();
-				var flagTemPRoduto = false;
+                      var flagTemPRoduto = false;
 				for(i=0;i<result.rows.length;i++){
 					
 					if(result.rows.item(i).flag_preco == "true"){
 						var precoAdicionais = '------ R$: '+result.rows.item(i).preco+'';
 					}else{
 						var precoAdicionais = "";
+						flagOpicionalObrigatorio = true;
 					}
 					if(result.rows.item(i).flag_produto_especifico == "true"){
 						var produtosEspecificos = result.rows.item(i).produto_especifico_adiconais;
 						var arrayProdutosEspecificos = produtosEspecificos.split(", ");
+						
 						for(k=0;k<arrayProdutosEspecificos.length;k++){
 							
 							if(arrayProdutosEspecificos[k] == nomeProdutoAtual){
@@ -990,16 +996,17 @@ function montaAdicionais(nomeProdutoAtual){
 					}else{
 						$("#id_modal_nome_pessoa .select-adicionais").append('<option value="'+result.rows.item(i).id+'">'+result.rows.item(i).title + precoAdicionais+'</option>');
 						$('.label-combo-adicionais').text(result.rows.item(i).label_adicionais);
-						flagTemPRoduto = true;
+                      flagTemPRoduto = true;
 					}
-					
+                      
+                      
 					
 				}
-				
-				if(flagTemPRoduto == false){
-					$('.label-combo-adicionais').text("");
-					$('.select-adicionais').hide();
-				}
+                      if(flagTemPRoduto == false){
+                        $('.label-combo-adicionais').text("");
+                        $('.select-adicionais').hide();
+                        flagOpicionalObrigatorio = false;
+                      }
 				if(editandoPedido){
 					tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
 						if(result.rows.length > 0){
@@ -1047,11 +1054,13 @@ function montaFormasDePagamento(){
 
 function montaAdicionarPessoa(tx,result){
 	
-    console.log("numeroPessoasMEsa: " + result.rows.length)
+    console.log("numeroPessoasMEsa: " + result.rows.length);
 	//Limpa li.
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
 	
     $("#id_ul_modal_nome_pessoa .inputNome").remove();
+    
+    flagOpicionalObrigatorio = false
 	
 	if(!editandoPessoa && !editandoPedido){
 		$(".textarea-observacao-produto").val('');
@@ -1407,10 +1416,16 @@ function adicionarPedido(tx,result){
     var observacao_opcao_pizza = "";
     var observacao_opcaoPizza_portugues = "";
     var adicionaisId =  $("#id_modal_nome_pessoa .select-adicionais").val();
+    var naoSelecionouOpcional = false;
 	if(result.rows.length > 0){
 	  if($(".pessoa_selecionado").size() > 0 ){
-		  if()
-		 db.transaction(function(tx) {
+		  if(flagOpicionalObrigatorio == true){
+			  if(adicionaisId == null){
+				  naoSelecionouOpcional = true;
+			  }
+		  }
+		 if(naoSelecionouOpcional == false){
+			 db.transaction(function(tx) {
 			 
 				 tx.executeSql('SELECT * FROM Pessoas where nome="'+ObjectLabels.label_conta_conjunto+'"',[],function(fx,result){
 					 if(result.rows.length == 0){
@@ -1538,7 +1553,11 @@ function adicionarPedido(tx,result){
 				 }
 				 
 		   
-		 },errorCB,selectPedidos);
+			 },errorCB,selectPedidos);
+		 }else{
+			 $('#modal_favor_selecionar_opcao .div-mensagem span').text(ObjectLabels.alert_favor_selecionar_opcao);
+			 show("modal_favor_selecionar_opcao");
+		 } 
 		 
 	 }else{
 		 $('#modal_favor_selecionar_pessoa .div-mensagem span').text(ObjectLabels.alert_favor_selecionar_pessoa);
@@ -2120,6 +2139,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
+			$('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
@@ -2134,10 +2154,11 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
+			$('#view1').removeClass('background_black_propaganda');
+			$('#geral').show();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-hide-SimpleDialogCover');
-			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
 			propagandaAtiva = false;
@@ -2298,12 +2319,6 @@ function bindsButtons(){
 	$('#btn_chamarGarçon').bind('touchstart click', function(){
 		showChamarGarcom('modal_chamar_garcon');
     });
-	
-	//Photum Menu
-	$('#btn_photum_menu').bind('touchstart click', function(){
-		showVideoDesenvolvidoPor('modal_chamar_garcon');
-    });
-	
     ///////////////////////////////////Janela descricao produto
 	
 	

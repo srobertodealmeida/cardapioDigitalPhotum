@@ -29,11 +29,14 @@ function selectPropagandas(flagCuriosidade){
 		
 		// pega qtde de variacao da propaganda curiosidade
 		tx.executeSql('SELECT * FROM configPropagandas ',[],function(fx,result){
-			 if(result.rows.length > 0){
+              
+                      if(result.rows.length > 0){
 					
 				 qtdVariacao =result.rows.item(0).variacao_curiosidade;
+                      
 				 
 				 qtdeVariacaoPropRestaurante = result.rows.item(0).variacao_pro_restaurante;
+                      
 
 			 }
 			 
@@ -45,6 +48,7 @@ function selectPropagandas(flagCuriosidade){
                      
                       //alert("aki")
                       //alert("tamanho antes ne pq "+result.rows.length)
+                      
 			 if(result.rows.length > 0){
                       
 				 for(var i=0;i<result.rows.length;i++){
@@ -63,8 +67,9 @@ function selectPropagandas(flagCuriosidade){
 				 qtdPropagandasLoop = arrayPropagandasLoop.length;
 				 primeiraVezLoopPropaganda = true;
 				 indiceComum = 0;
-				 montaPropagandaHtml(0,0,0);
-				 selectPropagandasRestaurante();
+                      
+                selectPropagandasRestaurante(true);
+				  
 				  
                       }else{
                       tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
@@ -86,7 +91,7 @@ function selectPropagandas(flagCuriosidade){
   
     
 	 db.transaction(function(tx) {
-     arrayPropagandasLoop = new Array();
+	arrayPropagandasLoop = new Array();
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Comum" order by ordenacao',[],function(fx,result){
 		 if(result.rows.length > 0){
 			
@@ -117,11 +122,13 @@ function selectPropagandas(flagCuriosidade){
 	 },errorCB,successCB);
  }
  
- function selectPropagandasRestaurante(){
-	  
+ function selectPropagandasRestaurante(primeiraVez){
+    
 	 db.transaction(function(tx) {
-		 objectArrayPropagandasRestauranteLoop = new Array();
+	arrayPropagandasRestauranteLoop = new Array();
+                   
 	 tx.executeSql('SELECT * FROM Propagandas where flag_passou="false" and tipoPropaganda="Propaganda Restaurante" order by ordenacao',[],function(fx,result){
+                   
 		 if(result.rows.length > 0){
 			
 			 for(var i=0;i<result.rows.length;i++){
@@ -140,6 +147,10 @@ function selectPropagandas(flagCuriosidade){
 			
 			 qtdPropagandasRestauranteLoop = 0;
 			 qtdPropagandasRestauranteLoop = arrayPropagandasRestauranteLoop.length;
+                   if(primeiraVez == true){
+                    montaPropagandaHtml(0,0,0);
+                   }
+                   
 			  
 		 }else{
 			 tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Restaurante"');
@@ -267,73 +278,76 @@ function mostrarPropaganda(indice,mostra){
     
 	if(propagandaAtiva == true){
     
-	    var ativo = $("#video"+mostra).attr('value');
-	        
-		//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
 		
-		var idElementoParaMostrar = "";
-		//var tag = $('#'+idElemento).prop("tagName");
-	        //var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
-	      
-		if (ativo != "false") {
-	        
-			idElementoParaMostrar = "video"+mostra;
-	       
-			    $('#'+idElementoParaMostrar).show(4000);
-	        
-	             var idVideo = $('#'+idElementoParaMostrar).attr("id")
-	        
-	        
-				 var video = document.getElementById(idVideo);
-	       
-	              video.load()
-				  video.play();
-			 
-		}else{
-	        
-			//$('#'+idElemento).show();
-			idElementoParaMostrar= "img"+mostra;
-	        
-			$('#'+idElementoParaMostrar).show();
-		}
-	        
-		var duration = $('#'+idElementoParaMostrar).attr('value');
-		duration = parseInt(duration) + 2000;
+		var ativo = $("#video"+mostra).attr('value');
+        
+	//var tipoPropaganda = $('.elemento-propaganda:first-child').attr('value');
+	
+	var idElementoParaMostrar = "";
+	//var tag = $('#'+idElemento).prop("tagName");
+        //var tag = $('.elemento-propaganda:nth-child(2)').prop("tagName");
+      
+	if (ativo != "false") {
+        
+		idElementoParaMostrar = "video"+mostra;
+       
+		    $('#'+idElementoParaMostrar).fadeIn(4000);
+        
+             var idVideo = $('#'+idElementoParaMostrar).attr("id")
+        
+        
+			 var video = document.getElementById(idVideo);
+       
+              video.load()
+			  video.play();
 		 
-		 window.setTimeout(function() {
-			 if(propagandaAtiva == false){
-				 clearTimeout(this);
-			 }
-	                       
-			 //$('#'+idElemento).hide(4000);
-	                       
-			 $('#'+idElementoParaMostrar).hide(400);
-			 primeiraVezLoopPropaganda = false;
+	}else{
+        
+		//$('#'+idElemento).show();
+		idElementoParaMostrar= "img"+mostra;
+        
+		$('#'+idElementoParaMostrar).fadeIn(4000);
+	}
+        
+	var duration = $('#'+idElementoParaMostrar).attr('value');
+	duration = parseInt(duration) + 2000;
+	 
+	 window.setTimeout(function() {
+		 if(propagandaAtiva == false){
+			 clearTimeout(this);
+		 }
+                       
+		 //$('#'+idElemento).hide(4000);
+                       
+		 $('#'+idElementoParaMostrar).hide('slow');
+		 primeiraVezLoopPropaganda = false;
+		 
+		 if(indiceComum == qtdPropagandasLoop-1){
+                       
+			 //var indiceProximo = 0;
+			 db.transaction(function(tx) {
+					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
+					selectPropagandasComuns(indice,mostra);
+				},errorCB,successCB);
 			 
-			 if(indiceComum == qtdPropagandasLoop-1){
-	                       
-				 //var indiceProximo = 0;
-				 db.transaction(function(tx) {
-						tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Comum"');
-						selectPropagandasComuns(indice,mostra);
-					},errorCB,successCB);
-				 
-			 }else{
-	                       
-				 var indiceProximo = indice +1;
-				 var idPropagandaRemover = $('#'+idElementoParaMostrar).attr('name');
-				 montaPropagandaHtml(indiceProximo,mostra,idPropagandaRemover);
-			 }
-			  
-		 }, duration);
+		 }else{
+                       
+			 var indiceProximo = indice +1;
+			 var idPropagandaRemover = $('#'+idElementoParaMostrar).attr('name');
+			 montaPropagandaHtml(indiceProximo,mostra,idPropagandaRemover);
+		 }
+		  
+	 }, duration);
 	}
     
 }
 
 function adicionarPropagandaHtml(indice,adiciona){
-	
+	var qtdere = qtdPropagandasRestauranteLoop-1;
+    
 	if(propagandaAtiva == true){
 		contadorVariacaoPropRestaurante = contadorVariacaoPropRestaurante +1;
+        
 	if(contadorVariacao == qtdVariacao){
 		var url = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
 		var image = arrayPropagandasCuriosidadesLoop[indicePropCuriosidade].image;
@@ -361,6 +375,7 @@ function adicionarPropagandaHtml(indice,adiciona){
 		contadorVariacao = -1;
 		flagCuriosidade = true;
 		indiceAntigoComum = indice;
+        contadorVariacaoPropRestaurante = contadorVariacaoPropRestaurante -1;
 	}else{
 		
 		if(contadorVariacaoPropRestaurante == qtdeVariacaoPropRestaurante){
@@ -371,18 +386,22 @@ function adicionarPropagandaHtml(indice,adiciona){
 			var extencao =  url.substr(url.length - 3);
 			var idPropaganda = arrayPropagandasRestauranteLoop[indicePropRestaurante].idPropaganda;
 			var idElemento = 'player-restaurante'+indice+'';
+            
+            if(indice <= qtdPropagandasLoop-1){
+                indiceComum = indiceComum-1;
+            }
 			
-			if(indice <= qtdPropagandasLoop-1){
-	            indiceComum = indiceComum-1;
-	        }
-			
+            
 			if(indicePropRestaurante == qtdPropagandasRestauranteLoop-1){
+               
 				indicePropRestaurante = 0;
 				arrayPropagandasRestauranteLoop = new Array();
 				qtdPropagandasRestauranteLoop = 0;
+                
 				db.transaction(function(tx) {
 					tx.executeSql('UPDATE Propagandas SET flag_passou="false" where tipoPropaganda="Propaganda Restaurante"');
-					selectPropagandasRestaurante();
+                               
+					selectPropagandasRestaurante(false);
 				},errorCB,successCB);
 				
 			}
@@ -390,7 +409,10 @@ function adicionarPropagandaHtml(indice,adiciona){
 			indicePropRestaurante = indicePropRestaurante +1;
 			contadorVariacaoPropRestaurante = -1;
 		}else{
+            
+         
 			var url = arrayPropagandasLoop[indice].image;
+           
 			var image = arrayPropagandasLoop[indice].image;
 			var extencao =  url.substr(url.length - 3);
 			var idPropaganda = arrayPropagandasLoop[indice].idPropaganda;

@@ -25,7 +25,7 @@
 <script type="text/javascript" src="cordova-2.5.0.js"></script>
 <script type="text/javascript" src="js/jquery.carouFredSel-6.2.1.js"></script>
 <script type="text/javascript" src="app.js"></script>
-<link rel="stylesheet" href="css/queryLoader.css" type="text/css" />
+<link   rel="stylesheet" href="css/queryLoader.css" type="text/css" />
 <script type='text/javascript' src='js/queryLoader.js'></script>
 <script type="text/javascript" src="js/meuJSIos.js"></script>
 
@@ -68,14 +68,13 @@
 <div><img src="img/loading.gif" id="preloader_image" ></div>
 </div>
 	
-<div id="view1"  dojoType="dojox.mobile.View">
+<div id="view1" class="view1" dojoType="dojox.mobile.View">
 	<div id="propagandas">
 	</div>
 	<div class="div-video-desenvolvido-por">
-	<video id="video-desenvolvido-por" width="1024px" height="748px" style="display:none;" >
-	<source id="source-video-desenvolvido-por" src="img/desenvolvidoPor.mp4" type="video/mp4">
-	
-	</video>
+		<video id="video-desenvolvido-por" width="1024px" height="768px" style="display:none;" >
+			<source id="source-video-desenvolvido-por" src="img/desenvolvidoPor.mp4" type="video/mp4">
+	    </video>
 	
 	
 	</div>
@@ -137,7 +136,7 @@
 				<button id="btn_chamarGarçon" class="button efeito-button">Chamar
 					Garçom</button>
 					
-				<button id="btn_photum_menu" class="button efeito-button">Photum Menu</button>
+				<button id="btn_photum_menu" onclick="showVideoDesenvolvidoPor('modal_chamar_garcon')" class="button efeito-button">Photum Menu</button>
 					
 			</div>
 
@@ -168,7 +167,6 @@
 				<h2 data-dojo-type="dojox.mobile.Heading"
 					data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
 					align="center" class="title_modal_title_monta_sua_pizza">Monte Sua Pizza</h2>
-				
 				
 				<div class="button-escolher-opcoes">
 				<button value="modal_nome_pessoa"
@@ -400,6 +398,13 @@
 		<span></span>
 		</div>
 		<button class="btn_ok_mensagem efeito-button" onclick="hide('modal_favor_selecionar_pessoa')" id="btn_ok_final">OK</button>
+	</div>
+	
+	<div id="modal_favor_selecionar_opcao" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+		<span></span>
+		</div>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide_modal_favor_selecionar_opcao('modal_favor_selecionar_opcao')" id="btn_ok_final_opcao">OK</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento" dojoType="dojox.mobile.SimpleDialog" class="mensagem">

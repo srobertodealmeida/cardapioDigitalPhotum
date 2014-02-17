@@ -336,6 +336,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
+			$('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
@@ -346,6 +347,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
+			$('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
