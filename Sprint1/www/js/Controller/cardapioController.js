@@ -975,9 +975,11 @@ function montaAdicionais(nomeProdutoAtual){
 					
 					if(result.rows.item(i).flag_preco == "true"){
 						var precoAdicionais = '------ R$: '+result.rows.item(i).preco+'';
+						$("#id_modal_nome_pessoa .select-adicionais").attr('multiple','multiple');
 					}else{
 						var precoAdicionais = "";
 						flagOpicionalObrigatorio = true;
+						$("#id_modal_nome_pessoa .select-adicionais").removeAttr('multiple');
 					}
 					if(result.rows.item(i).flag_produto_especifico == "true"){
 						var produtosEspecificos = result.rows.item(i).produto_especifico_adiconais;

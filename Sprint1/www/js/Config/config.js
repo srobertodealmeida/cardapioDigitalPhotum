@@ -51,83 +51,77 @@ var quantidadeRegistros = 0;//Quantidade total de registros , usado para saber q
 
 
 require([
-         "dojo/dom-construct",
-         "dojo/ready",
-         "dijit/registry",
-         "dojox/mobile/SpinWheel",
-         "dojox/mobile/SpinWheelSlot",
-         "dojox/mobile/parser",
-         "dojo/dom",
-         "dijit/dijit",
-         "dojo/parser",
-         "dojo/on", 
-         "dojo/_base/window", 
-         "dojo/_base/Deferred", 
-         "dojo/dom", 
-         "maqetta/space",
-         "maqetta/AppStates",
-         "dojox/mobile",
-         "dojox/mobile/deviceTheme",
-         "dojox/mobile/compat",
-         "dojo/hash",
-         "dojox/mobile",
-         "dijit/registry",
-         "dojox/mobile/ProgressIndicator",
-         "dojox/mobile/ScrollableView",
-         "dojox/mobile/SwapView",
-         "dojox/mobile/IconItem",
-         "dojox/mobile/IconContainer",
-         "dojox/mobile/TextBox",
-         "dojox/mobile/CarouselItem",
-         "dojox/mobile/ViewController",
-         "dojox/mobile/CheckBox",
-         "dojox/mobile/SimpleDialog",
-         "dojox/mobile/parser",
-         "dojo/domReady!",
-         "dojox/mobile/ViewController",
-         "dojox/mobile/Slider",
-         "dojox/mobile/Button",
-         "dojox/mobile/Opener",
-         "dojox/mobile/ContentPane",
-         "dijit/registry",
-         "dojox/mobile/parser",
-         "dojox/mobile",
-         "dojox/mobile/Button",
-         "dojo/_base/window",
-         "dojo/_base/Deferred",
-         "dijit/registry",
-         "dojox/mobile/ViewController",
-         "dojox/mobile/parser",
-         "dojox/mobile",
-         "dojox/mobile/compat",
-         "dojox/mobile/Button",
-         "dojo/_base/window",
-         "dojo/_base/Deferred",
-         "dijit/registry",
-         "dojox/mobile/ViewController",
-         "dojox/mobile/parser",
-         "dojox/mobile",
-         "dojox/mobile/compat",
-         "dojox/mobile/Button",
-         "dojox/mobile/GridLayout",
-         "dojox/mobile/Pane",
-         "dojo/dom-construct",
-         "dojo/ready",
-         "dijit/registry",
-         "dojox/mobile/SpinWheel",
-         "dojox/mobile/SpinWheelSlot",
-         "dojox/mobile/parser",
-         "dojox/mobile/RoundRectStoreList",
-         "dojo/store/Memory"
-         
-     ], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
-	
-	show = function(dlg){
-	    registry.byId(dlg).show();
+"dojo/dom",
+"dijit/dijit",
+"dojo/parser",
+"dojo/on", 
+"dojo/_base/window", 
+"dojo/_base/Deferred", 
+"dojo/dom", 
+"maqetta/space",
+"maqetta/AppStates",
+"dojox/mobile",
+"dojox/mobile/deviceTheme",
+"dojox/mobile/compat",
+"dojo/hash",
+"dojox/mobile",
+"dijit/registry",
+"dojox/mobile/ProgressIndicator",
+"dojox/mobile/ScrollableView",
+"dojox/mobile/SwapView",
+"dojox/mobile/IconItem",
+"dojox/mobile/IconContainer",
+"dojox/mobile/TextBox",
+"dojox/mobile/CarouselItem",
+"dojox/mobile/ViewController",
+"dojox/mobile/CheckBox",
+"dojox/mobile/SimpleDialog",
+"dojox/mobile/parser",
+"dojo/domReady!",
+"dojox/mobile/ViewController",
+"dojox/mobile/Slider",
+"dojox/mobile/Button",
+"dojox/mobile/Opener",
+"dojox/mobile/ContentPane",
+"dijit/registry",
+"dojox/mobile/parser",
+"dojox/mobile",
+"dojox/mobile/Button",
+"dojo/_base/window",
+"dojo/_base/Deferred",
+"dijit/registry",
+"dojox/mobile/ViewController",
+"dojox/mobile/parser",
+"dojox/mobile",
+"dojox/mobile/compat",
+"dojox/mobile/Button",
+"dojo/_base/window",
+"dojo/_base/Deferred",
+"dijit/registry",
+"dojox/mobile/ViewController",
+"dojox/mobile/parser",
+"dojox/mobile",
+"dojox/mobile/compat",
+"dojox/mobile/Button",
+"dojox/mobile/GridLayout",
+"dojox/mobile/Pane",
+"dojo/dom-construct",
+"dojo/ready",
+"dijit/registry",
+"dojox/mobile/SpinWheel",
+"dojox/mobile/SpinWheelSlot",
+"dojox/mobile/parser",
+"dojox/mobile/RoundRectStoreList",
+"dojo/store/Memory"
+], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
+    console.log(registry);
+	  show = function(dlg){
+	    registry.byId(dlg).show(); 
 	  }
-    hide = function(dlg){
-	    registry.byId(dlg).hide();
-    }
+	  
+	  hide = function(dlg){
+		    registry.byId(dlg).hide();
+	  }
     
 });
 
@@ -1610,7 +1604,7 @@ function insertTable(nomeTable){
 			
 			for(i=0;i<arrayProdutos.length;i++){
 				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
-				quantidadeRegistros = quantidadeRegistros - 1;
+				quantidadeRegistros = quantidadeRegistros - 1;,
 								tx
 										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,ordem,codigo) VALUES ("'
 												+ arrayProdutos[i].title

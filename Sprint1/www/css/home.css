@@ -439,13 +439,12 @@ padding-top: 8px;
 	z-index: 200;
 }
 #preloader div {
-	width:400px;
 	height:100% !important;
 	margin:auto;
 	height: 3px;
 	text-align:center;
 	position: relative;
-    top: 50%;
+    top: 20%;
 	overflow:hidden;
 	z-index: 400;
 }
