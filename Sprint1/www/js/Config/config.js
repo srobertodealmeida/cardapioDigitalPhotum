@@ -51,77 +51,77 @@ var quantidadeRegistros = 0;//Quantidade total de registros , usado para saber q
 
 
 require([
-"dojo/dom",
-"dijit/dijit",
-"dojo/parser",
-"dojo/on", 
-"dojo/_base/window", 
-"dojo/_base/Deferred", 
-"dojo/dom", 
-"maqetta/space",
-"maqetta/AppStates",
-"dojox/mobile",
-"dojox/mobile/deviceTheme",
-"dojox/mobile/compat",
-"dojo/hash",
-"dojox/mobile",
-"dijit/registry",
-"dojox/mobile/ProgressIndicator",
-"dojox/mobile/ScrollableView",
-"dojox/mobile/SwapView",
-"dojox/mobile/IconItem",
-"dojox/mobile/IconContainer",
-"dojox/mobile/TextBox",
-"dojox/mobile/CarouselItem",
-"dojox/mobile/ViewController",
-"dojox/mobile/CheckBox",
-"dojox/mobile/SimpleDialog",
-"dojox/mobile/parser",
-"dojo/domReady!",
-"dojox/mobile/ViewController",
-"dojox/mobile/Slider",
-"dojox/mobile/Button",
-"dojox/mobile/Opener",
-"dojox/mobile/ContentPane",
-"dijit/registry",
-"dojox/mobile/parser",
-"dojox/mobile",
-"dojox/mobile/Button",
-"dojo/_base/window",
-"dojo/_base/Deferred",
-"dijit/registry",
-"dojox/mobile/ViewController",
-"dojox/mobile/parser",
-"dojox/mobile",
-"dojox/mobile/compat",
-"dojox/mobile/Button",
-"dojo/_base/window",
-"dojo/_base/Deferred",
-"dijit/registry",
-"dojox/mobile/ViewController",
-"dojox/mobile/parser",
-"dojox/mobile",
-"dojox/mobile/compat",
-"dojox/mobile/Button",
-"dojox/mobile/GridLayout",
-"dojox/mobile/Pane",
-"dojo/dom-construct",
-"dojo/ready",
-"dijit/registry",
-"dojox/mobile/SpinWheel",
-"dojox/mobile/SpinWheelSlot",
-"dojox/mobile/parser",
-"dojox/mobile/RoundRectStoreList",
-"dojo/store/Memory"
-], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
-    console.log(registry);
-	  show = function(dlg){
+         "dojo/dom",
+         "dijit/dijit",
+         "dojo/parser",
+         "dojo/on",
+         "dojo/_base/window",
+         "dojo/_base/Deferred",
+         "dojo/dom",
+         "maqetta/space",
+         "maqetta/AppStates",
+         "dojox/mobile",
+         "dojox/mobile/deviceTheme",
+         "dojox/mobile/compat",
+         "dojo/hash",
+         "dojox/mobile",
+         "dijit/registry",
+         "dojox/mobile/ProgressIndicator",
+         "dojox/mobile/ScrollableView",
+         "dojox/mobile/SwapView",
+         "dojox/mobile/IconItem",
+         "dojox/mobile/IconContainer",
+         "dojox/mobile/TextBox",
+         "dojox/mobile/CarouselItem",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/CheckBox",
+         "dojox/mobile/SimpleDialog",
+         "dojox/mobile/parser",
+         "dojo/domReady!",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/Slider",
+         "dojox/mobile/Button",
+         "dojox/mobile/Opener",
+         "dojox/mobile/ContentPane",
+         "dijit/registry",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/Button",
+         "dojo/_base/window",
+         "dojo/_base/Deferred",
+         "dijit/registry",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/compat",
+         "dojox/mobile/Button",
+         "dojo/_base/window",
+         "dojo/_base/Deferred",
+         "dijit/registry",
+         "dojox/mobile/ViewController",
+         "dojox/mobile/parser",
+         "dojox/mobile",
+         "dojox/mobile/compat",
+         "dojox/mobile/Button",
+         "dojox/mobile/GridLayout",
+         "dojox/mobile/Pane",
+         "dojo/dom-construct",
+         "dojo/ready",
+         "dijit/registry",
+         "dojox/mobile/SpinWheel",
+         "dojox/mobile/SpinWheelSlot",
+         "dojox/mobile/parser",
+         "dojox/mobile/RoundRectStoreList",
+         "dojo/store/Memory"
+         ], function(dom, registry,dom, on,ProgressIndicator,parser, ViewController,ScrollableView){
+        console.log(registry);
+        show = function(dlg){
 	    registry.byId(dlg).show(); 
-	  }
-	  
-	  hide = function(dlg){
-		    registry.byId(dlg).hide();
-	  }
+        }
+        
+        hide = function(dlg){
+        registry.byId(dlg).hide();
+        }
     
 });
 
@@ -341,7 +341,6 @@ function getDrupalLabel(tx){
 
 function getDrupalFormasDePagamento(tx){
    
-	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxFormasDePagamento = getAjax(urlViewFormasDePagamento);
@@ -823,62 +822,74 @@ function getDrupalAdicionais(tx){
 }
 
 function getDadosDrupal(tx){
+    
+    
+    
+    
+    //alert('antes')
 	//show('modal_loading_atualizando_cardapio');
+    // alert('depois')
 
 	// Categoria
 	if(atualizaForm.configuracao == 'true'){
 		getDrupalLanguages(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Configuracao");
 	}
 	
 	// Label
 	if(atualizaForm.label == 'true'){
 		getDrupalLabel(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Label");
 	}
 	
 	// Home
 	if(atualizaForm.home == 'true'){
 		getDrupalHome(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Home");
 	}
 	
 	// Categoria
 	if(atualizaForm.categoria == 'true'){
 		getDrupalCategoria(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Categoria");
 	}
 	
 	// Produtos
 	if(atualizaForm.produto == 'true'){
 		getDrupalProduto(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Produto");
 	}
 	
 	// Propagandas
 	if(atualizaForm.propaganda == 'true'){
 		getDrupalPropaganda(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Propaganda");
 	}
 	
 	//Adicionais
 	if(atualizaForm.adicionais == 'true'){
 		getDrupalAdicionais(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Adicionais");
 	}
 	
 	//Formas de Pagamento
 	if(atualizaForm.formaDePagamento == 'true'){
 		getDrupalFormasDePagamento(tx);
+        
+        $('#preloader .title-atualizando').text("Atualizando: Forma de Pagamento");
 	}
 	
 	//Configuracao Propaganda
 	if(atualizaForm.qtdeVariacaoCuriosidade == 'true'){
 		getConfigPropaganda(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Quantidade Variacao Curiosidade");
 	}
 	
 	//Configuracao Propaganda Restaurante
 	if(atualizaForm.qtdeVariacaoPropRestaurante == 'true'){
 		getConfigPropaganda(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Quantidade Propaganda Restaurante");
 	}
-	
-	
-	
-	
-	
     
 }
 
@@ -894,9 +905,8 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
     	  		if (progressEvent.lengthComputable) {
     	  			zerarInatividade();
     	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
-    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
-    	  			console.log(perc + "% loaded...");
+    	  			$('#preloader .title-campo-download').text(url);
+    	  			$('#preloader .porcentagem-campo-download').text("quantidade: "+quantidadeRegistros+"/"+ perc +"%");
     	  		} else {
     	  			if($('#loadingPercentual').innerHTML == "") {
     	  				$('#loadingPercentual').innerHTML = "Loading";
@@ -915,6 +925,10 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
                   console.log("download error target " + error.target);
                   console.log("upload error code" + error.code);
                   console.log("error respoinse:"+error.response);
+                                    alert("download error source " + error.source);
+                                    alert("download error target " + error.target);
+                                    alert("upload error code" + error.code);
+                                    alert("error respoinse:"+error.response);
     	      },
     	      false
     	      );
@@ -935,9 +949,8 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
     	  		if (progressEvent.lengthComputable) {
     	  			zerarInatividade();
     	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
-    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
-    	  			console.log(perc + "% loaded...");
+    	  			$('#preloader .title-campo-download').text(url);
+    	  			$('#preloader .porcentagem-campo-download').text("quantidade: "+quantidadeRegistros+"/"+ perc +"%");
     	  		} else {
     	  			if($('#loadingPercentual').innerHTML == "") {
     	  				$('#loadingPercentual').innerHTML = "Loading";
@@ -977,6 +990,8 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
                   console.log("download error target " + error.target);
                   console.log("upload error code" + error.code);
                   console.log("error respoinse:"+error.response);
+                  
+                                    
     	      },
     	      false
     	      );
@@ -997,8 +1012,8 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 	    	  		if (progressEvent.lengthComputable) {
 	    	  			zerarInatividade();
 	    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-	    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
-	    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
+	    	  			$('#preloader .title-campo-download').text(url);
+	    	  			$('#preloader .porcentagem-campo-download').text("quantidade: "+quantidadeRegistros+"/"+ perc +"%");
 	    	  			console.log(perc + "% loaded...");
 	    	  		} else {
 	    	  			if($('#loadingPercentual').innerHTML == "") {
@@ -1021,6 +1036,10 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 				console.log("download error target " + error.target);
 				console.log("upload error code" + error.code);
 				console.log("error respoinse:" + error.response);
+                                  alert("download error source " + error.source);
+                                  alert("download error target " + error.target);
+                                  alert("upload error code" + error.code);
+                                  alert("error respoinse:"+error.response);
 			}, false);
 
 		})
@@ -1048,9 +1067,8 @@ function downloadImagesCategorias(tx,qtdCategorias,indice){
 	    	  		if (progressEvent.lengthComputable) {
 	    	  			zerarInatividade();
 	    	  			var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
-	    	  			$('#modal_loading_atualizando_cardapio .title-campo-download').text(url);
-	    	  			$('#modal_loading_atualizando_cardapio .porcentagem-campo-download').text(perc +"%");
-	    	  			console.log(perc + "% loaded...");
+	    	  			$('#preloader .title-campo-download').text(url);
+	    	  			$('#preloader .porcentagem-campo-download').text("quantidade: "+quantidadeRegistros+"/"+ perc +"%");
 	    	  		} else {
 	    	  			if($('#loadingPercentual').innerHTML == "") {
 	    	  				$('#loadingPercentual').innerHTML = "Loading";
@@ -1072,6 +1090,10 @@ function downloadImagesCategorias(tx,qtdCategorias,indice){
 				console.log("download error target " + error.target);
 				console.log("upload error code" + error.code);
 				console.log("error respoinse:" + error.response);
+                                  alert("download error source " + error.source);
+                                  alert("download error target " + error.target);
+                                  alert("upload error code" + error.code);
+                                  alert("error respoinse:"+error.response);
 			}, false);
 
 		})
@@ -1507,7 +1529,9 @@ function createTable(tx){
 	tx.executeSql('INSERT INTO Config(versao) VALUES ("'+versaoAtual+'")');
 	
 	// Tables Pedido e Mesa
-	createTablesdoCardapio(tx);
+	//createTablesdoCardapio(tx);
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
 	
 }
 
@@ -1535,6 +1559,7 @@ function insertTable(nomeTable){
 	if(nomeTable == "home"){
 		
 		 db.transaction(function(tx) {
+                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			 quantidadeRegistros = quantidadeRegistros - 1;
              tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
              testeProdutoErro = "background" + homeForm.logo;
@@ -1546,6 +1571,7 @@ function insertTable(nomeTable){
 		
 		db.transaction(function(tx) {
 			for(i=0; i < arrayLanguagesForm.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				 quantidadeRegistros = quantidadeRegistros - 1;                             
 			console.log('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
 		    tx.executeSql('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
@@ -1564,6 +1590,7 @@ function insertTable(nomeTable){
 				console.log("legaleim"+arrayIconesForm[i].image);
 			    console.log("DebugMeud-Insert" + arrayIconesForm[i].title);
 			    console.log('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
+                           $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			    quantidadeRegistros = quantidadeRegistros - 1;
 			    if(i=0){
 	            tx.executeSql('INSERT INTO Icones(title,image,icone_cardapio_english,icone_cardapio_spanish,icone_cardapio_french) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '", "' + title_lenguage_cardapio_Form.icone_cardapio_english + '", "' + title_lenguage_cardapio_Form.icone_cardapio_spanish + '", "' + title_lenguage_cardapio_Form.icone_cardapio_french + '")');
@@ -1581,6 +1608,7 @@ function insertTable(nomeTable){
 		
 		db.transaction(function(tx) {
 			for(i=0;i<arrayPropagandasForm.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			console.log('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
 			quantidadeRegistros = quantidadeRegistros - 1;
             tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
@@ -1591,7 +1619,7 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			var teste = arrayCategorias.length;
 			for(i=0;i<arrayCategorias.length;i++){
-				
+				$('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
 				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
@@ -1600,11 +1628,16 @@ function insertTable(nomeTable){
 		
 	}else if (nomeTable == "produtos") {
         console.log("insertProdutos")
-		db.transaction(function(tx) {
+		for(i=0;i<arrayProdutos.length;i++){
+          $('#preloader .quantidade-registros').text("Quantidadeee: "+i+" / "+arrayProdutos.length);
+        }
+        
+        db.transaction(function(tx) {
 			
 			for(i=0;i<arrayProdutos.length;i++){
 				console.log("nid ae genteeeeeeeeeeeeeee \o"+arrayProdutos[i].nid);
-				quantidadeRegistros = quantidadeRegistros - 1;,
+                       $('#preloader .quantidade-registros').text("Quantidade: "+i+"qtde arrya:"+arrayProdutos.length);
+				quantidadeRegistros = quantidadeRegistros - 1;
 								tx
 										.executeSql('INSERT INTO Produtos(title,previa_descricao,preco,descricao,descricao_saiba_mais,categoria,image,title_comum,language,nid,ordem,codigo) VALUES ("'
 												+ arrayProdutos[i].title
@@ -1638,6 +1671,7 @@ function insertTable(nomeTable){
 	}else if (nomeTable == "sleep-propagandas") {
 		db.transaction(function(tx) {
 			for(i=0;i<arrayPropagandasDepoisDownload.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				if(arrayPropagandasDepoisDownload[i].type == "insert"){
 					console.log('INSERT INTO Propagandas(image,nid,duration,deletadoBanco,versao,ordenacao,tipoPropaganda,flag_passou) VALUES ("' + arrayPropagandasDepoisDownload[i].image + '","'+arrayPropagandasDepoisDownload[i].nid+'","'+arrayPropagandasDepoisDownload[i].duration+'","false","'+arrayPropagandasDepoisDownload[i].versao+'","'+arrayPropagandasDepoisDownload[i].ordenacao+'","'+arrayPropagandasDepoisDownload[i].tipoPropaganda+'","false")');
@@ -1671,6 +1705,7 @@ function insertTable(nomeTable){
 	}else if (nomeTable == "labels") {
 		db.transaction(function(tx) {
 			for(i=0;i<arrayLabels.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			quantidadeRegistros = quantidadeRegistros - 1;
 			console.log('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","'+ arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
             tx.executeSql('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","' + arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
@@ -1679,6 +1714,7 @@ function insertTable(nomeTable){
 	}else if (nomeTable == "adicionais") {
 		db.transaction(function(tx) {
 			for(i=0;i<arrayAdicionais.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
 	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
@@ -1687,6 +1723,7 @@ function insertTable(nomeTable){
 	}else if (nomeTable == "formasDePagamento") {
 		db.transaction(function(tx) {
 			for(i=0;i<arrayFormasDePagamento.length;i++){
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  + '")');
 	            tx.executeSql('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  +  '")');
@@ -1694,12 +1731,14 @@ function insertTable(nomeTable){
             },errorCB,successInsert);
 	}else if (nomeTable == "config_propaganda") {
 		db.transaction(function(tx) {
+                $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
+                       $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				console.log('INSERT INTO configPropagandas(variacao_curiosidade) VALUES ("' + configPropaganda + '")');
 	
 					tx.executeSql('INSERT INTO configPropagandas(variacao_curiosidade,variacao_pro_restaurante) VALUES ("' + configPropaganda + '","'+configQtdeVariacaoPropagandaRestaurante+'")');
 			
-				}
+				
 				
 				
 	            
@@ -1707,6 +1746,10 @@ function insertTable(nomeTable){
             },errorCB,successInsert);
 	}
 }
+
+
+
+
 
 //Método de erro sqLite
 function errorCB(err) {
@@ -2177,7 +2220,8 @@ function inatividade() {
 			$('.mblSimpleDialog').addClass('class-sem-index');
 			$('.mblSimpleDialogCover').addClass('class-hide-SimpleDialogCover');
 			$('#propagandas').show();
-			$('#view1').addClass('background_black_propaganda');
+            $('#view1').addClass('background_black_propaganda');
+        
 		
 	}
 	if (contador != 50){
@@ -2272,12 +2316,12 @@ db.transaction(function(tx){
 }
 
 function bindTouchstart(botao,funcao){
-	
+	 
 	 if(typeof(funcao)=="function"){
 		
 		
 		 $(''+botao).bind('touchstart click', function(){
-				
+			
 				 funcao.call();
 		});
 	 }
@@ -2299,6 +2343,18 @@ function errorGetEnderecoServidor(){
     urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
     urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
     urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+    
+    db.transaction(function(tx) {
+		tx.executeSql('DROP TABLE IF EXISTS EnderecoServidor');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS EnderecoServidor (id INTEGER PRIMARY KEY AUTOINCREMENT, endereco TEXT)');
+		
+				 tx.executeSql('INSERT INTO EnderecoServidor(endereco) VALUES ("'+ipServidorDrupal+'")');
+
+
+	     },errorCB);
+    
+    
+    
 	document.addEventListener("deviceready", onDeviceReady, false);
 	$('.btn-mudar-endereceo-servidor').show();
 	
