@@ -341,6 +341,7 @@ function getDrupalLabel(tx){
 
 function getDrupalFormasDePagamento(tx){
    
+	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxFormasDePagamento = getAjax(urlViewFormasDePagamento);
@@ -747,8 +748,9 @@ function getDrupalPropaganda(txx){
 						  
 						  for(i=0;i<arrayPropagandasDownload.length;i++){
 							  
-							  downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
-							  
+							  //downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
+							  downloadVideosImagesPropagandas(tx,arrayPropagandasDownload.length,0);
+							 
 						  }
 						  
 						  
@@ -940,10 +942,11 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
 /*
  * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
  */
-function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,objectPropagandasDownload){
-	var url = encodeURI(url);
+function downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice){
+
+	var url = encodeURI(arrayPropagandasDownload[indice].url);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
-    	      var imagePath = fs.root.fullPath + pathDestino; // full file path
+    	      var imagePath = fs.root.fullPath + arrayPropagandasDownload[indice].pathDestino; // full file path
     	      var fileTransfer = new FileTransfer();
     	      fileTransfer.onprogress = function(progressEvent) {
     	  		if (progressEvent.lengthComputable) {
@@ -963,40 +966,23 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
     	      fileTransfer.download(url, imagePath, function (entry) {
     	    	  zerarInatividade();
     	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
-    	    	  if(downloadsArquivosErro == true){
-    	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
-    	    				return val != objectArquivosDownloadsErroRemover;
-    	    		  });
-    	    	  }
-    	    	  salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload);
+    	    	  
+    	    	  salvaPathImagenPropaganda(tx,imagePath,qtdeRealDownload,indice);
     	      }, function (error) {
-    	    	  var ObjectArquivosDownloadsErro = {
-    	    			  url:"",
-    	    			  pathDestino:"",
-    	    			  tx:"",
-    	    			  objectPropagandasDownload:""
-    	    			  }
     	    	  zerarInatividade();
-    	    	  ObjectArquivosDownloadsErro.url = url;
-    	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
-    	    	  ObjectArquivosDownloadsErro.tx = tx;
-    	    	  ObjectArquivosDownloadsErro.objectPropagandasDownload = objectPropagandasDownload;
-    	    	  
-    	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
-    	    	  
-    	    	  qtdPropagandas = qtdPropagandas -1;
-    	    	 
+    	    	  sucessDadosDrupal = false;
     	    	  console.log("download error source " + error.source);
                   console.log("download error target " + error.target);
                   console.log("upload error code" + error.code);
                   console.log("error respoinse:"+error.response);
                   
-                                    
+                  downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice);
     	      },
     	      false
     	      );
     	      
     	   })
+	
 }
 
 
@@ -1225,22 +1211,18 @@ function salvaPathImagenCategorias(tx,imagePath,qtdCategorias,indice){
 }
 
 //Método que salva path da imagem no form
-function salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload){
+function salvaPathImagenPropaganda(tx,imagePath,qtdeRealDownload,indice){
 	
-	objectPropagandasDownload.image = imagePath;
-	arrayPropagandasDepoisDownload.push(objectPropagandasDownload);
-	if(arrayPropagandasDepoisDownload.length == qtdPropagandas){
-		if(arrayArquivosDownloadsErro.length > 0){
-			qtdPropagandas = qtdPropagandas + arrayArquivosDownloadsErro.length;
-			
-			for(i=0;i<arrayArquivosDownloadsErro.length;i++){
-				  
-				  downloadVideosImagesPropagandas(arrayArquivosDownloadsErro[i].url, arrayArquivosDownloadsErro[i].pathDestino, arrayArquivosDownloadsErro[i].tx, true, arrayArquivosDownloadsErro[i],arrayArquivosDownloadsErro[i].objectPropagandasDownload);
-			}
-		}else{
-			insertTable("sleep-propagandas");
-		}
+	arrayPropagandasDownload[indice].image = imagePath
+	arrayPropagandasDepoisDownload.push(arrayPropagandasDownload[indice]);
+	if(arrayPropagandasDepoisDownload.length == qtdeRealDownload){
+		insertTable("sleep-propagandas");
+		
+	}else{
+		indice = indice +1;
+		downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice);
 	} 
+
 }
 
 /*
@@ -1530,8 +1512,9 @@ function createTable(tx){
 	
 	// Tables Pedido e Mesa
 	//createTablesdoCardapio(tx);
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
+    
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
 	
 }
 
@@ -2329,7 +2312,7 @@ function bindTouchstart(botao,funcao){
 
 function errorGetEnderecoServidor(){
     
-    ipServidorDrupal = "http://192.168.0.107/PizzaCompany/?q=rest";
+    ipServidorDrupal = "http://192.168.0.54/VillaScamboo/?q=rest";
     
     urlViewConfig = ipServidorDrupal + "/views/configuracao";
     urlViewLabels = ipServidorDrupal + "/views/labels";
@@ -2345,15 +2328,13 @@ function errorGetEnderecoServidor(){
     urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
     
     db.transaction(function(tx) {
-		tx.executeSql('DROP TABLE IF EXISTS EnderecoServidor');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS EnderecoServidor (id INTEGER PRIMARY KEY AUTOINCREMENT, endereco TEXT)');
-		
-				 tx.executeSql('INSERT INTO EnderecoServidor(endereco) VALUES ("'+ipServidorDrupal+'")');
-
-
-	     },errorCB);
-    
-    
+                   tx.executeSql('DROP TABLE IF EXISTS EnderecoServidor');
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS EnderecoServidor (id INTEGER PRIMARY KEY AUTOINCREMENT, endereco TEXT)');
+                   
+                   tx.executeSql('INSERT INTO EnderecoServidor(endereco) VALUES ("'+ipServidorDrupal+'")');
+                   
+                   
+                   },errorCB);
     
 	document.addEventListener("deviceready", onDeviceReady, false);
 	$('.btn-mudar-endereceo-servidor').show();
