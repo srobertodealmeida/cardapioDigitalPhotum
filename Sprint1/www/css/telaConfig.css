@@ -243,3 +243,9 @@ margin-top: 10;
      border: none;
      box-shadow:none;
     }
+
+.inputMudarEnderecoServidor{
+height: 100%;
+width: 500px;
+}
+    

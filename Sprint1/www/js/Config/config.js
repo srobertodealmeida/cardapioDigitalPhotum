@@ -128,23 +128,42 @@ require([
 
 
 function onLoad() {
+    alert("onLoad");
+    window.addEventListener("batterystatus", onBatteryStatus, false);
     $("#preloader").fadeOut(1000);
     document.addEventListener("deviceready", onDeviceReady, false);
 }
 
 function onDeviceReady() {
+	alert("onDeviceReady")
 	
+	
+	window.echo = function(str, callback) {
+    cordova.exec(callback, function(err) {
+        callback('Nothing to echo.');
+    }, "Echo", "echo", [str]);
+    };
+    
+    window.echo("echome", function(echoValue) {
+        alert(echoValue == "echome"); // should alert true.
+    });
+
 	
 	if(connectionWIFI == "connectionTrue"){
+        alert("dentroif");
+        
 		window.addEventListener("batterystatus", onBatteryStatus, false);
 	}
 	 
 }
 
+
 // Handle the batterystatus event
 //
 function onBatteryStatus(info) {
+    alert("bateria")
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
+    alert(info.level)
     if(info.level < 20){
     	 db.transaction(function(tx) {
     		 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
@@ -748,9 +767,8 @@ function getDrupalPropaganda(txx){
 						  
 						  for(i=0;i<arrayPropagandasDownload.length;i++){
 							  
-							  //downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
-							  downloadVideosImagesPropagandas(tx,arrayPropagandasDownload.length,0);
-							 
+							  downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
+							  
 						  }
 						  
 						  
@@ -942,11 +960,10 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
 /*
  * Criado um metodo apenas para as propagandas pois ios nao aguenta downlaod de varios arquivos pesados de uma vez, entao ao dar erro é feito uma repescagem e faz novas tentativas de downloads
  */
-function downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice){
-
-	var url = encodeURI(arrayPropagandasDownload[indice].url);
+function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,objectPropagandasDownload){
+	var url = encodeURI(url);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024*1024, function (fs) {
-    	      var imagePath = fs.root.fullPath + arrayPropagandasDownload[indice].pathDestino; // full file path
+    	      var imagePath = fs.root.fullPath + pathDestino; // full file path
     	      var fileTransfer = new FileTransfer();
     	      fileTransfer.onprogress = function(progressEvent) {
     	  		if (progressEvent.lengthComputable) {
@@ -965,24 +982,44 @@ function downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice){
     	  	
     	      fileTransfer.download(url, imagePath, function (entry) {
     	    	  zerarInatividade();
+                                    console.log("qtdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    "+qtdPropagandas)
     	    	  console.log("download complete: " + entry.fullPath); // entry is fileEntry object
-    	    	  
-    	    	  salvaPathImagenPropaganda(tx,imagePath,qtdeRealDownload,indice);
+    	    	  if(downloadsArquivosErro == true){
+    	    		  arrayArquivosDownloadsErro = $.grep(arrayArquivosDownloadsErro, function(val, index) {
+    	    				return val != objectArquivosDownloadsErroRemover;
+    	    		  });
+    	    	  }
+    	    	  salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload);
     	      }, function (error) {
+                                    alert("error")
+                                    console.log("qtdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee errorrr   "+qtdPropagandas)
+    	    	  var ObjectArquivosDownloadsErro = {
+    	    			  url:"",
+    	    			  pathDestino:"",
+    	    			  tx:"",
+    	    			  objectPropagandasDownload:""
+    	    			  }
     	    	  zerarInatividade();
-    	    	  sucessDadosDrupal = false;
+    	    	  ObjectArquivosDownloadsErro.url = url;
+    	    	  ObjectArquivosDownloadsErro.pathDestino = pathDestino;
+    	    	  ObjectArquivosDownloadsErro.tx = tx;
+    	    	  ObjectArquivosDownloadsErro.objectPropagandasDownload = objectPropagandasDownload;
+    	    	  
+    	    	  arrayArquivosDownloadsErro.push(ObjectArquivosDownloadsErro);
+    	    	  
+    	    	  qtdPropagandas = qtdPropagandas -1;
+    	    	 
     	    	  console.log("download error source " + error.source);
                   console.log("download error target " + error.target);
                   console.log("upload error code" + error.code);
                   console.log("error respoinse:"+error.response);
                   
-                  downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice);
+
     	      },
     	      false
     	      );
     	      
     	   })
-	
 }
 
 
@@ -1211,18 +1248,22 @@ function salvaPathImagenCategorias(tx,imagePath,qtdCategorias,indice){
 }
 
 //Método que salva path da imagem no form
-function salvaPathImagenPropaganda(tx,imagePath,qtdeRealDownload,indice){
+function salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload){
 	
-	arrayPropagandasDownload[indice].image = imagePath
-	arrayPropagandasDepoisDownload.push(arrayPropagandasDownload[indice]);
-	if(arrayPropagandasDepoisDownload.length == qtdeRealDownload){
-		insertTable("sleep-propagandas");
-		
-	}else{
-		indice = indice +1;
-		downloadVideosImagesPropagandas(tx,qtdeRealDownload,indice);
+	objectPropagandasDownload.image = imagePath;
+	arrayPropagandasDepoisDownload.push(objectPropagandasDownload);
+	if(arrayPropagandasDepoisDownload.length == qtdPropagandas){
+		if(arrayArquivosDownloadsErro.length > 0){
+			qtdPropagandas = qtdPropagandas + arrayArquivosDownloadsErro.length;
+			
+			for(i=0;i<arrayArquivosDownloadsErro.length;i++){
+				  
+				  downloadVideosImagesPropagandas(arrayArquivosDownloadsErro[i].url, arrayArquivosDownloadsErro[i].pathDestino, arrayArquivosDownloadsErro[i].tx, true, arrayArquivosDownloadsErro[i],arrayArquivosDownloadsErro[i].objectPropagandasDownload);
+			}
+		}else{
+			insertTable("sleep-propagandas");
+		}
 	} 
-
 }
 
 /*

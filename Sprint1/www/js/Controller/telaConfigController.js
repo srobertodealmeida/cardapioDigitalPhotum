@@ -89,6 +89,21 @@ function voltarHome(){
 }
 
 function preparaMudarEnderecoServidor(){
+	db.transaction(function(tx) {
+	tx.executeSql('SELECT * FROM EnderecoServidor',[],function(tx,result){
+		 if(result.rows.length > 0){
+
+				 $('.inputMudarEnderecoServidor').val(result.rows.item(0).endereco);
+				 show('modal_mudar_endereco_servidor');
+
+		 }
+		
+	},errorGetEndereco);
+	},errorCB);
+	
+}
+
+function errorGetEndereco(){
 	$('.inputMudarEnderecoServidor').val('http://192.168.0.106/PizzaCompany/?q=rest');
 	show('modal_mudar_endereco_servidor');
 }
@@ -145,7 +160,7 @@ function validarSenha() {
 			
 			if($('.inputSenha').val() == "admin"){
 				hide_preloader();
-				$('#geral').show();
+				$('#geralTelaConfig').show();
 				hide('senha_configaracao');
 			}else{
 				var ajax = getAjax(urlViewConfig);
@@ -154,7 +169,7 @@ function validarSenha() {
 					$.each(data, function(key, val) {
 						if (val.senha_configuracao == $('.inputSenha').val()) {
 							hide_preloader();
-							$('#geral').show();
+							$('#geralTelaConfig').show();
 							hide('senha_configaracao');
 						} else {
 							alert('Senha Errada');
@@ -167,7 +182,7 @@ function validarSenha() {
 			
 		} else {
 			hide_preloader();
-			$('#geral').show();
+			$('#geralTelaConfig').show();
 			hide('senha_configaracao');
 		}
 	}
@@ -636,28 +651,34 @@ function successPostMesa(){
 	alert('Mesa Inserida com sucesso');
 }
 
+function errorDBTelaconfig(){
+	console.log('erro');
+	alert('Favor Escolher Mesa/Conta/Linguagem');
+}
+
+
 $(document).ready(function(){
 	
 	db.transaction(function(tx) {
 	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
 		 mesaConfig = result.rows.item(0).numero;
-	 },errorCB)
+	 },errorDBTelaconfig)
 	 
 	 tx.executeSql('SELECT * FROM LanguageSelect',[],function(tx,result){
 		if(result.rows.length > 0){
 		constLanguageSelectedConf = result.rows.item(0).nome;
 		}
-	 },errorCB)
+	 },errorDBTelaconfig)
 	
 	 
 	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
 		 if(result.rows.length > 0){
 		 numeroContaConf = result.rows.item(0).idConta;
 		 }
-	 }, errorCB);
+	 }, errorDBTelaconfig);
 	 
 	 
-	},errorCB, successCB);
+	},errorDBTelaconfig, successCB);
 	$("#linkHome").click(function() {
 		  alert('clicou');
 	});

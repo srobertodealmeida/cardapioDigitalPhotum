@@ -93,12 +93,13 @@ require([
 	  hide = function(dlg){
 		    registry.byId(dlg).hide();
 	  }
-	  
-	  hide_modal_favor_selecionar_opcao = function(dlg){
-		    registry.byId(dlg).hide();
-		    
-		    $("#id_modal_nome_pessoa .select-adicionais").click();
-	  }
+        
+        hide_modal_favor_selecionar_opcao = function(dlg){
+        registry.byId(dlg).hide();
+        
+        $("#id_modal_nome_pessoa .select-adicionais").click();
+        $("#id_modal_nome_pessoa .select-adicionais").focus();
+        }
 	  
 	  showConfirmacaoPessoa = function(dlg,btn){
 		  $("#"+dlg+" .btn-sim-excluir-pessoa").attr('name',btn.value);
@@ -692,6 +693,7 @@ function montaBotoesCardapio(){
 		
 	},errorCB);
 	*/
+	
 }
 
 function chamarProdutos(div){
@@ -724,6 +726,7 @@ function selectDadosProdutos(tx){
 }
 
 function montaProdutos(tx,result){
+	
 	 for(var i=0;i<result.rows.length;i++){
 		 console.log( "testantoselecProdutos" + result.rows.item(i).id);
 		 $(".content .mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
@@ -753,7 +756,6 @@ function montaProdutos(tx,result){
 	}
     $("#UL-Produtos").hide();
     $("#UL-Produtos").show();
-    
    
 }
 
@@ -971,15 +973,17 @@ function montaAdicionais(nomeProdutoAtual){
 				
 				$('.select-adicionais').show();
                       var flagTemPRoduto = false;
+                      
 				for(i=0;i<result.rows.length;i++){
 					
 					if(result.rows.item(i).flag_preco == "true"){
 						var precoAdicionais = '------ R$: '+result.rows.item(i).preco+'';
-						$("#id_modal_nome_pessoa .select-adicionais").attr('multiple','multiple');
+                      $("#id_modal_nome_pessoa .select-adicionais").attr('multiple','multiple');
 					}else{
 						var precoAdicionais = "";
 						flagOpicionalObrigatorio = true;
-						$("#id_modal_nome_pessoa .select-adicionais").removeAttr('multiple');
+                      $("#id_modal_nome_pessoa .select-adicionais").removeAttr('multiple');
+                      
 					}
 					if(result.rows.item(i).flag_produto_especifico == "true"){
 						var produtosEspecificos = result.rows.item(i).produto_especifico_adiconais;
@@ -992,7 +996,7 @@ function montaAdicionais(nomeProdutoAtual){
 								$('.label-combo-adicionais').text(result.rows.item(i).label_adicionais);
 								flagTemPRoduto = true;
 							}
-							
+
 						}
 						
 					}else{
@@ -1009,7 +1013,8 @@ function montaAdicionais(nomeProdutoAtual){
                         $('.select-adicionais').hide();
                         flagOpicionalObrigatorio = false;
                       }
-				if(editandoPedido){
+				
+               if(editandoPedido){
 					tx.executeSql('SELECT * FROM Pedido where id = "'+idPedidoEditando+'"',[],function(tx,result){
 						if(result.rows.length > 0){
 							var stringIdAdicionais =  result.rows.item(0).id_adicionais;
@@ -1061,9 +1066,9 @@ function montaAdicionarPessoa(tx,result){
 	$("#id_ul_modal_nome_pessoa .liEditavel").remove();
 	
     $("#id_ul_modal_nome_pessoa .inputNome").remove();
-    
-    flagOpicionalObrigatorio = false
 	
+    flagOpicionalObrigatorio = false;
+    
 	if(!editandoPessoa && !editandoPedido){
 		$(".textarea-observacao-produto").val('');
 	}
@@ -1147,7 +1152,6 @@ function montaAdicionarPessoa(tx,result){
 				+ '" onclick="mostrarImput(this)" class="mblListItem liEditavel" ><div class="mblListItemRightIcon"><div class="mblDomButtonArrow mblDomButton"><div><div><div><div></div></div></div></div></div></div><span  class="editavel">'+ObjectLabels.label_adicionar_pessoa+'</span><input data-dojo-type="dojox/mobile/CheckBox" type="checkbox"  class="mblCheckBox meuCheckBox"/> <div class="mblListItemLabel"> </div></li><input    name="add'
 				+ valueUltimoLi
 				+ '" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
-		
 	}
 	$(".naoEditavel").click(function(e){
 		if(e.target.tagName == "LI"){
@@ -1330,7 +1334,7 @@ function salvarEdicaoPedido(){
 			 
 		 }
 		//Prepara Adicionais
-		 if(adicionaisId != null){
+		 if(adicionaisId != "null"){
 			
 				 adicionaisId = adicionaisId.toString();
 				 var arrayIdAdicionais = adicionaisId.split(",");
@@ -1384,19 +1388,16 @@ function salvarEdicaoPedido(){
 		 }else{
             
 			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
+			 
 			 precoFinal = precoFinal.toFixed(2);
               
-                  
-                   
+
 			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'", title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id='+idPedidoEditando+'');
                   
-                   
-                   
-                  
+
 		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
                    
-                   
-                  
+   
 		 }
 	
 	 },errorCB);
@@ -1422,7 +1423,7 @@ function adicionarPedido(tx,result){
 	if(result.rows.length > 0){
 	  if($(".pessoa_selecionado").size() > 0 ){
 		  if(flagOpicionalObrigatorio == true){
-			  if(adicionaisId == null){
+			  if(adicionaisId == "null"){
 				  naoSelecionouOpcional = true;
 			  }
 		  }
@@ -1480,7 +1481,7 @@ function adicionarPedido(tx,result){
 				 var contador = 0;
 				 
 				 //Prepara Adicionais
-				 if(adicionaisId != null){
+				 if(adicionaisId != "null"){
 					 adicionaisId = adicionaisId.toString();
 					 var arrayIdAdicionais = adicionaisId.split(",");
 					
@@ -1559,6 +1560,7 @@ function adicionarPedido(tx,result){
 		 }else{
 			 $('#modal_favor_selecionar_opcao .div-mensagem span').text(ObjectLabels.alert_favor_selecionar_opcao);
 			 show("modal_favor_selecionar_opcao");
+ 
 		 } 
 		 
 	 }else{
@@ -1989,8 +1991,8 @@ function montaModalPreviaPedido(tx,result){
 	
 	$("#id-ul-fechamento-conta .mostrarDetalhado").remove();
 	$("#id-ul-fechamento-conta .pedido_detalhado").remove();
-	
 	$('#modal_previa_pedido .title_modal_nome_pessoa').text(ObjectLabels.title_total);
+	
 	$('#modal_previa_pedido .btn-confirmar-pagamento').text(ObjectLabels.btn_confirmar_pagamento);
 	$('#modal_previa_pedido .btn_cancelar_pedido').text(ObjectLabels.btn_cancelar);
 	$('#modal_previa_pedido .btn-fechar-conta-previa-pedido').text(ObjectLabels.btn_fechar_conta_da_mesa);
@@ -1998,7 +2000,7 @@ function montaModalPreviaPedido(tx,result){
 	if(result.rows.length == 0){
 		$('#id-confirmarPagametento').text(ObjectLabels.btn_limpar_dados_da_mesa);
 		$('#id-confirmarPagametento').attr('onclick','chamarLimparDadosMesa()');
-	}else{
+    }else{
 		$('#id-confirmarPagametento').text(ObjectLabels.btn_confirmar_pagamento);
 		$('#id-confirmarPagametento').attr('onclick','confirmarPagamento(this)');
 	}
@@ -2137,11 +2139,26 @@ $(document).ready(function(){
 	inatividade();
 	bindsButtons();
 		
+	$(window).bind('scroll', function () {
+	    var $nav = $(".navbar")
+	    var scrollTop = $(window).scrollTop();
+	    var offsetTop = $nav.offset().top;
+
+	    if (Math.abs(scrollTop - offsetTop) > 1) {
+	        $nav.css('position', 'absolute');
+	        setTimeout(function(){
+	            $nav.css('position', 'fixed');
+	        }, 1);
+	    }
+	});
+	
+	
+	
 		$('#propagandas').click(function(e){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
-			$('#view1').removeClass('background_black_propaganda');
+                                $('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
@@ -2155,12 +2172,13 @@ $(document).ready(function(){
 		$('#propagandas').bind('touchstart click', function(){
 			zerarInatividade();
 			inatividade();
+            $('#view1').removeClass('background_black_propaganda');
 			$('#propagandas').hide();
-			$('#view1').removeClass('background_black_propaganda');
-			$('#geral').show();
+            $('#geral').show();
 			$('.mblSimpleDialog').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-sem-index');
 			$('.mblSimpleDialogCover').removeClass('class-hide-SimpleDialogCover');
+			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
 			propagandaAtiva = false;
@@ -2321,6 +2339,12 @@ function bindsButtons(){
 	$('#btn_chamarGarçon').bind('touchstart click', function(){
 		showChamarGarcom('modal_chamar_garcon');
     });
+	
+	//Photum Menu
+	//$('#btn_photum_menu').bind('touchstart click', function(){
+	//	showVideoDesenvolvidoPor('modal_chamar_garcon');
+    //});
+	
     ///////////////////////////////////Janela descricao produto
 	
 	

@@ -164,15 +164,15 @@ function  atualizar(){
 	db.transaction(function(tx){
 		//tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
 			// if(result.rows.length != 0){
-				 connectionWIFI = "connectionTrue";
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
 							var ajax = getAjax(urlViewConfig);
-							alert('antes')
+						console.log(ajax)
 							 ajax.success(function (data) {
 								 $.each(data, function(key, val) {
 							    	 if(val.atualizar == 'true'){
 							    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
+                                        console.log("akiiiiiiiiiiiiiiiiiiiii")
 											atualizaForm.categoria = val.atualiza_categoria;
 											atualizaForm.configuracao = val.atualiza_configuracao;
 											atualizaForm.home = val.atualiza_home;
@@ -206,6 +206,9 @@ function  atualizar(){
 							    	
 							       });
 						     });
+
+                   
+                   
 							
 							
 						} else {
@@ -248,7 +251,7 @@ function criarIdContaPrimeiraVez(){
 
 
 function pegarUltimaVersao(tx){
-	 alert('kiultimo')
+	
 	console.log('pegarUltimaVersao');
 	tx.executeSql('SELECT versao, MAX(id) FROM Config',[],function(tx,result) {
 		  if(versao > parseInt(result.rows.item(0).versao)){// Caso versao for maior atualiza banco.
@@ -336,7 +339,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
-			$('#view1').removeClass('background_black_propaganda');
+                                $('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
@@ -347,7 +350,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
-			$('#view1').removeClass('background_black_propaganda');
+                               $('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
