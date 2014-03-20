@@ -12,6 +12,8 @@ var arrayArquivosDownloadsErro = new Array();
 
 var arrayAdicionais = new Array();
 
+
+
 var categoriaSelecionado;
 
 var displayCozinhaSelecionado;
@@ -24,7 +26,9 @@ var buttons = {
 		descricao_saiba_mais:"",
 		categoria:"",
 		image:""
- };
+  };
+
+
 
 var ObjectLabels = {
 		btn_home:"",

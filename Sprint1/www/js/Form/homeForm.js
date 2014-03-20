@@ -20,7 +20,9 @@ var atualizaForm = {
 		adicionais:"",
 		formaDePagamento:"",
 		qtdeVariacaoCuriosidade:"",
-		qtdeVariacaoPropRestaurante:""
+        qtdeVariacaoPropRestaurante:"",
+        chopp:""
+
 };
 
 

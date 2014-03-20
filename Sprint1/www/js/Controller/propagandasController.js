@@ -619,7 +619,8 @@ function randomicarArray(el){
 }
 
 $(document).ready(function(){
-                
+        console.log("propaganda")
+                  
 	//$('.elemento-propaganda').remove();
 	onLoad();
 	propagandaAtiva = true;

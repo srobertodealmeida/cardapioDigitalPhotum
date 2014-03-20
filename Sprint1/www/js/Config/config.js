@@ -12,10 +12,12 @@ var ipServidorDrupal = "null";
 					var urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
 					var urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
 					var urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+					var urlViewChopp = ipServidorDrupal + "/views/view_chopp";
+					
 
 var pathAplicativo = "/CardapioPhotum";
 var constLanguageSelected = "";
-var connectionWIFI = "connectionTrue";
+var connectionWIFI = "connectionFalse";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
@@ -32,6 +34,7 @@ var titleLanguage="";
 var qtdLanguages = 0;
 var qtdPropaganda = 0;
 var qtdCategorias = 0;
+var chopp_codigo_produto = "";
 var produtosFormVazio = {
 		title:"",
 		previa_descricao:"",
@@ -128,42 +131,86 @@ require([
 
 
 function onLoad() {
-    alert("onLoad");
-    window.addEventListener("batterystatus", onBatteryStatus, false);
-    $("#preloader").fadeOut(1000);
+
+    window.setTimeout(function() {
+                      
+                      $("#preloader").fadeOut(1000);
+                      }, 3000);
+    
     document.addEventListener("deviceready", onDeviceReady, false);
+
 }
 
 function onDeviceReady() {
-	alert("onDeviceReady")
-	
-	
-	window.echo = function(str, callback) {
-    cordova.exec(callback, function(err) {
-        callback('Nothing to echo.');
-    }, "Echo", "echo", [str]);
-    };
+	setTuimeoutBateria()
     
-    window.echo("echome", function(echoValue) {
-        alert(echoValue == "echome"); // should alert true.
-    });
+   // window.echo = function(str, callback) {
+       // cordova.exec(alertSim, function(err) {
+                   // alertSim('Nothing to echo.');
+                  //   }, "Echo", "echo", ["echome"]);
+//};
 
-	
 	if(connectionWIFI == "connectionTrue"){
-        alert("dentroif");
-        
 		window.addEventListener("batterystatus", onBatteryStatus, false);
 	}
 	 
 }
 
+function verificaBateria(echoValue){
+    
+    var percentagem = parseInt(echoValue);
+    if(percentagem < 20){
+        db.transaction(function(tx) {
+                       tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
+                                     mesa = result.rows.item(0).numero;
+                                     var mensagem  = {
+                                     "value":"Bateria em "+percentagem+"% na mesa: "+mesa+"",
+                                     }
+                                     
+                                     var typeNotificacao  = {
+                                     "value":"bateria",
+                                     }
+                                     
+                                     var data  = {
+                                     "type":"notificacao",
+                                     "field_notificacao_mensagem[und][0]":mensagem,
+                                     "field_notificacao_type[und][0]":typeNotificacao,
+                                     "title":mesa,
+                                     };
+                                     console.log(data);
+                                     var url=""+ipServidorDrupal+"/node";
+                                     //var ajaxPostDrupal = postAjax(url,data);
+                                     postAjax(url,data) ;
+                                     },errorCB)
+                       },errorCB,successInsert);
+    }
+
+}
+
+function setTuimeoutBateria(){
+   
+    window.setTimeout(function() {
+
+                      setTuimeoutBateria()
+                      }, 600000);
+    
+    
+    cordova.exec(verificaBateria, function(err) {
+                 verificaBateria('Nothing to echo.');
+                 }, "Echo", "echo", ["echome"]);
+    
+   // window.echo("echome", function(echoValue) {
+               // alert(echoValue); // should alert true.
+               // });
+
+}
 
 // Handle the batterystatus event
 //
 function onBatteryStatus(info) {
-    alert("bateria")
+  
     console.log("Level: " + info.level + " isPlugged: " + info.isPlugged);
-    alert(info.level)
+  
     if(info.level < 20){
     	 db.transaction(function(tx) {
     		 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
@@ -360,7 +407,6 @@ function getDrupalLabel(tx){
 
 function getDrupalFormasDePagamento(tx){
    
-	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxFormasDePagamento = getAjax(urlViewFormasDePagamento);
@@ -841,6 +887,33 @@ function getDrupalAdicionais(tx){
 	});
 }
 
+function getDrupalChopp(tx){
+   
+	
+	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
+	
+    var ajaxChopp = getAjax(urlViewChopp);
+	
+    ajaxChopp.success(function (data) {
+		$.each(data, function(key, val) {
+			
+			chopp_codigo_produto = val.produto_shop;
+			  
+		  });
+		
+		quantidadeRegistros += 1;
+		
+		insertTable('chopp');
+		  
+    });
+	
+    ajaxChopp.error(function (jqXHR, textStatus, errorThrown) {
+		sucessDadosDrupal = false;
+		alert('error');
+	});
+	
+}
+
 function getDadosDrupal(tx){
     
     
@@ -909,6 +982,12 @@ function getDadosDrupal(tx){
 	if(atualizaForm.qtdeVariacaoPropRestaurante == 'true'){
 		getConfigPropaganda(tx);
         $('#preloader .title-atualizando').text("Atualizando: Quantidade Propaganda Restaurante");
+	}
+	
+	//Chopp
+	if(atualizaForm.chopp == 'true'){
+		getDrupalChopp(tx);
+        $('#preloader .title-atualizando').text("Atualizando: Chopp");
 	}
     
 }
@@ -1531,6 +1610,15 @@ function createTable(tx){
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FormasDePagamento (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT,title_comum TEXT, language TEXT)');
 	}
 	
+    //Chopp
+	
+	if(atualizaForm.chopp == "true"){
+		   ////////////////////////////////////////////Formas de Pagamento//////////////////////////////////////
+		  //Table formaDePagamento
+		tx.executeSql('DROP TABLE IF EXISTS Chopp');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Chopp (id INTEGER PRIMARY KEY AUTOINCREMENT, codigo_produto_chopp TEXT)');
+	}
+	
 	
      //Variacao Propaganda Curiosidade
 	
@@ -1768,7 +1856,18 @@ function insertTable(nomeTable){
 	            
 	            
             },errorCB,successInsert);
-	}
+	}else if (nomeTable == "chopp") {
+		db.transaction(function(tx) {
+            $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
+			quantidadeRegistros = quantidadeRegistros - 1;
+                   $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
+			console.log('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
+
+				tx.executeSql('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
+		
+            
+        },errorCB,successInsert);
+    }
 }
 
 
@@ -2154,7 +2253,8 @@ function postAjax(url,data){
 }
 
 function postAjaxSincrona(url,data){
-	if (connectionWIFI == "connectionTrue") {
+	
+	if (connectionWIFI == "connectionTrue") {	
 		return $.ajax({
 			dataType:'json',
 			url : url,
@@ -2178,8 +2278,7 @@ function postAjaxSincrona(url,data){
 			}
 		});
 		
-	
-}
+   }
 
 
 }
@@ -2238,6 +2337,9 @@ function inatividade() {
 	if(contador == 50) {
 		//alert('chamouPropaganda');
 		//window.location = 'propagandas.html';
+        cordova.exec(verificaBateria, function(err) {
+                     verificaBateria('Nothing to echo.');
+                     }, "Echo", "echo", ["echome"]);
 			$('#propagandas').load('propagandas.html');
 			$('#geral').hide();
 			$('.mblSimpleDialog').addClass('class-sem-index');
@@ -2249,6 +2351,7 @@ function inatividade() {
 		
 	}
 	if (contador != 50){
+        
 		contador = contador+1;
 		//alert(contador);
 		setTimeout("inatividade()", 1000);
@@ -2310,11 +2413,11 @@ function zerarInatividade(){
 	contador = 0;
 }
 function initVariaveis(){
-	
 db.transaction(function(tx){
 		
 		// btn_home
 		tx.executeSql('SELECT * FROM EnderecoServidor',[],function(tx,result){
+                      
 			 if(result.rows.length > 0){
 				 
 					 ipServidorDrupal = result.rows.item(0).endereco;
@@ -2331,6 +2434,7 @@ db.transaction(function(tx){
 					 urlViewSincronizacaoPedido = ipServidorDrupal + "/views/sincronizacao_pedido";
 					 urlViewSincronizacaoPessoa = ipServidorDrupal + "/views/sincronizacao_pessoa";
 					 urlViewSincronizacaoConf = ipServidorDrupal + "/views/sincronizacao_conf";
+				     urlViewChopp = ipServidorDrupal + "/views/view_chopp";
 			 }
 			
 		},errorGetEnderecoServidor);
@@ -2352,8 +2456,8 @@ function bindTouchstart(botao,funcao){
 }
 
 function errorGetEnderecoServidor(){
-    
-    ipServidorDrupal = "http://192.168.0.54/VillaScamboo/?q=rest";
+    alert("aki")
+    ipServidorDrupal = "http://192.169.1.105:8080/VillaScamboo/?q=rest";
     
     urlViewConfig = ipServidorDrupal + "/views/configuracao";
     urlViewLabels = ipServidorDrupal + "/views/labels";

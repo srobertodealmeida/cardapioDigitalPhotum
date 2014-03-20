@@ -183,7 +183,7 @@ function  atualizar(){
 											atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
 											atualizaForm.qtdeVariacaoCuriosidade = val.atualiza_quantidade_variacao_qdte_curiosidade;
 											atualizaForm.qtdeVariacaoPropRestaurante = val.atualiza_quantidade_variacao_propaganda_restaurante;
-											
+											atualizaForm.chopp = val.atualiza_chopp;
 											init(val.versao);
 							    		 } else {
 							    			 versao = val.versao;
@@ -199,6 +199,7 @@ function  atualizar(){
 							    			atualizaForm.formaDePagamento = val.atualiza_forma_pagamento;
 							    			atualizaForm.qtdeVariacaoCuriosidade = val.atualiza_quantidade_variacao_qdte_curiosidade;
 							    			atualizaForm.qtdeVariacaoPropRestaurante = val.atualiza_quantidade_variacao_propaganda_restaurante;
+							    			atualizaForm.chopp = val.atualiza_chopp;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
 							    		 }
 								    	 

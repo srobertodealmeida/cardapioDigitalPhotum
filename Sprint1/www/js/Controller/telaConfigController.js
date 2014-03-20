@@ -91,15 +91,15 @@ function voltarHome(){
 function preparaMudarEnderecoServidor(){
 	db.transaction(function(tx) {
 	tx.executeSql('SELECT * FROM EnderecoServidor',[],function(tx,result){
-		 if(result.rows.length > 0){
-
-				 $('.inputMudarEnderecoServidor').val(result.rows.item(0).endereco);
-				 show('modal_mudar_endereco_servidor');
-
-		 }
-		
-	},errorGetEndereco);
-	},errorCB);
+                  if(result.rows.length > 0){
+                  
+                  $('.inputMudarEnderecoServidor').val(result.rows.item(0).endereco);
+                  show('modal_mudar_endereco_servidor');
+                  
+                  }
+                  
+                  },errorGetEndereco);
+      },errorCB);
 	
 }
 
@@ -107,6 +107,7 @@ function errorGetEndereco(){
 	$('.inputMudarEnderecoServidor').val('http://192.168.0.106/PizzaCompany/?q=rest');
 	show('modal_mudar_endereco_servidor');
 }
+
 
 function focusOutInputMudarEnderecoServidor(){
 	if(window.event.keyCode == 13) {
@@ -650,12 +651,9 @@ function finalizaRecebeDadosSincronizacao(){
 function successPostMesa(){
 	alert('Mesa Inserida com sucesso');
 }
-
 function errorDBTelaconfig(){
-	console.log('erro');
-	alert('Favor Escolher Mesa/Conta/Linguagem');
+    
 }
-
 
 $(document).ready(function(){
 	

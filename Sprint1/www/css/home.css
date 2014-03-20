@@ -439,12 +439,13 @@ padding-top: 8px;
 	z-index: 200;
 }
 #preloader div {
+	width:400px;
 	height:100% !important;
 	margin:auto;
 	height: 3px;
 	text-align:center;
 	position: relative;
-    top: 20%;
+    top: 50%;
 	overflow:hidden;
 	z-index: 400;
 }
@@ -534,7 +535,6 @@ top: 61.7px !important;
 	top:  8%;
 		right:12px;
 	position: fixed;
-	color: white;''
 }
 
 .language-escolhido{
@@ -548,12 +548,7 @@ right: 10;
 }
 
 .div-icon-arrow{
-	position: fixed;
-	right: 5px;
-	top:3%;
-}
-
-.background_black_propaganda{
-	height: 100%;
-	background-color: black;
+position: fixed;
+right: 5px;
+top:5px;
 }

@@ -91,7 +91,9 @@
 			 <div class="panel-trasnparente-esquerda">
 			 
 			 </div>
-			<div id="mobileTransitionView1" class="menu_categoria"
+             <div class="divShop" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="show('modal_adicionar_garcom')" ><li dojoType="dojox.mobile.ListItem"  class="minhaLIChopp" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria '+classeCategoriaDuasLinhas+'">CHOPP DO GARÇOM</span></div></div>
+			
+            <div id="mobileTransitionView1" class="menu_categoria"
 				dojoType="dojox.mobile.ScrollableView" data-dojo-props='threshold:100' onmousedown="zerarInatividade()" onclick="zerarInatividade()">
 				<div id="menu" data-dojo-type="dojox.mobile.Pane">
 
@@ -127,7 +129,8 @@
 			<div class="panel-trasnparente-botoes"></div>
 			<div id="botoes">
 				<a href="home.html" >
-				<button  id="btn_home"  data-dojo-type="dojox.mobile.Button" class="button c">Home</button>
+                   
+                <button  id="btn_home"  data-dojo-type="dojox.mobile.Button" class="button c">Home</button>
 				</a>
 				<button  id="btn_fecharConta" class="button efeito-button">Fechar
 					Conta</button>
@@ -240,16 +243,16 @@
 				
 				<label class="label-combo-adicionais label"> </label>
 				<select  multiple class="select-adicionais">
-				<option value="null" selected="selected"></option>
 				
+				<option value="null" selected="selected"></option>
 				</select>
 				
 				<div class="form-adiconar-pessoa">
 
-					<div class="observacao_pedido">
+					<div class="observacao_pedido" >
 						<label class="label label-observacao label-observacao-produto">Observação do
 							Pedido:</label><br />
-						<textarea onkeypress="sairObservacaoPedido()" class="textarea-observacao-produto"></textarea>
+						<textarea onkeypress="sairObservacaoPedido()"rows="4" cols="22" class="textarea-observacao-produto"></textarea>
 					</div>
 
 				</div>
@@ -305,7 +308,6 @@
 			dojoType="dojox.mobile.ScrollableView" style="display:block !important" data-dojo-props='threshold:100'>
 				<ul id="id-ul-fechamento-conta" data-dojo-type="dojox.mobile.GridLayout"
 					class="minhaUL-modal-nome-pessoa">
-					
 
 				</ul>
 			</div>
@@ -317,7 +319,36 @@
 		<div class="btn_adicionar_pedido_previa_pedido">
 	        <button  id="mesa" value="mesa" class="btn-fechar-conta-previa-pedido efeito-button-previa-pedido"  onclick="showSugestaoSobremesa(this)">Fechar Conta da Mesa</button>
 			<button  id="btn_efetuar_pedido_22" value="descricao-categoria-1-1" class="btn_cancelar_pedido btn-previa-pedido efeito-button-previa-pedido" onclick="hide('modal_previa_pedido')">Cancelar</button>
+			<button  id="id-distribuir-chop" value="mesa" class="btn-distribuir-chopps"  onclick="montaDistribuicaoChopps()">Distribuir Chopp</button>
 			<button  id="id-confirmarPagametento" value="mesa" class="btn-confirmar-pagamento efeito-button-previa-pedido"  onclick="confirmarPagamento(this)">Confirmar Pagamento</button>
+	    </div>
+	</div>
+	
+	<!-- Previa Lista individual -->
+	<div id="modal_distribuicao_chopps" dojoType="dojox.mobile.SimpleDialog" class="modal_distribuicao_chopps">
+		
+		
+		<h2 data-dojo-type="dojox.mobile.Heading"
+				data-dojo-props="fixed:'top', fixed:'top'" style="font-size: 19px;"
+				align="center" class="title_modal_nome_pessoa">Distribuicao de Chopps</h2>
+				<span id="" class="total_mesa"></span>
+		<div id="mobileTransitionView345" class="menu_distribuicao_chopps"
+			dojoType="dojox.mobile.ScrollableView" style="display:block !important" data-dojo-props='threshold:100'>
+				<ul id="id-ul-distribuicao-chopp" data-dojo-type="dojox.mobile.GridLayout"
+					class="minhaUL-modal-distribuicao-chopps">
+
+				</ul>
+			</div>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<span class="label-total-chopps">Total Chopps: </span><span class="total_chopps_distribuicao">20</span>
+		<div class="btn_distribuicao_chopps">
+	        <button  id="" value="mesa" class="btn-confirmar-distribuicao-chopps"  onclick="distribuirChopps()">OK</button>
+			<button  id="" value="descricao-categoria-1-1" class="btn_cancelar_distribuicao_chopps " onclick="hide('modal_distribuicao_chopps')">Cancelar</button>
+            
+
 	    </div>
 	</div>
 	
@@ -341,6 +372,12 @@
 		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_chamar_garcon')">Não</button>
 	</div>
 	
+	<div id="modal_adicionar_garcom" value="modal_chamar_garcon" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao">ATENÇÃO! Somente o Garçom Pode Efetuar Este Pedido.</p>
+		<button  class="btn-sim-excluir-pessoa efeito-button" value="modal_chamar_garcon" onclick="adicionarChopp(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_adicionar_garcom')">Não</button>
+	</div>
+	
 	<div id="modal_efetuar_pedido" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
 		<p class="mensagem-confirmacao"></p>
 		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="efetuarPedido(this)">Sim</button>
@@ -358,6 +395,19 @@
 		
 		<button  class="btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="modal_fechar_conta" onclick="showConfirmacaoGarcom(this)">Sim</button>
 		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_fechar_conta')">Não</button>
+	</div>
+    
+    <div id="modal_repetir_pedido" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<p class="mensagem-confirmacao"></p>
+		<div class="div-formas-de-pagamento">
+			<label class="label-forma-de-pagamento label">Escolha a Pessoa:</label>
+			<select style="display:none;" class="select-pessoa-repetir-pedido">
+			</select>
+		</div>
+        
+		
+		<button  class="btn-sim-repetir-pessoa btn-sim-excluir-pessoa fechamentoIndividual efeito-button" value="" onclick="repetirPedido(this)">Sim</button>
+		<button  class="btn-nao-excluir-pessoa efeito-button" onclick="hide('modal_repetir_pedido')">Não</button>
 	</div>
 	
 	<div id="modal_sugestao_sobremesas" value="modal_fechar_conta" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
@@ -407,6 +457,13 @@
             <span></span>
 		</div>
 		<button class="btn_ok_mensagem efeito-button" onclick="hide_modal_favor_selecionar_opcao('modal_favor_selecionar_opcao')" id="btn_ok_final_opcao">OK</button>
+	</div>
+    
+    <div id="modal_favor_selecionar_pessoa_repetir_pedido" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
+		<div class="div-mensagem">
+            <span></span>
+		</div>
+		<button class="btn_ok_mensagem efeito-button" onclick="hide_modal_favor_selecionar_pessoa_repetir_pedido('modal_favor_selecionar_pessoa_repetir_pedido')" id="btn_ok_final_opcao">OK</button>
 	</div>
 	
 	<div id="modal_confirmacao_pagamento" dojoType="dojox.mobile.SimpleDialog" class="mensagem">
