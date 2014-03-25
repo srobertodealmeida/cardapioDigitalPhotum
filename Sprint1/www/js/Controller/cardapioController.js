@@ -140,7 +140,7 @@ require([
 		  registry.byId('modal_excluir_pedido').show();
 	  }
      
-     showConfirmacaoFechamentoConta = function(id,value){
+     showConfirmacaoFechamentoConta = function(id,value,idli){
     	                                                
     	 hide('modal_sugestao_sobremesas');
     	 montaFormasDePagamento();		  
@@ -148,6 +148,7 @@ require([
 		  $('#modal_fechar_conta p').text(ObjectLabels.alert_fechar_conta +' ' + value ) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('value',id) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('title',value) ;
+          $('#modal_fechar_conta .fechamentoIndividual').attr('id',idli) ;
 		  $('#modal_fechar_conta .fechamentoIndividual').attr('onClick','showConfirmacaoPedidoIndividualGarcom(this)') ;
 		  $('#modal_fechar_conta .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim) ;
 		  $('#modal_fechar_conta .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao) ;
@@ -175,7 +176,8 @@ require([
     						 $('#modal_sugestao_sobremesas p').text(ObjectLabels.alert_experimentar_sobremesa);
     						 $('#modal_sugestao_sobremesas .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
     						 $('#modal_sugestao_sobremesas .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
-    						 $('#modal_sugestao_sobremesas .btn-nao-sugestao-sobremesa').attr('onClick','showConfirmacaoFechamentoConta("'+dlg.id+'","'+dlg.value+'")') ;
+                                  var idLi =  $('#'+dlg.id).attr('idli');
+    						 $('#modal_sugestao_sobremesas .btn-nao-sugestao-sobremesa').attr('onClick','showConfirmacaoFechamentoConta("'+dlg.id+'","'+dlg.value+'","'+idLi+'")') ;
     						
     						  registry.byId('modal_sugestao_sobremesas').show();
     					}else{
@@ -202,7 +204,7 @@ require([
     	 if(dlg.value != 'mesa'){
     		  tipo = "Individual";
     		  
-    		  ultimoCaracterId = dlg.value.charAt(dlg.value.length-1);
+    		  ultimoCaracterId = dlg.id;
     		  var preco = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
 	   			preco = preco.replace('Total:','');
 	   		
@@ -212,8 +214,10 @@ require([
 		   		  }	else{
 		   			 nomePessoa = dlg.title +': ' + preco;
 		   		  }
-    		 
+    		
+     
     		  totalPagamento = $('#pedido-fechamento-conta-'+ultimoCaracterId+' .preco-fechamento-conta').text();
+      
     		  
     		  db.transaction(function(tx){
 					tx.executeSql('SELECT * FROM Pedido where pessoa = "'+ dlg.title +'" and status="aguardando-pedido" ',[],function(tx,result){
@@ -312,6 +316,7 @@ require([
     	 var qtdAguardandoPagamento = $( "#id-ul-fechamento-conta .mostrarDetalhado .aguardandoPagamento" ).length;
     	 
     	 if(qtdTotal != qtdAguardandoPagamento){
+      
 		 var nomePessoa_field  = {
 			     "value":""+nomePessoa+"",
 		 }
@@ -1248,8 +1253,10 @@ function montaAdicionarPessoa(tx,result){
 	tx.executeSql('SELECT * FROM Pessoas where nome="Conta Conjunto"',[],function(tx,result){
 		if(result.rows.length > 0){
 			if(result.rows.item(0).ativo == "false"){
+				
 		       $('#id_modal_nome_pessoa .div_conjunto').remove();
-	        }
+	        
+			}
 		}
 	},errorCB);
 		
@@ -2123,7 +2130,33 @@ function montaPreviaPedido(){
 
 function montaDistribuicaoChopps(){
 	db.transaction(function(tx) {
-		 tx.executeSql('SELECT * FROM Pessoas',[],montaModalDistribuicaoChopps,errorCB);
+                   
+                   tx.executeSql('SELECT * FROM Chopp',[],function(tx,result){
+                                 
+                                 if(result.rows.length > 0){
+                                 var codigo_produto_chopp = result.rows.item(0).codigo_produto_chopp;
+                                 
+                                 tx.executeSql('SELECT * FROM Produtos where codigo = "'+codigo_produto_chopp+'" and language = "'+constLanguageSelected+'"',[],function(tx,result){
+                                               if(result.rows.length > 0){
+                                               tx.executeSql('SELECT * FROM Pedido where id_produto = "'+result.rows.item(0).id+'"',[],function(tx,result){
+                                                             $('#modal_distribuicao_chopps .total_chopps_distribuicao').text(result.rows.length);
+                                                             if(result.rows.length > 0){
+                                                             
+                                                             for(var l=0;l<result.rows.length;l++){
+                                                             arrayIdPedidoChopps.push(result.rows.item(l).id);
+                                                             }
+                                                             tx.executeSql('SELECT * FROM Pessoas',[],montaModalDistribuicaoChopps,errorCB);
+                                                             }else{
+                                                             
+                                                             alert("Nao tem chopps adicionados")
+                                                             }
+                                                             },errorCB);
+                                               }
+                                               },errorCB);
+                                 }
+                                 },errorCB);
+                   
+		 
     },errorCB);
 }
 
@@ -2135,7 +2168,10 @@ function chamarLimparDadosMesa(){
 
 function montaModalDistribuicaoChopps(tx,result){
 	
+    
+    hide('modal_informacoes_extras');
 	show('modal_distribuicao_chopps');
+	
     $("#id-ul-distribuicao-chopp li").remove();
 	for(var i=0;i<result.rows.length;i++){
 	    
@@ -2145,37 +2181,30 @@ function montaModalDistribuicaoChopps(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_distribuicao_chopps_nome_pessoa"> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).nome+'</span> </div><input name="'+result.rows.item(i).nome+'" class="input-distribuicao-chopps"></input> </li>');
+								+ '" > <div class="modal_distribuicao_chopps_nome_pessoa"> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).nome+'</span> </div><input  type="number" name="'+result.rows.item(i).nome+'" class="input-distribuicao-chopps"></input> </li>');
      }
 	
 	
-	 tx.executeSql('SELECT * FROM Chopp',[],function(tx,result){
-                   
-		if(result.rows.length > 0){
-			var codigo_produto_chopp = result.rows.item(0).codigo_produto_chopp;
-			
-			tx.executeSql('SELECT * FROM Produtos where codigo = "'+codigo_produto_chopp+'" and language = "'+constLanguageSelected+'"',[],function(tx,result){
-				if(result.rows.length > 0){
-					tx.executeSql('SELECT * FROM Pedido where id_produto = "'+result.rows.item(0).id+'"',[],function(tx,result){
-						$('#modal_distribuicao_chopps .total_chopps_distribuicao').text(result.rows.length);
-						if(result.rows.length > 0){
-							
-							for(var l=0;l<result.rows.length;l++){
-								arrayIdPedidoChopps.push(result.rows.item(l).id);
-							}
-						}
-				     },errorCB);
-				}
-		     },errorCB);
-		}
-     },errorCB);
-	
+    $('.input-distribuicao-chopps').focusout(function(){
+                                             var valorInserido = parseInt(this.value);
+                                             
+                                             var total = parseInt($('#modal_distribuicao_chopps .total_chopps_distribuicao').text());
+                                            
+                                             var valorFinal = total - valorInserido;
+                                             
+                                             if(valorFinal < 0){
+                                             alert("Ultrapassou o Numero de Chopps");
+                                             $(this).val("0");
+                                             }else{
+                                             $('#modal_distribuicao_chopps .total_chopps_distribuicao').text(valorFinal);
+                                             }
+                                             });
 	
 }
 
 function distribuirChopps(){
 	db.transaction(function(tx) {
-		var contadorArrayPedidos = 0;
+    var contadorArrayPedidos = 0;
 	$( "#modal_distribuicao_chopps .input-distribuicao-chopps" ).each(function( index ) {
 	   	if(this.value != ""){
 			var numeroChopPorPessoa = parseInt(this.value);
@@ -2190,8 +2219,8 @@ function distribuirChopps(){
 			}
 	   	}
     });
-	 hide('modal_distribuicao_chopps');
-	 montaPreviaPedido();
+                   hide('modal_distribuicao_chopps');
+                   montaPreviaPedido();
 	},errorCB);
 }
 
@@ -2225,7 +2254,7 @@ function montaModalPreviaPedido(tx,result){
 								+ i
 								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
 								+ i
-								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div id="div-modal_previa_preco_produto'+i+'" class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual efeito-button"  onclick="showSugestaoSobremesa(this)">'+ObjectLabels.btn_fechar_conta_individual+'</button> </div> 	</li>  <div id="pedido_detalhado-'
+								+ '" > <div class="modal_pedido_nome_pessoa"> <div class="div-incremento"> <span class="incremento mais">+</span> </div> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).pessoa+'</span> </div> <div id="div-modal_previa_preco_produto'+i+'" class="modal_previa_preco_produto"> <span class="preco-fechamento-conta"></span> <button idLI="'+i+'" id="btn_pedido_'+i+'" title="'+result.rows.item(i).status+'" value="'+result.rows.item(i).pessoa+'" class="btn_fechar_conta_individual efeito-button"  onclick="showSugestaoSobremesa(this)">'+ObjectLabels.btn_fechar_conta_individual+'</button> </div> 	</li>  <div id="pedido_detalhado-'
 								+ i
 								+ '" style="display: none" class="pedido_detalhado"> <ul dojoType="dojox.mobile.EdgeToEdgeList" class="mblEdgeToEdgeList minhaUL-modal-nome-pessoa" ><li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem minhaLI li_detalhe_pedido">  <div class="modal_pedido_nome_produto_detalhado"> <span>'+result.rows.item(i).nome_produto+'</span> </div> <div class="modal_pedido_preco_produto_detalhado"><span>R$ '+result.rows.item(i).preco_produto+'</span> </div>  </li> </ul> </div>');
 	    }else{
