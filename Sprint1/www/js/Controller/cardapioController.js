@@ -428,14 +428,14 @@ function adicionarChopp(){
 						 var title_adicionais = "";
 						 var title_adicionais_portugues = "";
 						 var contador = 0;
-						 var pessoaSelecionado = "Conta Conjunto";
+						 var pessoaSelecionado = ObjectLabels.label_conta_conjunto;
 						 var observacao = "Chopp";
 						 var title = result.rows.item(0).title;
 						var adicionaisId = "";
 						var flagPizzaMeioaMeio = "";
 						var nomePrimeiraOpcaoPizza = "";
 						flagChopp = true;
-						   tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","chopp","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","","","","","","semDisplay")');
+						   tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","true","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","chopp","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","","","","","","semDisplay")');
 						   
 						   tx.executeSql('SELECT mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,id, MAX(id) FROM Pedido where status = "chopp"',[],postPedidoDrupal,errorCB);
 						
@@ -1139,7 +1139,9 @@ function montaAdicionarPessoa(tx,result){
 	$('#modal_pedido_confirmacao .mensagem-confirmacao').text(ObjectLabels.alert_excluir_pessoa);
 	$('#modal_pedido_confirmacao .btn-sim-excluir-pessoa').text(ObjectLabels.btn_sim);
 	$('#modal_pedido_confirmacao .btn-nao-excluir-pessoa').text(ObjectLabels.btn_nao);
+	
 	$('#id_modal_nome_pessoa .contaConjunto').text(ObjectLabels.label_conta_conjunto);
+	
 	  
 	if(result.rows.length == 0){//Caso não tiver nenhuma pessoa no banco de dadosmonta 2 li com adicionar pessoa
 		console.log("entrou no if montaPessoa")
@@ -1153,9 +1155,8 @@ function montaAdicionarPessoa(tx,result){
 					+ '" style="display:none" onkeypress="salvarPessoa(this)" class="inputNome" type="text" />');
 		}
 		
-		
 	}else if(result.rows.length == 1){// Caso tiver apenas uma pessoa no banco de dados gera mais 2 li de adicionar pessoa
-		if(result.rows.item(0).nome != "Conta Conjunto"){
+		if(result.rows.item(0).contaConjunto != "true"){
 		$("#id_ul_modal_nome_pessoa")
 				.append(
 						'<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
@@ -1186,7 +1187,7 @@ function montaAdicionarPessoa(tx,result){
 	}else {
 		for(i=0;i<result.rows.length;i++){// monta li de pessoas do banco de dados
 			var value = i + 1; 
-			if(result.rows.item(i).nome != "Conta Conjunto"){
+			if(result.rows.item(i).contaConjunto != "true"){
 			$("#id_ul_modal_nome_pessoa").append('<li dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\'id="add'
 						+ value
 						+ '" name="'
@@ -1250,7 +1251,7 @@ function montaAdicionarPessoa(tx,result){
 		
 	},errorCB);
 	
-	tx.executeSql('SELECT * FROM Pessoas where nome="Conta Conjunto"',[],function(tx,result){
+	tx.executeSql('SELECT * FROM Pessoas where contaConjunto="true"',[],function(tx,result){
 		if(result.rows.length > 0){
 			if(result.rows.item(0).ativo == "false"){
 				
@@ -1447,7 +1448,12 @@ function salvarEdicaoPedido(){
 									 precoFinal = parseFloat(precoFinal) * quantidadeProduto;
 									 precoFinal = precoFinal.toFixed(2);
 									
-									 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" ,title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id="'+idPedidoEditando+'"');
+									 var contaConjunto = false;
+									 if(pessoaSelecionado == ObjectLabels.label_conta_conjunto){
+										 contaConjunto = true;
+									 }
+										 
+									 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'",contaConjunto="'+contaConjunto+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'" ,title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id="'+idPedidoEditando+'"');
 								     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
 								 }
 								 
@@ -1462,12 +1468,13 @@ function salvarEdicaoPedido(){
 			 var precoFinal = parseFloat(precoOriginal) * quantidadeProduto;
 			 precoFinal = precoFinal.toFixed(2);
               
+			 var contaConjunto = false;
+			 if(pessoaSelecionado == ObjectLabels.label_conta_conjunto){
+				 contaConjunto = true;
+			 }
+                   
+			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'",contaConjunto="'+contaConjunto+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'", title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id='+idPedidoEditando+'');
                   
-                   
-			 tx.executeSql('UPDATE Pedido SET pessoa="'+pessoaSelecionado+'", observacao="'+observacao+'",title_adicionais="'+title_adicionais+'",preco_adicionais="'+preco_adicionais+'",nid_adicionais="'+nid_adicionais+'",id_adicionais="'+adicionaisId+'",preco_produto="'+precoFinal+'", title_adicionais_portugues="'+title_adicionais_portugues+'" WHERE id='+idPedidoEditando+'');
-                  
-                   
-                   
                   
 		     tx.executeSql('UPDATE Pessoas SET associado_pedido="true" WHERE nome="'+pessoaSelecionado+'"');
                    
@@ -1495,10 +1502,16 @@ function adicionarPedido(tx,result){
     var observacao_opcaoPizza_portugues = "";
     var adicionaisId =  $("#id_modal_nome_pessoa .select-adicionais").val();
     var naoSelecionouOpcional = false;
+    var contaConjunto = false;
+    
+    if(pessoaSelecionado == ObjectLabels.label_conta_conjunto){
+    	contaConjunto = true;
+    }
     
 	if(result.rows.length > 0){
-       
+		
 	  if($(".pessoa_selecionado").size() > 0 ){
+		  
 		  if(flagOpicionalObrigatorio == true){
 			  if(adicionaisId == null || adicionaisId == "null"){
 				  naoSelecionouOpcional = true;
@@ -1508,15 +1521,6 @@ function adicionarPedido(tx,result){
 		 if(naoSelecionouOpcional == false){
 			 db.transaction(function(tx) {
 			 
-				 tx.executeSql('SELECT * FROM Pessoas where nome="'+ObjectLabels.label_conta_conjunto+'"',[],function(fx,result){
-					 if(result.rows.length == 0){
-						 if(pessoaSelecionado == ""+ObjectLabels.label_conta_conjunto+""){
-					    	 tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo,contaConjunto) VALUES ("Conta Conjunto","true","true","true")');
-					     }
-					 }
-					 
-				 },errorCB);
-			     
 				 var title = result.rows.item(0).title;
 				 var title_opcaoPizza_portugues = result.rows.item(0).title_comum;
 				 var nomeSegundaPizzaDelimitado ="";
@@ -1603,12 +1607,12 @@ function adicionarPedido(tx,result){
 									 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 										 if(result.rows.length > 0){
 											 	
-											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
+											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
 										 }
 										 
 									 },errorCB);
 								 }else{
-									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
+									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
 	
 								 }
 								 
@@ -1622,12 +1626,12 @@ function adicionarPedido(tx,result){
 						 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 							 if(result.rows.length > 0){
 								
-								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
+								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
 							 }
 							 
 						 },errorCB);
 					 }else{
-						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
+						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'")');
 
 					 }
 					 
@@ -1874,11 +1878,14 @@ function repetirPedido(btn){
 
     flagRepetirPedido = true;
     var pessoa = $("#modal_repetir_pedido .select-pessoa-repetir-pedido").val();
+    var contaConjunto = false;
+    if(pessoa == ObjectLabels.label_conta_conjunto){
+    	contaConjunto = true;
+    }
     if(pessoa != "0"){
         db.transaction(function(tx) {
                        
-                       tx.executeSql('INSERT INTO Pedido(mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) select mesa,"'+pessoa+'",observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,"confirmacao",nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha from Pedido where id = '+btn.value+'');
-                       
+                       tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) select mesa,"'+pessoa+'","'+contaConjunto+'",observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,"confirmacao",nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha from Pedido where id = '+btn.value+'');
                        
                        
                        tx.executeSql('SELECT mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,id, MAX(id) FROM Pedido',[],postPedidoDrupal,errorCB);
@@ -2160,6 +2167,45 @@ function montaDistribuicaoChopps(){
     },errorCB);
 }
 
+function montaAdicionarCouvert(){
+	db.transaction(function(tx) {
+                                 
+                                                             
+            tx.executeSql('SELECT * FROM Pessoas',[],montaModalAdicionarCouver,errorCB);
+            
+		 
+    },errorCB);
+}
+
+
+function montaModalAdicionarCouver(tx,result){
+	
+    
+    hide('modal_informacoes_extras');
+	show('modal_adicionar_couver');
+	
+    $("#id-ul-adicionar-couver li").remove();
+	for(var i=0;i<result.rows.length;i++){
+	    
+		$("#id-ul-adicionar-couver")
+		    .append(
+						'<li id="pessoa-adicionar-couvert-conta-'
+								+ i
+								+ '" dojoType="dojox.mobile.ListItem" data-dojo-props=\'moveTo:"#"\' class="mblListItem liEditavel mostrarDetalhado" value="pedido_detalhado-'
+								+ i
+								+ '" > <div class="modal_adicionar_couvert_nome_pessoa"> <span class="span-nome-pessoa-fechamento-conta">'+result.rows.item(i).nome+'</span> </div><input  type="number" name="'+result.rows.item(i).nome+'" class="input-adionar-couvert"></input> </li>');
+     }
+	
+	
+	$('.input-adionar-couvert').focusout(function(){
+        alert('UPDATE Pessoas SET quantidade_couvert="'+this.value+'" WHERE nome="'+this.name+'"')
+        
+         tx.executeSql('UPDATE Pessoas SET quantidade_couvert="'+this.value+'" WHERE nome="'+this.name+'"');
+    });
+	
+}
+
+
 function chamarLimparDadosMesa(){
 	$('#modal_confirmacao_pagamento_limpar_dados_mesa .inputSenhaLimparDados').text('');
 	$('#modal_confirmacao_pagamento_limpar_dados_mesa .div-mensagem span').text();
@@ -2212,8 +2258,11 @@ function distribuirChopps(){
 			if(numeroChopPorPessoa > 0){
 				var ateIndice = contadorArrayPedidos+numeroChopPorPessoa;
 				for(i=contadorArrayPedidos;i<ateIndice;i++){
-					
-					tx.executeSql('UPDATE Pedido SET pessoa="'+nomePessoa+'" WHERE Id='+arrayIdPedidoChopps[i]+'');
+					var contaConjunto = false;
+					if(nomePessoa == ObjectLabels.label_conta_conjunto){
+						contaConjunto = true;
+					}
+					tx.executeSql('UPDATE Pedido SET pessoa="'+nomePessoa+'",contaConjunto="'+contaConjunto+'" WHERE Id='+arrayIdPedidoChopps[i]+'');
 					contadorArrayPedidos = contadorArrayPedidos+1;
 				}
 			}
@@ -2371,12 +2420,45 @@ function chamarGarcon(){
      show('modal_chamar_garcom_confirmacao_mensagem');
 }
 
+
+function setarContaConjunto(){
+	db.transaction(function(tx) {
+	tx.executeSql('SELECT * FROM Pessoas where contaConjunto="true"',[],function(fx,result){
+		 if(result.rows.length == 0){
+			      
+		    	 tx.executeSql('INSERT INTO Pessoas(nome,associado_pedido,ativo,contaConjunto) VALUES ("'+ObjectLabels.label_conta_conjunto+'","true","true","true")');
+		 }else{
+			 if(ObjectLabels.label_conta_conjunto == result.rows.item(0).nome){
+			 }else{
+				 tx.executeSql('UPDATE Pessoas SET nome="'+ObjectLabels.label_conta_conjunto+'" WHERE Id='+result.rows.item(0).id+'');
+			 }
+		 }
+		 
+	 },errorCB);
+	},errorCB);
+}
+
+function setarPedidosContaConjunto(){
+	db.transaction(function(tx) {
+	 tx.executeSql('SELECT * FROM Pedido where contaConjunto = "true"',[],function(tx,result){
+	     
+		 if(result.rows.length>0){
+			 for(var i=0;i<result.rows.length;i++){
+				 tx.executeSql('UPDATE Pedido SET pessoa="'+ObjectLabels.label_conta_conjunto+'" WHERE Id='+ result.rows.item(i).id+'');
+			 }
+		 }
+		 
+	 },errorCB);
+	},errorCB);
+}
 $(document).ready(function(){
 	var text = $('.textarea-motivo-cancelamento-pedido').text();
 	setLanguage();
 	setLabels();
 	inatividade();
 	bindsButtons();
+	setarContaConjunto();
+	setarPedidosContaConjunto();
 		
 		$('#propagandas').click(function(e){
 			zerarInatividade();
@@ -2430,6 +2512,8 @@ $(document).ready(function(){
 			propagandaAtiva = false;
 		});
         
+		
+		
 		/*
 		
         $('#modal_pedido .btn_adicionar_pedido').bind('touchstart click', function(){
