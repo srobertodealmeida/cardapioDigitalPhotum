@@ -15,9 +15,9 @@ var ipServidorDrupal = "null";
 					var urlViewChopp = ipServidorDrupal + "/views/view_chopp";
 					
 
-var pathAplicativo = "/CardapioPhotum";
+var pathAplicativo = "/CardapioPhotum"; 
 var constLanguageSelected = "";
-var connectionWIFI = "connectionFalse";
+var connectionWIFI = "connectionTrue";
 var contador = 0;
 var montaLanguage = false;
 var arrayLabels = new Array();
@@ -407,6 +407,7 @@ function getDrupalLabel(tx){
 
 function getDrupalFormasDePagamento(tx){
    
+	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxFormasDePagamento = getAjax(urlViewFormasDePagamento);
@@ -888,7 +889,7 @@ function getDrupalAdicionais(tx){
 }
 
 function getDrupalChopp(tx){
-   
+    alert("getDrupalChopp");
 	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
@@ -898,6 +899,7 @@ function getDrupalChopp(tx){
 		$.each(data, function(key, val) {
 			
 			chopp_codigo_produto = val.produto_shop;
+               alert(val.produto_shop)
 			  
 		  });
 		
@@ -1418,8 +1420,6 @@ function montaBanderaLanguage(tx,result){
 		}
 	 },errorCB)
 	
-	
-	
 }
 
 function montaBackgroundLogo(tx,result){
@@ -1641,9 +1641,9 @@ function createTable(tx){
 	
 	// Tables Pedido e Mesa
 	//createTablesdoCardapio(tx);
-    tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT, quantidade_couvert TEXT, quantidade_chopps TEXT)');
     
-    tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,contaConjunto TEXT,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
 	
 }
 
@@ -1653,13 +1653,13 @@ function createTablesdoCardapio(tx){
 	////////////////////////////////////////////Pessoas//////////////////////////////////////
 	// Table Pessoas
 	tx.executeSql('DROP TABLE IF EXISTS Pessoas');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT, quantidade_couvert TEXT, quantidade_chopps TEXT)');
 	
 	 ////////////////////////////////////////////Pedido//////////////////////////////////////
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
 
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT , contaConjunto TEXT, observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
 }
 
 /*
@@ -1861,6 +1861,7 @@ function insertTable(nomeTable){
             $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			quantidadeRegistros = quantidadeRegistros - 1;
                    $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
+                       alert('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")')
 			console.log('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
 
 				tx.executeSql('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
@@ -2253,8 +2254,7 @@ function postAjax(url,data){
 }
 
 function postAjaxSincrona(url,data){
-	
-	if (connectionWIFI == "connectionTrue") {	
+	if (connectionWIFI == "connectionTrue") {
 		return $.ajax({
 			dataType:'json',
 			url : url,
@@ -2278,7 +2278,8 @@ function postAjaxSincrona(url,data){
 			}
 		});
 		
-   }
+	
+}
 
 
 }
