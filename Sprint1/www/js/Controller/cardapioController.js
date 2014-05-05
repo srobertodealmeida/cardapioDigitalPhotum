@@ -24,6 +24,8 @@ var flagChopp = false;
 var flagCouvert = false;
 var arrayIdPedidoChopps = new Array();
 var tipoCouver = "";
+var nivelCategoriaAtual = "";
+var nivelCategoriaMax = "";
 
 require([
 "dojo/dom",
@@ -977,29 +979,28 @@ function montaCardapio(tx){
 		constLanguageSelected = result.rows.item(0).nome;
 	},errorCB)
 	
-	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
-		 mesa = result.rows.item(0).numero;
-	 },errorCB)
+	tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
+		mesa = result.rows.item(0).numero;
+	},errorCB)
 	 
-	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
-		 idConta = result.rows.item(0).idConta;
-	 }, errorCB);
+	tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
+		idConta = result.rows.item(0).idConta;
+	}, errorCB);
 	 
 	
 	
-	 tx.executeSql('SELECT MAX(nivel) FROM Categorias',[],function(tx,result){
+	 tx.executeSql('SELECT nivel, MAX(nivel) FROM Categorias',[],function(tx,result){
 		var nivelMax = result.rows.item(0).nivel;
+		nivelCategoriaMax = nivelMax;
 		tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" and nivel="'+nivelMax+'" order by ordem',[],montaCategoria,errorCB);
 		
-		alert(result.rows.item(0).nivel);
 	 },errorCB)
-	
-	
-	
+	 
 	montaBotoesCardapio();
 }
 
 function montaCategoria(tx,result){
+	nivelCategoriaAtual = result.rows.item(0).nivel;
     console.log(result.rows);
     for(var i=0;i<result.rows.length;i++){
         
@@ -1069,16 +1070,22 @@ function chamarProdutos(div){
 			if(result.rows.item(0).image != null || result.rows.item(0).image != ""){
 				$('body').css('background','url("'+result.rows.item(0).image+'") no-repeat scroll center bottom transparent');
 			}
+			nivelCategoria = result.rows.item(0).nivel;
 			
 		},errorCB);
 	 },errorCB);
+	
+	
 	db.transaction(selectDadosProdutos,errorCB);
 }
 
 function selectDadosProdutos(tx){
-	console.log("selectDadosProdutos: " + categoriaSelecionado);
-	console.log('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" ');
-	tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" and language = "'+constLanguageSelected+'" order by ordem',[],montaProdutos,errorCB);
+
+	if(nivelCategoriaAtual != "1"){
+		tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" and categoria_acima="'+categoriaSelecionado+'" order by ordem',[],montaCategoria,errorCB);
+	}else{
+		tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" and language = "'+constLanguageSelected+'" order by ordem',[],montaProdutos,errorCB);
+	}
 }
 
 function montaProdutos(tx,result){
