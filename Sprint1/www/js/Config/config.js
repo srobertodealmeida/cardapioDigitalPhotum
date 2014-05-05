@@ -549,6 +549,7 @@ function getDrupalHome(tx){
 }
 
 function getDrupalCategoria(tx) {
+    alert("getDrupalCategoria");
 	// ///////////////Categoria/////////////////////////////////////
 
 	var ajaxCategoria = getAjax(urlViewCategoria);
@@ -568,7 +569,9 @@ function getDrupalCategoria(tx) {
 				language : "",
 				image: "",
 				ordem:0,
-				display_cozinha : ""
+				display_cozinha : "",
+				nivel : 1,
+				categoria_acima : ""
 			};
 			
 			var categoriasFinalDownloadForm = {
@@ -583,6 +586,8 @@ function getDrupalCategoria(tx) {
 			categoriaForm.title_comum = val.node_title;
 			categoriaForm.ordem = parseInt(val.ordem_categoria);
 			categoriaForm.display_cozinha = val.display_cozinha;
+			categoriaForm.nivel = parseInt(val.nivel_categoria);
+			categoriaForm.categoria_acima = val.categoria_acima;
                
 			//categoriaForm.image = val.image_categoria
 			//arrayCategorias.push(categoriaForm);
@@ -1433,9 +1438,20 @@ function montaBackgroundLogo(tx,result){
 		console.log(result.rows.item(i).background);
 		
     }
+    
+    verificarTemPedidos();
 	
 }
 
+function verificarTemPedidos(){
+	db.transaction(function(tx) {
+                   tx.executeSql('SELECT * FROM Pedido ',[],function(tx,result){
+                                 if(result.rows.length > 0){
+                                 $('.div-alerta-pedidos-aberto').show();
+                                 }
+                                 },errorCB);
+                   },errorCB);
+}
 function montaIcones(tx,result){
 	
 	for(var i=0;i<result.rows.length;i++){
@@ -1581,7 +1597,7 @@ function createTable(tx){
          ////////////////////////////////////////////Categorias//////////////////////////////////////
 		// Table categorias
 		tx.executeSql('DROP TABLE IF EXISTS Categorias');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT, ordem INTEGER, display_cozinha TEXT)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Categorias (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, title_comum TEXT, language TEXT, image TEXT, ordem INTEGER, display_cozinha TEXT, nivel INTEGER, categoria_acima TEXT)');
 	}
 	
 	// Produtos
@@ -1643,7 +1659,7 @@ function createTable(tx){
 	//createTablesdoCardapio(tx);
     tx.executeSql('CREATE TABLE IF NOT EXISTS Pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, associado_pedido TEXT, ativo TEXT, contaConjunto TEXT, quantidade_couvert TEXT, quantidade_chopps TEXT)');
     
-    tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,contaConjunto TEXT,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT ,contaConjunto TEXT,  observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT, data_pedido DATETIME)');
 	
 }
 
@@ -1659,7 +1675,7 @@ function createTablesdoCardapio(tx){
 	// Table Pedido
 	tx.executeSql('DROP TABLE IF EXISTS Pedido');
 
-	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT , contaConjunto TEXT, observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS Pedido (id INTEGER PRIMARY KEY AUTOINCREMENT, mesa TEXT ,  pessoa TEXT , contaConjunto TEXT, observacao TEXT ,id_produto INTEGER, nome_produto TEXT ,preco_original_produto TEXT,  preco_produto TEXT,  quantidade TEXT, status TEXT, nid TEXT, nome_produto_portugues TEXT, categoria_produto TEXT, title_adicionais TEXT,title_adicionais_portugues TEXT, preco_adicionais TEXT, nid_adicionais TEXT, id_adicionais TEXT, flagPizzaMeioaMeio TEXT,observacao_opcao_pizza TEXT, nomePrimeiraOpcaoPizza TEXT, nomeSegundaOpcaoPizza TEXT,observacao_opcaoPizza_portugues TEXT, title_opcaoPizza_portugues TEXT, nid_produto TEXT, display_cozinha TEXT, data_pedido DATETIME)');
 }
 
 /*
@@ -1733,8 +1749,8 @@ function insertTable(nomeTable){
 			for(i=0;i<arrayCategorias.length;i++){
 				$('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
-				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
-				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'")');
+				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha,nivel,categoria_acima) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'",'+arrayCategorias[i].nivel+',"'+arrayCategorias[i].categoria_acima+'")');
+				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha,nivel,categoria_acima) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'",'+arrayCategorias[i].nivel+',"'+arrayCategorias[i].categoria_acima+'")');
 			}
             },errorCB,successInsert);
 		
@@ -2198,6 +2214,13 @@ function setLabels(){
 			}
 		},errorCB);
 		
+		//Pagamento Efetuado.
+		tx.executeSql('SELECT * FROM Labels where categoria_label = "label_pagamento_efetuado" and language="'+constLanguageSelected+'"',[],function(tx,result){
+			if(result.rows.length > 0){
+				ObjectLabels.label_pagamento_efetuado = result.rows.item(0).valor;
+			}
+		},errorCB);
+		
 	},errorCB);
 }
 
@@ -2414,13 +2437,14 @@ function zerarInatividade(){
 	contador = 0;
 }
 function initVariaveis(){
+    
 db.transaction(function(tx){
 		
 		// btn_home
 		tx.executeSql('SELECT * FROM EnderecoServidor',[],function(tx,result){
-                      
+                 
 			 if(result.rows.length > 0){
-				 
+				
 					 ipServidorDrupal = result.rows.item(0).endereco;
 					
 					 urlViewConfig = ipServidorDrupal + "/views/configuracao";
@@ -2457,8 +2481,8 @@ function bindTouchstart(botao,funcao){
 }
 
 function errorGetEnderecoServidor(){
-    alert("aki")
-    ipServidorDrupal = "http://192.169.1.105:8080/VillaScamboo/?q=rest";
+
+    ipServidorDrupal = "http://192.168.0.107/VillaScamboo/?q=rest";
     
     urlViewConfig = ipServidorDrupal + "/views/configuracao";
     urlViewLabels = ipServidorDrupal + "/views/labels";

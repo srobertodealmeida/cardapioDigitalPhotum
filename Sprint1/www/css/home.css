@@ -272,9 +272,11 @@ padding-top: 8px;
 
 
 .modal_image {
+	
 	width:50%;
 	height:100%;
 	float: left;
+	
 }
 
 .img_modal {
@@ -551,4 +553,7 @@ right: 10;
 position: fixed;
 right: 5px;
 top:5px;
+}
+.div-alerta-pedidos-aberto{
+	
 }

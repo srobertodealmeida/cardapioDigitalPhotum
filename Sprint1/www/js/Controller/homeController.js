@@ -314,10 +314,19 @@ function checkConnection() {
 
 }
 
+function verificarTemPedidos(){
+	db.transaction(function(tx) {
+		tx.executeSql('SELECT * FROM Pedido ',[],function(tx,result){
+			 if(result.rows.length > 0){
+				$('.div-alerta-pedidos-aberto').show();
+			 }
+		   },errorCB);
+    },errorCB);
+}
 
 
 $(document).ready(function(){
-	
+	verificarTemPedidos();
 	atualizar();
    // document.addEventListener("deviceready", checkConnection, false);
     createTableMesa();
