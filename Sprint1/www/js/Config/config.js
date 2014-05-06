@@ -1700,7 +1700,7 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			for(i=0; i < arrayLanguagesForm.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
-				 quantidadeRegistros = quantidadeRegistros - 1;                             
+			quantidadeRegistros = quantidadeRegistros - 1;                             
 			console.log('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
 		    tx.executeSql('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
 		    
@@ -1710,10 +1710,10 @@ function insertTable(nomeTable){
 	
 
            }else if (nomeTable == "icones") {
-		
+		 
 			db.transaction(function(tx) {
 				for(i=0; i < arrayIconesForm.length;i++){
-					console.log("legaleim "+i);
+				console.log("legaleim "+i);
 				console.log("legaleim"+arrayIconesForm[i].title);
 				console.log("legaleim"+arrayIconesForm[i].image);
 			    console.log("DebugMeud-Insert" + arrayIconesForm[i].title);

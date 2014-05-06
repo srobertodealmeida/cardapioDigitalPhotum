@@ -235,7 +235,7 @@
 
 .menu_categoria {
 	border-radius: 3px 3px 3px 3px;
-	height: 80% !important;
+	height: 73% !important;
 	float: inherit;
 	top: 8 !important;
 }
@@ -1442,6 +1442,26 @@ overflow: hidden;
 */
 }
 
+
+.minhaLIVoltar {
+	overflow: hidden;
+	padding: 4px !important;
+	margin: 8px 10px 2px;
+	border-bottom: none !important;
+	height: 50px !important;
+	line-height: 10px !important;
+	border-radius: 24px;
+	position: relative;
+	background-color: red !important;
+	/*
+
+    background: #4d4d4d !important;
+    background-attachment: #4d4d4d !important;
+    background-image: #4d4d4d !important;
+
+*/
+}
+
 * {
 	text-shadow: none !important;
 	box-shadow: none !important;
@@ -1568,6 +1588,16 @@ overflow: hidden;
 	color: white !important;
 	white-space: pre-wrap;
 }
+
+.nome_voltar {
+	position: relative;
+	top: -41px;
+	left: 70;
+	color: white !important;
+	white-space: pre-wrap;
+}
+
+
 
 .imagemMinha {
 	border-radius: inherit;
@@ -2652,6 +2682,11 @@ opacity: 0.18;
 }
 
 .divShop{
+   margin-bottom: 20px !important;
+   margin-top:10px !important;
+}
+
+.divVoltar{
    margin-bottom: 20px !important;
    margin-top:10px !important;
 }

@@ -1000,8 +1000,15 @@ function montaCardapio(tx){
 }
 
 function montaCategoria(tx,result){
+	$(".menu_categoria .mblScrollableViewContainer").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
+	 $(".menu_categoria .mblScrollBarWrapper div").css("-webkit-transform"," translate3d(0px, 0px, 0px)");
 	nivelCategoriaAtual = result.rows.item(0).nivel;
     console.log(result.rows);
+    
+    $("#ul-categorias .divClicavel").hide();
+    $("#ul-categorias .divClicavel").remove();
+                              
+        $('.menu_categoria').hide();
     for(var i=0;i<result.rows.length;i++){
         
         var classeCategoriaDuasLinhas = "";
@@ -1012,7 +1019,17 @@ function montaCategoria(tx,result){
     	$("#ul-categorias").append('<div class="divClicavel" name="'+result.rows.item(i).title_comum+'" value="'+result.rows.item(i).display_cozinha+'" id="categoria-'+i+'" onclick="chamarProdutos(this)" ><li dojoType="dojox.mobile.ListItem"  class="minhaLI minhaLI" tabindex="0"><div class="mblListItemLabel" style="display: inline;"></div></li> <div class="div-span-nome-categoria"><span class="nome_categoria '+classeCategoriaDuasLinhas+'">'+result.rows.item(i).title+'</span></div></div>')
 		console.log(result.rows.item(i));
     	console.log(result.rows.item(i));
+    	
+    	
     }
+    $('.esquerda .divVoltar').hide();
+   
+    $('.menu_categoria').show('slow',function(){
+                              if(nivelCategoriaAtual != nivelCategoriaMax){
+                             $('.esquerda .divVoltar').show();
+                              }
+                              });
+  
 }
 
 
@@ -1067,7 +1084,9 @@ function chamarProdutos(div){
 	
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM Categorias where title_comum = "'+ categoriaSelecionado +'" and language = "Portuguese-Brazil" ',[],function(tx,result){
-			if(result.rows.item(0).image != null || result.rows.item(0).image != ""){
+
+			if(result.rows.item(0).image != null && result.rows.item(0).image != ""){
+                  
 				$('body').css('background','url("'+result.rows.item(0).image+'") no-repeat scroll center bottom transparent');
 			}
 			nivelCategoria = result.rows.item(0).nivel;
@@ -1082,10 +1101,19 @@ function chamarProdutos(div){
 function selectDadosProdutos(tx){
 
 	if(nivelCategoriaAtual != "1"){
+
 		tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" and categoria_acima="'+categoriaSelecionado+'" order by ordem',[],montaCategoria,errorCB);
 	}else{
 		tx.executeSql('SELECT * FROM Produtos where categoria = "'+ categoriaSelecionado +'" and language = "'+constLanguageSelected+'" order by ordem',[],montaProdutos,errorCB);
 	}
+}
+
+function voltarCategoria(){
+   
+	var categoriaAnterior = parseInt(nivelCategoriaAtual) + 1;
+	db.transaction(function(tx){
+		tx.executeSql('SELECT * FROM Categorias where language="'+constLanguageSelected+'" and nivel="'+categoriaAnterior+'" order by ordem',[],montaCategoria,errorCB);
+	},errorCB);
 }
 
 function montaProdutos(tx,result){
