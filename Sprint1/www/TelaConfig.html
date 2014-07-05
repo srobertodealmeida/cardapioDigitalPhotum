@@ -28,7 +28,7 @@
 <script type="text/javascript" src="js/Config/config.js"></script>
 <script
 	src="http://debug.phonegap.com/target/target-script-min.js#photumCardapioDigital102030"></script>
-<script type="text/javascript" src="js/Controller/cardapioController.js"></script>
+
 <script type="text/javascript"
 	src="js/Controller/telaConfigController.js"></script>
 
@@ -64,7 +64,7 @@
 				</div>
 				<button class="btn_ok_mensagem" onclick="validarSenha()"
 					id="btn_ok_final">OK</button>
-				<a href="home.html"><button class="btn-cancelar-senha">Cancelar</button></a>
+				<button onclick="voltarHome();" class="btn-cancelar-senha">Cancelar</button>
 			</form>
 		</div>
 
@@ -74,21 +74,21 @@
 			<img id="logo-home" alt="" src="" class="img-logo">
 			<div>
 				<ul class="ul-configuracao">
-					<li class="li-configuracao"><button id="btn-mudar-mesa"
-							value="1">Mudar Numero Mesa</button></li>
+					<li class="li-configuracao"><button onclick="preparaMudarNumeroMesaCodigoGarcom()"
+							value="1">Mudar Numero Mesa/Garçom</button></li>
 					<li class="li-configuracao"><button onclick="sincronizarDados()"
 							value="1">Sincronizar Ipad</button></li>
-					<li class="li-configuracao"><a href="home.html"><button
-								value="1">Voltar Home</button></a></li>
+					<li class="li-configuracao"><a href="initHome.html"><button
+							value="1">Voltar Home</button></a></li>
+					<li class="li-configuracao"><button onclick="show('modal_alterar_tipo_cardapio');"
+							value="1">Alterar Tipo Cardapio</button></li>
 					<li class="li-configuracao"><button onclick="preparaMudarEnderecoServidor()"
-								value="1">Mudar Endereço Servidor</button></li>
+							value="1">Mudar Endereço Servidor</button></li>
 
 				</ul>
 			</div>
 
 		</div>
-
-
 
 		<div class="space"></div>
 
@@ -113,12 +113,9 @@
 							<button value="7" class="button-numerico">7</button>
 						</div>
 
-
-
 						<div class="button-numerico">
 							<button value="x" class="button-numerico">X</button>
 						</div>
-
 
 					</div>
 					<div class="primeira-linha">
@@ -126,22 +123,17 @@
 							<button value="2" class="button-numerico">2</button>
 						</div>
 
-
 						<div class="button-numerico">
 							<button value="5" class="button-numerico">5</button>
 						</div>
-
 
 						<div class="button-numerico">
 							<button value="8" class="button-numerico">8</button>
 						</div>
 
-
-
 						<div class="button-numerico">
 							<button value="0" class="button-numerico">0</button>
 						</div>
-
 
 					</div>
 					<div class="primeira-linha">
@@ -172,6 +164,7 @@
 
 			</div>
 		</div>
+		
 		<div id="modal_sincronizacao_ipad"
 			dojoType="dojox.mobile.SimpleDialog" class="modal-sincronizacao">
 			<p class="mensagem-confirmacao">Escolha uma opção:</p>
@@ -241,10 +234,49 @@
 				</form>
 			</div>
 		</div>
+		
+		<div id="modal_mudar_numero_mesa_garcom" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div class="div-form-mudar-numero-mesa-garcom">
+				<form onsubmit=" return false;">
+					<div class="div-mensagem">
+						<div>
+                        <label class="labelSenha">Mesa: </label> <input
+							onkeypress="focusOutInputMudarNumeroMesa(this)" class="inputMudarNumeroMesa"></input>
+                        </div>
+
+						<div>
+                            <label class="labelSenha">Código Garçom: </label> <input
+							onkeypress="focusOutInputMudarCodigoGarcom(this)" class="inputMudarCodigoGarcom"></input>
+                        </div>
+					</div>
+					<button class="btn_ok_mensagem" onclick="mudarNumeroMesaGarcon()" id="btn-mudar-numero-mesa">OK</button>
+					<button class="btn-cancelar-senha" onclick="hide('modal_mudar_numero_mesa_garcom')">Cancelar</button>
+				</form>
+			</div>
+		</div>
+		
+		<div id="modal_alterar_tipo_cardapio" dojoType="dojox.mobile.SimpleDialog"
+			class="mensagem">
+			<div>
+				<select class="select-tipo-cardapio">
+					<option value="true">Exemplo</option>
+					<option value="false" selected="selected">Definitivo</option>
+				</select>
+			</div>
+			<form onsubmit=" return false;">
+				<div class="div-mensagem">
+					<label class="labelSenha">Senha: </label> <input
+						class="inputSenha"
+						type="password"></input>
+				</div>
+				<button class="btn_ok_mensagem" onclick="validarSenhaMudarTipoCardapio()"
+					id="btn_ok_final">OK</button>
+				<button onclick="hide('modal_alterar_tipo_cardapio');" class="btn-cancelar-senha">Cancelar</button>
+			</form>
+		</div>
 
 	</div>
 
 </body>
 </html>
-
-

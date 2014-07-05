@@ -2250,6 +2250,19 @@ opacity: 0.18;
 	right: 0;
 }
 
+#id-modal-descricao-produto-branco .btn_adicionar_pedido{
+	position: inherit !important;
+	height: 100% !important;
+	width: 40% !important;
+}
+
+#id-modal-descricao-produto-branco .btn_cancelar_pedido{
+	position: inherit !important;
+	height: 100% !important;
+	width:  40% !important;
+	right: 0;
+}
+
  .efeito-button:active{
      box-shadow: inset 0 0 7px rgba(0, 0, 0, .2);
      top: 4px;
@@ -2934,3 +2947,21 @@ text-align: center;
 display:none;
 }
 
+.label-field-produto-branco{
+     color: black;
+	font-size: 22;
+
+}
+.input-titulo-produto{
+color: black;
+	font-size: 22;
+	width: 45%;
+
+}
+
+.input-preco-produto{
+color: black;
+	font-size: 22;
+	width: 10%;
+
+}

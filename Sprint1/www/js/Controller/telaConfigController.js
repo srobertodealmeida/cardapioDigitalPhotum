@@ -85,7 +85,7 @@ require([
 });
 
 function voltarHome(){
-	window.location = 'home.html';
+	window.location = 'initHome.html';
 }
 
 function preparaMudarEnderecoServidor(){
@@ -103,6 +103,32 @@ function preparaMudarEnderecoServidor(){
 	
 }
 
+function preparaMudarNumeroMesaCodigoGarcom(){
+	db.transaction(function(tx) {
+	    tx.executeSql('CREATE TABLE IF NOT EXISTS Mesa (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');	
+	    tx.executeSql('CREATE TABLE IF NOT EXISTS CodigoGarcom (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+		tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
+	                  if(result.rows.length > 0){
+	                  
+	                	  $('.inputMudarNumeroMesa').val(result.rows.item(0).numero);
+	                  
+	                  }
+	                  tx.executeSql('SELECT * FROM CodigoGarcom',[],function(tx,result){
+	                      if(result.rows.length > 0){
+	                      
+	                      $('.inputMudarCodigoGarcom').val(result.rows.item(0).numero);
+	                      
+	                      }
+	                      show('modal_mudar_numero_mesa_garcom');
+	                      
+	                      },errorCB);
+	                  
+	     },errorCB);
+	
+     },errorCB);
+	
+}
+
 function errorGetEndereco(){
 	$('.inputMudarEnderecoServidor').val('http://192.168.0.106/PizzaCompany/?q=rest');
 	show('modal_mudar_endereco_servidor');
@@ -117,6 +143,54 @@ function focusOutInputMudarEnderecoServidor(){
 		  return false;
 	}
 }
+
+function focusOutInputMudarNumeroMesa(){
+	if(window.event.keyCode == 13) {
+		  
+		 $('.inputMudarNumeroMesa').trigger('blur');
+		 $('#btn-mudar-numero-mesa').trigger('click');
+		  return false;
+	}
+}
+
+function focusOutInputMudarCodigoGarcom(){
+	if(window.event.keyCode == 13) {
+		  
+		 $('.inputMudarCodigoGarcom').trigger('blur');
+		 $('#btn-mudar-numero-mesa').trigger('click');
+		  return false;
+	}
+}
+
+
+
+function mudarNumeroMesaGarcon(){
+    
+	var numeroMesa = $('.inputMudarNumeroMesa').val();
+	var codigoGarcom = $('.inputMudarCodigoGarcom').val();
+	
+	db.transaction(function(tx) {
+		
+		tx.executeSql('DROP TABLE IF EXISTS Mesa');
+		tx.executeSql('DROP TABLE IF EXISTS CodigoGarcom');
+		
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Mesa (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS CodigoGarcom (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+		
+	     tx.executeSql('INSERT INTO Mesa(numero) VALUES ("'+numeroMesa+'")');
+                  
+	     tx.executeSql('INSERT INTO CodigoGarcom(numero) VALUES ("'+codigoGarcom+'")');
+				
+	     hide('modal_mudar_numero_mesa_garcom');
+	     alert('Valores inseridos com Sucesso');
+
+	 },errorCB);
+}
+
+function succeslegal(){
+    alert("legallllll");
+}
+
 
 function mudarEnderecoServidor(){
 
@@ -182,9 +256,11 @@ function validarSenha() {
 			
 			
 		} else {
-			hide_preloader();
-			$('#geralTelaConfig').show();
-			hide('senha_configaracao');
+			if($('.inputSenha').val() == "admin"){
+				hide_preloader();
+				$('#geralTelaConfig').show();
+				hide('senha_configaracao');
+			}
 		}
 	}
 
@@ -256,11 +332,12 @@ function postInsertMesa(valor){
 }
 
 function sincronizarDados(){
-	
+	setarValoresCardapio();
 	show('modal_sincronizacao_ipad');
 }
 
 function sincronizarMandarDados() {
+	
 	$('.preloader_image').show();
 
 	//Criar Chave de sincronização
@@ -296,6 +373,30 @@ function sincronizarReceberDados(){
 	receberDadosPessoa(chaveDigitada);
 	receberDadosConf(chaveDigitada)
 	
+}
+
+function setarValoresCardapio(){
+	
+	db.transaction(function(tx) {
+		 tx.executeSql('CREATE TABLE IF NOT EXISTS Mesa (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+		 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
+			 mesaConfig = result.rows.item(0).numero;
+		 },errorDBTelaconfig)
+		 
+		 tx.executeSql('SELECT * FROM LanguageSelect',[],function(tx,result){
+			if(result.rows.length > 0){
+			constLanguageSelectedConf = result.rows.item(0).nome;
+			}
+		 },errorDBTelaconfig)
+		
+		 
+		 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
+			 if(result.rows.length > 0){
+			 numeroContaConf = result.rows.item(0).idConta;
+			 }
+		 }, errorDBTelaconfig);
+		 
+	}, errorDBTelaconfig, successCB);
 }
 
 
@@ -520,6 +621,29 @@ function sincronizarMandaPedidos(chaveSincronizacao){
    },errorCB, successCB);
 }
 
+function validarSenhaMudarTipoCardapio(){
+    
+	var senha = $('#modal_alterar_tipo_cardapio .inputSenha').val();
+	if(senha == "topodomundo"){
+		db.transaction(function(tx) {
+			var tipoCardapio = $('#modal_alterar_tipo_cardapio .select-tipo-cardapio').val();
+    		tx.executeSql('SELECT * FROM tipoAplicativo',[],function(tx,result){
+
+    			if(result.rows.length>0){
+    				tx.executeSql('UPDATE tipoAplicativo SET fake="'+tipoCardapio+'" WHERE id="'+result.rows.item(0).id+'"');
+    				hide('modal_alterar_tipo_cardapio');
+    			}else{
+    				alert("Não foi possivel alterar tipo do cardapio");
+    			}
+    			
+    		},errorCB);
+        },errorCB);
+	}else{
+		alert("Senha Inválida");
+	}
+	
+}
+
 function sincronizarMandaPessoa(chaveSincronizacao){
 	db.transaction(function(tx) {
 		 tx.executeSql('SELECT * FROM Pessoas',[],function(tx,result){
@@ -550,7 +674,6 @@ function sincronizarMandaPessoa(chaveSincronizacao){
 							"value" : result.rows.item(i).contaConjunto,
 					}
 					
-					
 					var data = {
 							"type" : "sincronizacao_pessoa",
 							"field_chave_sincronizacao[und][0]" : chave_sincronizacao,
@@ -568,8 +691,6 @@ function sincronizarMandaPessoa(chaveSincronizacao){
 							flagMandarPessoaSincronizacao = true;
 							finalizaMandaDadosSincronizacao();
 						}
-				    	
-						
 				    	
 				    });
 			    }
@@ -656,27 +777,7 @@ function errorDBTelaconfig(){
 }
 
 $(document).ready(function(){
-	
-	db.transaction(function(tx) {
-	 tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
-		 mesaConfig = result.rows.item(0).numero;
-	 },errorDBTelaconfig)
 	 
-	 tx.executeSql('SELECT * FROM LanguageSelect',[],function(tx,result){
-		if(result.rows.length > 0){
-		constLanguageSelectedConf = result.rows.item(0).nome;
-		}
-	 },errorDBTelaconfig)
-	
-	 
-	 tx.executeSql('SELECT * FROM IdConta ', [], function(tx, result) {
-		 if(result.rows.length > 0){
-		 numeroContaConf = result.rows.item(0).idConta;
-		 }
-	 }, errorDBTelaconfig);
-	 
-	 
-	},errorDBTelaconfig, successCB);
 	$("#linkHome").click(function() {
 		  alert('clicou');
 	});
@@ -715,6 +816,7 @@ $(document).ready(function(){
 			if(valor == ""){
 				alert('Favor selecionar uma mesa');
 			}else{
+				setarValoresCardapio();
 			getMesas(valor);
 			}
 		}

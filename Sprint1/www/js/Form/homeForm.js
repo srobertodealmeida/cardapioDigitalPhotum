@@ -33,9 +33,6 @@ var title_lenguage_cardapio_Form = {
 		icones_cardapio_french:""
 };
 
-
-
-
 var propagandasForm = {
 		image:""
 };

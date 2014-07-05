@@ -51,7 +51,7 @@ var qtdPropagandas = 0;
 var sucessDadosDrupal = true;
 var db = window.openDatabase("CardapioDigital", "1.0", "Just a Dummy DB", 200000);
 var quantidadeRegistros = 0;//Quantidade total de registros , usado para saber quando terminou os registros(valor começa com 2 por causa do background e logo)
-
+var qtdeTiposAtualizacoes = 0;
 
 require([
          "dojo/dom",
@@ -234,8 +234,7 @@ function onBatteryStatus(info) {
     	   		    	//var ajaxPostDrupal = postAjax(url,data);
     	   		    	postAjax(url,data) ;
     	   	 },errorCB)
-             },errorCB,successInsert);
-		
+         },errorCB,successInsert);
     }
 }
 
@@ -317,7 +316,6 @@ function getDrupalLanguages(tx){
 			  // Faz download das imagens e faz o insert dos dados
 			  //TODO fazer com que download das imagens não faça insenrt de dados separar.
 			  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio,titleLanguage); //faz donwload da imagen;
-			  
 		  });
 		
 		
@@ -337,26 +335,21 @@ function getConfigPropaganda(tx){
 	
 	///////////////////////////////////////////////////////Languages///////////////////////////////////////////////////////////////////////////////
     var ajaxUrlViewConfig = getAjax(urlViewConfig);
-	
     ajaxUrlViewConfig.success(function (data) {
 
-    	$.each(data, function(key, val) {
-    	   
+    	$.each(data, function(key, val) {    	   
 			  configPropaganda = val.quantidade_variacao_propaganda_curiosidade;
 			  configQtdeVariacaoPropagandaRestaurante = val.quantidade_variacao_propaganda_restaurante;
 		 });
     	quantidadeRegistros += 1;
     	insertTable('config_propaganda');
     	
-		
-		  
     });
 	
     ajaxUrlViewConfig.error(function (jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 		alert('error');
 	}); 
-	
 	
 }
 
@@ -366,8 +359,7 @@ function getDrupalLabel(tx){
 	
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
-    var ajaxLabels = getAjax(urlViewLabels);
-	
+    var ajaxLabels = getAjax(urlViewLabels);	
     ajaxLabels.success(function (data) {
 		$.each(data, function(key, val) {
 			
@@ -539,17 +531,15 @@ function getDrupalHome(tx){
 					  downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosFormVazio,titleLanguage); //faz donwload da imagen;
 			   });
 			  }
-			  
 	     });
      });
-	
 	ajaxHome.error(function (jqXHR, textStatus, errorThrown) {
 		sucessDadosDrupal = false;
 	});
 }
 
 function getDrupalCategoria(tx) {
-    alert("getDrupalCategoria");
+
 	// ///////////////Categoria/////////////////////////////////////
 
 	var ajaxCategoria = getAjax(urlViewCategoria);
@@ -816,7 +806,7 @@ function getDrupalPropaganda(txx){
 			    			  }
 					  //Caso tiver arquivo para fazer download update
 					  if(arrayPropagandasDownload.length > 0){
-						  
+						  qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 						  for(i=0;i<arrayPropagandasDownload.length;i++){
 							  
 							  downloadVideosImagesPropagandas(arrayPropagandasDownload[i].url,arrayPropagandasDownload[i].pathDestino,arrayPropagandasDownload[i].tx,downloadsArquivosErro,objectArquivosDownloadsErroRemover,arrayPropagandasDownload[i])
@@ -894,8 +884,7 @@ function getDrupalAdicionais(tx){
 }
 
 function getDrupalChopp(tx){
-    alert("getDrupalChopp");
-	
+   
 	/////////////////Labels///////////////////////////////////////////////////////////////////////////////
 	
     var ajaxChopp = getAjax(urlViewChopp);
@@ -904,7 +893,7 @@ function getDrupalChopp(tx){
 		$.each(data, function(key, val) {
 			
 			chopp_codigo_produto = val.produto_shop;
-               alert(val.produto_shop)
+               
 			  
 		  });
 		
@@ -922,58 +911,63 @@ function getDrupalChopp(tx){
 }
 
 function getDadosDrupal(tx){
-    
-    
-    
-    
+
     //alert('antes')
 	//show('modal_loading_atualizando_cardapio');
     // alert('depois')
 
 	// Categoria
 	if(atualizaForm.configuracao == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalLanguages(tx);
         $('#preloader .title-atualizando').text("Atualizando: Configuracao");
 	}
 	
 	// Label
 	if(atualizaForm.label == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalLabel(tx);
         $('#preloader .title-atualizando').text("Atualizando: Label");
 	}
 	
 	// Home
 	if(atualizaForm.home == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 2;
 		getDrupalHome(tx);
         $('#preloader .title-atualizando').text("Atualizando: Home");
 	}
 	
 	// Categoria
 	if(atualizaForm.categoria == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalCategoria(tx);
         $('#preloader .title-atualizando').text("Atualizando: Categoria");
 	}
 	
 	// Produtos
 	if(atualizaForm.produto == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalProduto(tx);
         $('#preloader .title-atualizando').text("Atualizando: Produto");
 	}
 	
 	// Propagandas
 	if(atualizaForm.propaganda == 'true'){
+        
 		getDrupalPropaganda(tx);
         $('#preloader .title-atualizando').text("Atualizando: Propaganda");
 	}
 	
 	//Adicionais
 	if(atualizaForm.adicionais == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalAdicionais(tx);
         $('#preloader .title-atualizando').text("Atualizando: Adicionais");
 	}
 	
 	//Formas de Pagamento
 	if(atualizaForm.formaDePagamento == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalFormasDePagamento(tx);
         
         $('#preloader .title-atualizando').text("Atualizando: Forma de Pagamento");
@@ -981,18 +975,21 @@ function getDadosDrupal(tx){
 	
 	//Configuracao Propaganda
 	if(atualizaForm.qtdeVariacaoCuriosidade == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getConfigPropaganda(tx);
         $('#preloader .title-atualizando').text("Atualizando: Quantidade Variacao Curiosidade");
 	}
 	
 	//Configuracao Propaganda Restaurante
 	if(atualizaForm.qtdeVariacaoPropRestaurante == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getConfigPropaganda(tx);
         $('#preloader .title-atualizando').text("Atualizando: Quantidade Propaganda Restaurante");
 	}
 	
 	//Chopp
 	if(atualizaForm.chopp == 'true'){
+        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes + 1;
 		getDrupalChopp(tx);
         $('#preloader .title-atualizando').text("Atualizando: Chopp");
 	}
@@ -1031,10 +1028,7 @@ function downloadImages(url,pathDestino,tx,titleIcone,typeImagen,produtosForm,ti
                   console.log("download error target " + error.target);
                   console.log("upload error code" + error.code);
                   console.log("error respoinse:"+error.response);
-                                    alert("download error source " + error.source);
-                                    alert("download error target " + error.target);
-                                    alert("upload error code" + error.code);
-                                    alert("error respoinse:"+error.response);
+
     	      },
     	      false
     	      );
@@ -1077,7 +1071,7 @@ function downloadVideosImagesPropagandas(url,pathDestino,tx,downloadsArquivosErr
     	    	  }
     	    	  salvaPathImagenPropaganda(tx,imagePath,objectPropagandasDownload);
     	      }, function (error) {
-                                    alert("error")
+                                  
                                     console.log("qtdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee errorrr   "+qtdPropagandas)
     	    	  var ObjectArquivosDownloadsErro = {
     	    			  url:"",
@@ -1145,10 +1139,7 @@ function downloadImagesProdutos(tx,qtdProdutos,indice){
 				console.log("download error target " + error.target);
 				console.log("upload error code" + error.code);
 				console.log("error respoinse:" + error.response);
-                                  alert("download error source " + error.source);
-                                  alert("download error target " + error.target);
-                                  alert("upload error code" + error.code);
-                                  alert("error respoinse:"+error.response);
+                                
 			}, false);
 
 		})
@@ -1685,11 +1676,13 @@ var testeProdutoErro;
 function insertTable(nomeTable){
 	
 	if(nomeTable == "home"){
-		
+	
 		 db.transaction(function(tx) {
                         $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			 quantidadeRegistros = quantidadeRegistros - 1;
              tx.executeSql('INSERT INTO Home(logo,background) VALUES ("' + homeForm.logo + '", "' + homeForm.background + '")');
+                        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                        
              testeProdutoErro = "background" + homeForm.logo;
              },errorCB,successInsert);
 		
@@ -1700,20 +1693,22 @@ function insertTable(nomeTable){
 		db.transaction(function(tx) {
 			for(i=0; i < arrayLanguagesForm.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
-			quantidadeRegistros = quantidadeRegistros - 1;                             
+				 quantidadeRegistros = quantidadeRegistros - 1;                             
 			console.log('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
 		    tx.executeSql('INSERT INTO Languages(nome,image) VALUES ("' + arrayLanguagesForm[i].title + '", "' + arrayLanguagesForm[i].image + '")');
 		    
 			}
+                        qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                      
             },errorCB,successInsert);
 	
 	
 
            }else if (nomeTable == "icones") {
-		 
+		
 			db.transaction(function(tx) {
 				for(i=0; i < arrayIconesForm.length;i++){
-				console.log("legaleim "+i);
+					console.log("legaleim "+i);
 				console.log("legaleim"+arrayIconesForm[i].title);
 				console.log("legaleim"+arrayIconesForm[i].image);
 			    console.log("DebugMeud-Insert" + arrayIconesForm[i].title);
@@ -1726,12 +1721,15 @@ function insertTable(nomeTable){
 			    	tx.executeSql('INSERT INTO Icones(title,image) VALUES ("' + arrayIconesForm[i].title + '", "' + arrayIconesForm[i].image + '")');
 			    }
 	            testeProdutoErro = "icones" + arrayIconesForm[i].title;
+                           qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                           
 				}
 	            },errorCB,successInsert);
 		
 		
 	
 	}else if (nomeTable == "propagandas") {
+       
 		console.log('INSERT INTO Propaganda(image) VALUES ("' + propagandasForm.image + '")');
 		
 		db.transaction(function(tx) {
@@ -1742,8 +1740,11 @@ function insertTable(nomeTable){
             tx.executeSql('INSERT INTO Propaganda(image) VALUES ("' + arrayPropagandasForm[i].image + '")');
             testeProdutoErro = "propagandas" + arrayPropagandasForm[i].image;
 			}
+                       qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                       
             },errorCB,successInsert);
 	}else if (nomeTable == "categorias") {
+      
 		db.transaction(function(tx) {
 			var teste = arrayCategorias.length;
 			for(i=0;i<arrayCategorias.length;i++){
@@ -1752,9 +1753,12 @@ function insertTable(nomeTable){
 				console.log('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha,nivel,categoria_acima) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'",'+arrayCategorias[i].nivel+',"'+arrayCategorias[i].categoria_acima+'")');
 				tx.executeSql('INSERT INTO Categorias(title,language,title_comum,image,ordem,display_cozinha,nivel,categoria_acima) VALUES ("' + arrayCategorias[i].title + '","'+arrayCategorias[i].language+'","'+arrayCategorias[i].title_comum+'","'+arrayCategorias[i].image+'","'+arrayCategorias[i].ordem+'","'+arrayCategorias[i].display_cozinha+'",'+arrayCategorias[i].nivel+',"'+arrayCategorias[i].categoria_acima+'")');
 			}
+                       qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                     
             },errorCB,successInsert);
 		
 	}else if (nomeTable == "produtos") {
+    
         console.log("insertProdutos")
 		for(i=0;i<arrayProdutos.length;i++){
           $('#preloader .quantidade-registros').text("Quantidadeee: "+i+" / "+arrayProdutos.length);
@@ -1793,10 +1797,12 @@ function insertTable(nomeTable){
 												+ arrayProdutos[i].codigo +
 												'" )');
 								testeProdutoErro = "produtos" + arrayProdutos[i].title;
-			}
+			}qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                       
             },errorCB,successInsert);
 		
 	}else if (nomeTable == "sleep-propagandas") {
+        
 		db.transaction(function(tx) {
 			for(i=0;i<arrayPropagandasDepoisDownload.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
@@ -1828,36 +1834,46 @@ function insertTable(nomeTable){
 				tx.executeSql('DELETE FROM Propagandas where deletadoBanco = "true"');
 				
 				tx.executeSql('UPDATE Propagandas SET deletadoBanco="true"');
+                      
+                       qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                    
          },errorCB,successInsert);
 		
 	}else if (nomeTable == "labels") {
+        
 		db.transaction(function(tx) {
 			for(i=0;i<arrayLabels.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			quantidadeRegistros = quantidadeRegistros - 1;
 			console.log('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","'+ arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
             tx.executeSql('INSERT INTO Labels(valor,language,valor_english,valor_spanish,valor_french,categoria_label) VALUES ("' + arrayLabels[i].valor + '","'+ arrayLabels[i].language +'","' + arrayLabels[i].valor_english + '","' + arrayLabels[i].valor_spanish + '","' + arrayLabels[i].valor_french + '","' + arrayLabels[i].categoria_label + '")');
-			}
+			}qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                    
             },errorCB,successInsert);
 	}else if (nomeTable == "adicionais") {
+        
 		db.transaction(function(tx) {
 			for(i=0;i<arrayAdicionais.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
 	            tx.executeSql('INSERT INTO Adicionais(title,preco,categoria,nid,title_comum,language,label_adicionais,flag_preco,flag_produto_especifico,produto_especifico_adiconais) VALUES ("' + arrayAdicionais[i].title + '","'+ arrayAdicionais[i].preco +'","' + arrayAdicionais[i].categoria  + '","' + arrayAdicionais[i].nid  + '","' + arrayAdicionais[i].title_comum  + '","' + arrayAdicionais[i].language  + '","' + arrayAdicionais[i].label_adicionais  + '","' + arrayAdicionais[i].flag_preco  + '","' + arrayAdicionais[i].flag_produto_especifico  + '","' + arrayAdicionais[i].produto_especifico_adiconais  + '")');
-			}
+			}qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                      
             },errorCB,successInsert);
 	}else if (nomeTable == "formasDePagamento") {
+        
 		db.transaction(function(tx) {
 			for(i=0;i<arrayFormasDePagamento.length;i++){
                        $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
 				console.log('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  + '")');
 	            tx.executeSql('INSERT INTO FormasDePagamento(title,title_comum, language) VALUES ("' + arrayFormasDePagamento[i].title + '","'+ arrayFormasDePagamento[i].title_comum +'","' + arrayFormasDePagamento[i].language  +  '")');
-			}
+			}qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                     
             },errorCB,successInsert);
 	}else if (nomeTable == "config_propaganda") {
+        
 		db.transaction(function(tx) {
                 $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 				quantidadeRegistros = quantidadeRegistros - 1;
@@ -1868,21 +1884,23 @@ function insertTable(nomeTable){
 			
 				
 				
-				
-	            
+				qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+	           
 	            
             },errorCB,successInsert);
 	}else if (nomeTable == "chopp") {
+     
 		db.transaction(function(tx) {
             $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
 			quantidadeRegistros = quantidadeRegistros - 1;
                    $('#preloader .quantidade-registros').text("Quantidade: "+quantidadeRegistros);
-                       alert('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")')
+                      
 			console.log('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
 
 				tx.executeSql('INSERT INTO Chopp(codigo_produto_chopp) VALUES ("' + chopp_codigo_produto + '")');
 		
-            
+            qtdeTiposAtualizacoes = qtdeTiposAtualizacoes - 1;
+                  
         },errorCB,successInsert);
     }
 }
@@ -1907,12 +1925,18 @@ function successCB() {
 function successInsert(){
 	//quantidadeRegistros = quantidadeRegistros - 1;
 	console.log('dentro success'+ quantidadeRegistros);
-	if(quantidadeRegistros < 1){
+
+        if(quantidadeRegistros < 1){
+        
+       
 		 //hide('modal_loading_atualizando_cardapio');
+  
+        if(qtdeTiposAtualizacoes <= 0){
 		db.transaction(montaHome,errorCB);
 		db.transaction(function(tx){
 			tx.executeSql('SELECT DISTINCT title_comum FROM Produtos',[],atualizaImageProdutosLanguage,errorCB);
 		},errorCB);
+        }
 	}
 }
 
@@ -2512,7 +2536,7 @@ function errorGetEnderecoServidor(){
 }
 
 $(document).ready(function(){
-                  
+  
 	initVariaveis();
                  
 });
@@ -2560,8 +2584,6 @@ function Mock(){
         },errorCB, successInsert);
 	//db.transaction(montaHome,errorCB);
 	//db.transaction(testeSelect,errorCB);
-	
-	
 	
 }
 

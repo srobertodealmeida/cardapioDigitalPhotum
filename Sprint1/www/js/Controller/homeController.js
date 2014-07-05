@@ -147,7 +147,7 @@ function atualizaLabelsHome(){
 function mostrarListLanguage(){
 	$('.panel-languages').toggle('slow', function() {
 	    // Animation complete.
-	  });
+	});
 }
 
 function onDeviceReadyHome(){
@@ -160,19 +160,28 @@ function hide_preloader() { // DOM
 }
 
 var versao;
+var senha_confirmacao_pagamento = "";
 function  atualizar(){
+
 	db.transaction(function(tx){
 		//tx.executeSql('SELECT * FROM Connection ',[],function(tx,result){
 			// if(result.rows.length != 0){
 				 if (connectionWIFI != "") {
 						if (connectionWIFI == "connectionTrue") {
+             
+               
 							var ajax = getAjax(urlViewConfig);
-						console.log(ajax)
+						    console.log(ajax)
+                    
 							 ajax.success(function (data) {
+                                   
 								 $.each(data, function(key, val) {
 							    	 if(val.atualizar == 'true'){
+                                        senha_confirmacao_pagamento = val.senha_confirmacao_pagamento;
+                                        db.transaction(atualizaSenhaConfirmacaoPagamento,errorCB);
+                                        
 							    		 if(val.versao == 1){//Primeira vez que aplicativo foi gerado.
-                                        console.log("akiiiiiiiiiiiiiiiiiiiii")
+							    			console.log("akiiiiiiiiiiiiiiiiiiiii");
 											atualizaForm.categoria = val.atualiza_categoria;
 											atualizaForm.configuracao = val.atualiza_configuracao;
 											atualizaForm.home = val.atualiza_home;
@@ -202,18 +211,14 @@ function  atualizar(){
 							    			atualizaForm.chopp = val.atualiza_chopp;
 							    			db.transaction(pegarUltimaVersao,errorCB); 
 							    		 }
-								    	 
 								     }
-							    	
 							       });
 						     });
-
-                   
-                   
-							
 							
 						} else {
+                   
 							db.transaction(montaHome, errorCB);
+							
 						}
 					}
 			// }
@@ -222,6 +227,17 @@ function  atualizar(){
 	
 	 
 }
+
+function atualizaSenhaConfirmacaoPagamento(tx){
+
+    tx.executeSql('DROP TABLE IF EXISTS SenhaConfirmacaoPagamento');
+
+    tx.executeSql('CREATE TABLE IF NOT EXISTS SenhaConfirmacaoPagamento (id INTEGER PRIMARY KEY AUTOINCREMENT, senha TEXT)');
+
+    tx.executeSql('INSERT INTO SenhaConfirmacaoPagamento(senha) VALUES ("'+senha_confirmacao_pagamento+'")');
+
+}
+
 
 function createTableMesa(){
 	console.log('createTableMesa');
@@ -233,9 +249,28 @@ function createTableMesa(){
 function pegarNumeroMesa(tx){
 	console.log('pegarNumeroMesa');
 	tx.executeSql('SELECT * FROM Mesa',[],function(tx,result){
-		 mesa = result.rows.item(0).numero;
-		 $('.span-button-config').text(mesa);
-	 },errorCB)
+		if(result.rows.length>0){
+		mesa = result.rows.item(0).numero;
+		$('.span-button-config').text(mesa);
+		}else{
+			tx.executeSql('INSERT INTO Mesa(numero) VALUES ("1")');
+			$('.span-button-config').text("1");
+		}
+	},errorCB)
+}
+
+function pegarCodigoGarcom(){
+	db.transaction(function(tx) {
+	tx.executeSql('CREATE TABLE IF NOT EXISTS CodigoGarcom (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT NOT NULL)');
+	tx.executeSql('SELECT * FROM CodigoGarcom',[],function(tx,result){
+		if(result.rows.length>0){
+		var codigoGarcom = result.rows.item(0).numero;
+		$('.span-codigo-garcom').text(codigoGarcom);
+		}else{
+			$('.span-codigo-garcom').text("C-0");
+		}
+	},errorCB);
+	},errorCB);
 }
 
 function criarIdContaPrimeiraVez(){
@@ -284,7 +319,6 @@ function validaConnection(tx){
 				}
 		 }
 	   },errorCB);
-	
 }
 
 function connectionNaoCriado(err){
@@ -310,27 +344,22 @@ function checkConnection() {
 		tx.executeSql('INSERT INTO Connection(connectionWIFI) VALUES ("'+connectionWIFI+'")');
 		atualizar();
     },errorCB);
-    
 
 }
-
-function verificarTemPedidos(){
-	db.transaction(function(tx) {
-		tx.executeSql('SELECT * FROM Pedido ',[],function(tx,result){
-			 if(result.rows.length > 0){
-				$('.div-alerta-pedidos-aberto').show();
-			 }
-		   },errorCB);
-    },errorCB);
-}
-
 
 $(document).ready(function(){
-	verificarTemPedidos();
+
+   //  db.transaction(function(tx) {
+   // createTablesdoCardapio(tx);
+   // },errorCB);
+                  
+    // verificarTemPedidos();
 	atualizar();
    // document.addEventListener("deviceready", checkConnection, false);
     createTableMesa();
+    
     db.transaction(pegarNumeroMesa,semNumeroMesa); 
+    pegarCodigoGarcom();
 	// db.transaction(populateDB, errorCB, successCB);
 	//quantidadeRegistros = 7;
 	 // Atualiza caso checbox no backend esteja setado como true;
@@ -349,7 +378,7 @@ $(document).ready(function(){
 			zerarInatividade();
 			inatividade();
 			$('#propagandas').hide();
-                                $('#view1').removeClass('background_black_propaganda');
+            $('#view1').removeClass('background_black_propaganda');
 			$('#geral').show();
 			console.log("propagandasClick");
 			$('div#propagandas').html("");
@@ -382,6 +411,6 @@ $(document).ready(function(){
 		             duration        : 1000,                        
 		             pauseOnHover    : true
 		         }                  
-		     });
+        });
 	
 });
