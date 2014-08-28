@@ -30,6 +30,7 @@ var nivelCategoriaMax = "";
 var categoriaAcima = "";
 var senha_confirmacao_pagamento = "";
 var codigoGarcom = "";
+var displayCozinha = "";
 
 require([
 "dojo/dom",
@@ -648,7 +649,9 @@ function mostrarSugestõesSobremesas(dlg){
 function adicionarChopp(){
 	flagCouvert = false;
 	var quantidadeChopp = parseInt($('#modal_adicionar_garcom .input-quantidade-chopp').val());
-	parseInt
+    
+    if(quantidadeChopp < 6){
+
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM Chopp',[],function(tx,result){
 			
@@ -677,7 +680,7 @@ function adicionarChopp(){
 						var nomePrimeiraOpcaoPizza = "";
 						flagChopp = true;
 						  for(i=0;i<quantidadeChopp;i++){
-						   tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido) VALUES ("'+mesa+'","'+pessoaSelecionado+'","true","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","chopp","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","","","","","","semDisplay","'+returnDataAtual()+'")');
+						   tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido,chop_distribuir) VALUES ("'+mesa+'","'+pessoaSelecionado+'","true","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","chopp","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","","","","","","semDisplay","'+returnDataAtual()+'","true")');
 						   
 						   tx.executeSql('SELECT mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,id, MAX(id) FROM Pedido where status = "chopp"',[],postPedidoDrupal,errorCB);
 						  }
@@ -690,6 +693,9 @@ function adicionarChopp(){
 		
 	},errorCB);
 	hide('modal_adicionar_garcom');
+    }else{
+        alert("Limite de 5 chopps por vez");
+    }
 }
 
 function verificarPedidosAberto(){
@@ -1363,6 +1369,8 @@ function montaDescricaoProdutoBranco(result){
     // limpa modal-descricao
     $("#id-modal-descricao-produto-branco .modal_image img").remove();
     
+    $("#id-modal-descricao-produto-branco .select-display-produto-branco option").remove();
+    
     
     $("#id-modal-descricao-produto-branco .input-titulo-produto").val("");
     $("#id-modal-descricao-produto-branco .input-preco-produto").val("");
@@ -1374,6 +1382,29 @@ function montaDescricaoProdutoBranco(result){
     $("#id-modal-descricao-produto-branco .btn_adicionar_pedido_descricao_pedido button").remove();
     $("#id-modal-descricao-produto-branco .btn_adicionar_pedido_descricao_pedido button").remove();
     if(result.rows.length > 0){
+    	
+    	
+    	
+    	//Monta combo box de display
+    	db.transaction(function(tx) {
+            tx.executeSql('SELECT DISTINCT display_cozinha FROM Categorias',[],function(tx,result){
+                          if(result.rows.length > 0){
+                          
+                           $("#id-modal-descricao-produto-branco .select-display-produto-branco").append('<option value="none">Apenas no Caixa</option>');
+                          for(i=0;i<result.rows.length;i++){
+                          if(result.rows.item(i).display_cozinha != null && result.rows.item(i).display_cozinha != "null"){
+                        	  $("#id-modal-descricao-produto-branco .select-display-produto-branco").append('<option value="'+result.rows.item(i).display_cozinha+'">'+result.rows.item(i).display_cozinha+'</option>');
+                          }
+                          }
+                          }
+                          },errorCB);
+            	},errorCB);
+            
+    	
+    	
+    	
+    	
+    	
         console.log("imagem: "  + result.rows.item(0).image);
         
         $("#id-modal-descricao-produto-branco .modal_image").append('<img alt="" src="'+result.rows.item(0).image+'" class="img_modal">');
@@ -1430,9 +1461,14 @@ function selectPessoaProdutoBranco(idProduto){
 	
    var nomeProduto =  $("#id-modal-descricao-produto-branco .input-titulo-produto").val();
    var precoProduto = parseFloat($("#id-modal-descricao-produto-branco .input-preco-produto").val());
+   displayCozinhaSelecionado = $("#id-modal-descricao-produto-branco .select-display-produto-branco").val();
+
+    if(nomeProduto != "" && $("#id-modal-descricao-produto-branco .input-preco-produto").val() != "" && displayCozinhaSelecionado != ""){
    var branco = "";
    var ordem = -10;
    var codigo = "temporario";
+   
+   
    
    db.transaction(function(tx){
 		
@@ -1468,7 +1504,7 @@ function selectPessoaProdutoBranco(idProduto){
 					
 				console.log('selectPessoas');
 				idProdutoAtual = result.rows.item(0).id;
-				hide('id-modal-descricao');
+				hide('id-modal-descricao-produto-branco');
 				if(flagPizzaMeioaMeio == true){
 					hide('id-modal-meio-a-meio');
 				}
@@ -1478,7 +1514,10 @@ function selectPessoaProdutoBranco(idProduto){
 		},errorCB);
 		
 	},errorCB);
-	
+	}else{
+    
+    alert("Favor Preencher todos os campos")
+    }
 }
 
 function montaAdicionais(nomeProdutoAtual){
@@ -2126,13 +2165,13 @@ function adicionarPedido(tx,result){
 									 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 										 if(result.rows.length > 0){
 											 
-											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'")');
+											 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido,chop_distribuir) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'","false")');
 										 }
 										 
 									 },errorCB);
 								 }else{
 									 var data_pedido = new  Date();
-									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'")');
+									 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido,chop_distribuir) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'","false")');
 	
 								 }
 								 
@@ -2146,13 +2185,13 @@ function adicionarPedido(tx,result){
 						 tx.executeSql('SELECT * FROM Produtos where title_comum="'+result.rows.item(0).title_comum+'" and language="Portuguese-Brazil"',[],function(fx,result){
 							 if(result.rows.length > 0){
 								
-								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'")');
+								 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido,chop_distribuir) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'","false")');
 							 }
 							 
 						 },errorCB);
 					 }else{
                            
-						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'")');
+						 		 tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,data_pedido,chop_distribuir) VALUES ("'+mesa+'","'+pessoaSelecionado+'","'+contaConjunto+'","'+observacao+'","'+id+'","'+title+'","'+preco_original+'","'+preco+'","1","confirmacao","'+title_comum+'","'+categoria+'","'+nid_produto+'","'+title_adicionais+'","'+preco_adicionais+'","'+nid_adicionais+'","'+adicionaisId+'","'+flagPizzaMeioaMeio+'","'+nomePrimeiraOpcaoPizza+'","'+nomeSegundaOpcaoPizza+'","'+observacao_opcaoPizza_portugues+'","'+title_opcaoPizza_portugues+'","'+observacao_opcao_pizza+'","'+title_adicionais_portugues+'","'+displayCozinhaSelecionado+'","'+returnDataAtual()+'","false")');
 
 					 }
 					 
@@ -2457,7 +2496,10 @@ function repetirPedido(btn){
     
         db.transaction(function(tx) {
                       
-                       tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) select mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,"confirmacao",nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha from Pedido where id = '+btn.name+'');
+                       tx.executeSql('INSERT INTO Pedido(mesa,pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha) select '+mesa+',pessoa,contaConjunto,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,"confirmacao",nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha from Pedido where id = '+btn.name+'');
+                       
+                       
+                
                        
                        
                        tx.executeSql('SELECT mesa,pessoa,observacao,id_produto,nome_produto,preco_original_produto,preco_produto,quantidade,status,nome_produto_portugues,categoria_produto,nid_produto,title_adicionais,preco_adicionais,nid_adicionais,id_adicionais,flagPizzaMeioaMeio,nomePrimeiraOpcaoPizza,nomeSegundaOpcaoPizza,observacao_opcaoPizza_portugues,title_opcaoPizza_portugues,observacao_opcao_pizza,title_adicionais_portugues,display_cozinha,id, MAX(id) FROM Pedido',[],postPedidoDrupal,errorCB);
@@ -2728,7 +2770,7 @@ function montaDistribuicaoChopps(){
                                  tx.executeSql('SELECT * FROM Produtos where codigo = "'+codigo_produto_chopp+'" and language = "'+constLanguageSelected+'"',[],function(tx,result){
                                               
                                                if(result.rows.length > 0){
-                                               tx.executeSql('SELECT * FROM Pedido where id_produto = "'+result.rows.item(0).id+'" and (status="aguardando-pedido" or status="aguardando-pagamento") ',[],function(tx,result){
+                                               tx.executeSql('SELECT * FROM Pedido where id_produto = "'+result.rows.item(0).id+'" and chop_distribuir = "true" and (status="aguardando-pedido" or status="aguardando-pagamento") ',[],function(tx,result){
                                                              $('#modal_distribuicao_chopps .total_chopps_distribuicao').text(result.rows.length);
                                                              if(result.rows.length > 0){
                                                              
@@ -3160,7 +3202,7 @@ function distribuirChopps(){
 					}
                                                                       
                                                                       
-					tx.executeSql('UPDATE Pedido SET pessoa="'+nomePessoa+'",contaConjunto="'+contaConjunto+'" WHERE Id='+arrayIdPedidoChopps[i]+'');
+					tx.executeSql('UPDATE Pedido SET pessoa="'+nomePessoa+'",contaConjunto="'+contaConjunto+'", chop_distribuir ="false"  WHERE Id='+arrayIdPedidoChopps[i]+'');
 					contadorArrayPedidos = contadorArrayPedidos+1;
 				}
 			}
@@ -3382,17 +3424,6 @@ function setarCodigoGarcom(){
 	
 }
 $(document).ready(function(){
-                  	db.transaction(function(tx) {
-                  tx.executeSql('SELECT DISTINCT display_cozinha FROM Categorias',[],function(tx,result){
-                                if(result.rows.length > 0){
-                                for(i=0;i<result.rows.length;i++){
-                                alert(result.rows.item(i).display_cozinha)
-                                }
-                                }
-                                },errorCB);
-                  	},errorCB);
-                  
-                  
                   
                   
 	var text = $('.textarea-motivo-cancelamento-pedido').text();
